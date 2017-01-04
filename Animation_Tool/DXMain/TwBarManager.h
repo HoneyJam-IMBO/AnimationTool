@@ -35,6 +35,8 @@ public:
 	void AddColorBar(const char* barName, const char* groupName, const char* menuName, void* var);
 	//bool botton o/x에 사용하기 적당한 버튼 ui
 	void AddBoolBar(const char* barName, const char* groupName, const char* menuName, void* var);
+	void AddMinMaxBar(const char* barName, const char* groupName, const char* menuName, void* var,
+		float min=0.f, float max=1.f, float step = 0.1f);
 
 	//light dir float3에 사용하기 좋은 화살표 bar
 	void AddDirBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj);

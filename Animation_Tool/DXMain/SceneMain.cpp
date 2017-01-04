@@ -223,6 +223,7 @@ void CSceneMain::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wPa
 		if (m_pPickingObject) {
 			TWBARMGR->DeleteBar("PickingBar");
 			TWBARMGR->AddRotationBar("PickingBar", "rotation", "testRo", m_pPickingObject);
+
 		}
 		break;
 	case WM_LBUTTONUP:

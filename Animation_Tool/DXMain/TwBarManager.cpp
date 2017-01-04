@@ -98,6 +98,14 @@ void CTwBarManager::AddBoolBar(const char * barName, const char* groupName, cons
 	TwAddVarRW(m_mTwBar[barName], menuName, TW_TYPE_BOOLCPP, var, buff);
 }
 
+void CTwBarManager::AddMinMaxBar(const char * barName, const char * groupName, const char * menuName, void * var, float min, float max, float step){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
+	char buff[256];
+	sprintf(buff, "min=%f max=%f step=%f group=%s keyincr=+ keydecr=-",min, max, step, groupName);
+
+	TwAddVarRW(m_mTwBar[barName], "Animation speed", TW_TYPE_FLOAT, var, buff);
+}
+
 void CTwBarManager::AddDirBar(const char * barName, const char * groupName, const char * menuName, CGameObject* pObj){
 	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
 	char buff[256];

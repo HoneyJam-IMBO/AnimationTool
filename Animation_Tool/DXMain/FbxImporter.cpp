@@ -253,6 +253,7 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 		for (unsigned int clusterIndex = 0; clusterIndex < numOfClusters; ++clusterIndex)
 		{
 			FbxCluster* currCluster = currSkin->GetCluster(clusterIndex);
+		
 			std::string currJointName = currCluster->GetLink()->GetName();
 			//새로운 joint index 구하기
 			//UINT currJointIndex = clusterIndex + currMeshJointIndexOffset;
@@ -273,7 +274,7 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 			currCluster->GetTransformMatrix(transformMatrix);	// The transformation of the mesh at binding time
 			currCluster->GetTransformLinkMatrix(transformLinkMatrix);	// The transformation of the cluster(joint) at binding time from joint space to world space
 			globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix; //* AnimationData.GetGeometryTransform();
-
+		
 			globalBindposeInverseMatrix.SetT(
 				FbxVector4(globalBindposeInverseMatrix.GetT().mData[0] * m_MeshScale,
 					globalBindposeInverseMatrix.GetT().mData[1] * m_MeshScale,
@@ -282,6 +283,7 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 
 			// 현재 Joint의 Offset 행렬 구하기 
 			AnimationData.GetJointDatas()[clusterIndex].SetOffsetMtx(globalBindposeInverseMatrix);
+			XMMATRIX mtx = ConvertFbxMtxToXMMATRIX(globalBindposeInverseMatrix);
 
 			for (FbxLongLong i = m_AnimStackData.GetTimeStart(); i <= m_AnimStackData.GetTimeEnd(); ++i) {
 				FbxTime currTime;

@@ -81,7 +81,7 @@ bool CFBXAnimationMesh::Begin(UINT index){
 				BoneTransform.SetIdentity();
 			else BoneTransform = FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetKeyFrames()[i].GetKeyFrameTransformMtx();
 
-			BoneTransform *= FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetOffsetMtx();
+			//BoneTransform *= FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetOffsetMtx();
 
 			m_ppAnimationData[i][j] = XMMatrixTranspose(ConvertFbxMtxToXMMATRIX(BoneTransform));//그럼 최종 행렬 = A*B*C*D
 		}
@@ -128,6 +128,19 @@ void CFBXAnimationMesh::SetShaderState(){
 	
 	for (int j = 0; j < m_nJoint; ++j) {
 		pAnimationData[jointIndex++] = m_ppAnimationData[m_nFrame][j];
+
+		XMMATRIX mtx;
+		//mtx = XMMatrixInverse(nullptr, m_ppAnimationData[m_nFrame][j]);
+		mtx = m_ppAnimationData[m_nFrame][j];
+		XMFLOAT4X4 xmf4Test;
+		XMStoreFloat4x4(&xmf4Test, mtx);
+		xmf4Test._41 = xmf4Test._14;
+		xmf4Test._42 = xmf4Test._24;
+		xmf4Test._43 = xmf4Test._34;
+
+		DEBUGER->RegistCoordinateSys(XMLoadFloat4x4(&xmf4Test));
+
+		//DEBUGER->RegistCoordinateSys(m_ppAnimationData[m_nFrame][j]);
 	}
 	
 	m_pAnimBuffer->Unmap();

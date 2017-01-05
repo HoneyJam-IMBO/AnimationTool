@@ -90,6 +90,15 @@ void CGameObject::SetPosition(XMVECTOR pos) {
 		m_xmf4x4World._42 = GetTerrainHeight();
 	}
 }
+void CGameObject::SetPositionX(const float pos){
+	m_xmf4x4World._41 = pos;
+}
+void CGameObject::SetPositionY(const float pos) {
+	m_xmf4x4World._42 = pos;
+}
+void CGameObject::SetPositionZ(const float pos) {
+	m_xmf4x4World._43 = pos;
+}
 void CGameObject::SetWorldMtx(XMMATRIX mtxWorld) {
 	XMStoreFloat4x4(&m_xmf4x4World, mtxWorld);
 }
@@ -265,6 +274,11 @@ bool CGameObject::CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvR
 	BoundingBox = m_OriBoundingBox;
 	BoundingBox.Transform(BoundingBox, GetWorldMtx());
 	return BoundingBox.Intersects(xmvWorldCameraStartPos, xmvRayDir, distance);
+}
+
+void CGameObject::PickingProc(){
+	TWBARMGR->AddRotationBar("PickingBar", "Object", "Rotation", this);
+	TWBARMGR->AddPositionBar("PickingBar", "Object", "Position", this, 0.f, SPACE_SIZE - 1.0f, 1.0f);
 }
 
 

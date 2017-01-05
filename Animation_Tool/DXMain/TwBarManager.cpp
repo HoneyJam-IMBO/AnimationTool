@@ -103,7 +103,7 @@ void CTwBarManager::AddMinMaxBar(const char * barName, const char * groupName, c
 	char buff[256];
 	sprintf(buff, "min=%f max=%f step=%f group=%s keyincr=+ keydecr=-",min, max, step, groupName);
 
-	TwAddVarRW(m_mTwBar[barName], "Animation speed", TW_TYPE_FLOAT, var, buff);
+	TwAddVarRW(m_mTwBar[barName], menuName, TW_TYPE_FLOAT, var, buff);
 }
 
 void CTwBarManager::AddDirBar(const char * barName, const char * groupName, const char * menuName, CGameObject* pObj){
@@ -122,6 +122,25 @@ void CTwBarManager::AddRotationBar(const char * barName, const char * groupName,
 	AddVarCB(barName, menuName, TW_TYPE_QUAT4F, SetQuaternionToTwBar, GetQuaternionToTwBar, pObj, buff);
 }
 
+void CTwBarManager::AddPositionBar(const char * barName, const char * groupName, const char * menuName, CGameObject * pObj,
+	float min, float max, float step){
+
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
+	char buff[256];
+	sprintf(buff, "min=%f max=%f step=%f group=%s keyincr=+ keydecr=-", min, max, step, groupName);
+
+	char subMenuNameX[64];
+	sprintf(subMenuNameX, "%sX", menuName);
+	char subMenuNameY[64];
+	sprintf(subMenuNameY, "%sY", menuName);
+	char subMenuNameZ[64];
+	sprintf(subMenuNameZ, "%sZ", menuName);
+
+	AddVarCB(barName, subMenuNameZ, TW_TYPE_FLOAT, SetPositionZToTwBar, GetPositionZToTwBar, pObj, buff);
+	AddVarCB(barName, subMenuNameY, TW_TYPE_FLOAT, SetPositionYToTwBar, GetPositionYToTwBar, pObj, buff);
+	AddVarCB(barName, subMenuNameX, TW_TYPE_FLOAT, SetPositionXToTwBar, GetPositionXToTwBar, pObj, buff);
+}
+
 
 void CTwBarManager::DeleteBar(const char * barName){
 	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;//¾øÀ¸¸é return;
@@ -130,6 +149,7 @@ void CTwBarManager::DeleteBar(const char * barName){
 	m_mTwBar.erase(barName);
 }
 
+//quaternion
 void TW_CALL SetQuaternionToTwBar(const void * value, void * clientData) {
 	if (nullptr == clientData) return;
 	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
@@ -137,7 +157,6 @@ void TW_CALL SetQuaternionToTwBar(const void * value, void * clientData) {
 
 	pObj->SetWorldMtx(XMMatrixAffineTransformation(pObj->GetScale(), XMQuaternionIdentity(), pObj->GetRotationQuaternion(), pObj->GetPosition()));
 }
-
 void TW_CALL GetQuaternionToTwBar(void * value, void * clientData) {
 	if (nullptr == clientData) return;
 	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
@@ -145,4 +164,37 @@ void TW_CALL GetQuaternionToTwBar(void * value, void * clientData) {
 	XMStoreFloat4(&xmf4, pObj->GetRotationQuaternion());
 	
 	*static_cast<XMFLOAT4 *>(value) = xmf4;
+}
+//x
+void TW_CALL SetPositionXToTwBar(const void * value, void * clientData){
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	pObj->SetPositionX(*static_cast<const float *>(value));
+}
+void TW_CALL GetPositionXToTwBar(void * value, void * clientData){
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->GetPositionX();
+}
+//y
+void TW_CALL SetPositionYToTwBar(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	pObj->SetPositionY(*static_cast<const float *>(value));
+}
+void TW_CALL GetPositionYToTwBar(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->GetPositionY();
+}
+//z
+void TW_CALL SetPositionZToTwBar(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	pObj->SetPositionZ(*static_cast<const float *>(value));
+}
+void TW_CALL GetPositionZToTwBar(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->GetPositionZ();
 }

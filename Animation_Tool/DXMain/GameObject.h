@@ -26,7 +26,7 @@ public:
 	virtual bool End();
 	//----------------------------object-----------------------------
 
-	virtual void SetPosition(XMVECTOR pos);
+	object_id GetObjectID() { return m_objectID; }
 
 	XMVECTOR GetRight();
 	XMVECTOR GetUp();
@@ -35,28 +35,34 @@ public:
 	void SetUp(XMVECTOR xmvUp);
 	void SetLook(XMVECTOR xmvLook);
 
-	XMVECTOR GetPosition();
-	object_id GetObjectID() { return m_objectID; }
-
-	virtual XMMATRIX GetWorldMtx();
 	void SetWorldMtx(XMMATRIX mtxWorld);
+	virtual XMMATRIX GetWorldMtx();
+	virtual void SetPosition(XMVECTOR pos);
+	void SetPositionX(const float pos);
+	void SetPositionY(const float pos);
+	void SetPositionZ(const float pos);
+	float GetPositionX() { return m_xmf4x4World._41; };
+	float GetPositionY() { return m_xmf4x4World._42; };
+	float GetPositionZ() { return m_xmf4x4World._43; };
+	XMVECTOR GetPosition();
+	XMVECTOR GetRotationQuaternion() { return XMLoadFloat4(&m_xmf4RotationQuaternion); }
+	void SetRotationQuaternion(XMVECTOR xmv) { XMStoreFloat4(&m_xmf4RotationQuaternion, xmv); }
+	XMVECTOR GetScale() { return XMLoadFloat4(&m_xmf4Scale); }
+	void SetScale(XMVECTOR xmv) { XMStoreFloat4(&m_xmf4Scale, xmv); }
+
 	void SetRotation(XMMATRIX mtxRotation);
+
+	//----------------------------component------------------------
 	//test animate func
 	virtual void Move(XMVECTOR xmvDir, float fDistance);
 	virtual void Rotate(XMMATRIX xmMtx);
 	virtual void Rotate(float x = 0.0f, float y = 0.0f, float z = 0.0f);
-	//----------------------------component------------------------
-	//자신의 component 실행 + 
+
+	//자신의 component 실행 + a
 	virtual void Animate(float fTimeElapsed);
-
-	//Component Set
 	bool SetComponent(CComponent* pComponenet);
-
-	//Get
 	CComponent* GetComponenet(const component_id& componenetID);
 	const CComponent* GetComponenet(const component_id& componenetID)const;
-
-	//Clear
 	void ClearComponents();
 	//----------------------------component------------------------
 
@@ -65,10 +71,10 @@ public:
 	
 	//render container controll
 	virtual void RegistToContainer();
-	virtual void RegistToDebuger();
 	CRenderContainer* GetRenderContainer() { return m_pRenderContainer; }
-	//virtual void RegistToLayer(mapLayer & mLayer);
-//	void SetRenderContainer(CRenderContainerSeller* pSeller);
+
+	//debuger container controll
+	virtual void RegistToDebuger();
 
 	//space
 	void SetSpaceIndex(int index) { m_spaceIndex = index; }
@@ -78,18 +84,11 @@ public:
 	float GetTerrainHeight();
 	void SetTerrainContainer(CTerrainContainer* pTerrainContainer) { m_pTerrainContainer = pTerrainContainer; };
 
-	
-	XMVECTOR GetRotationQuaternion() { return XMLoadFloat4(&m_xmf4RotationQuaternion); }
-	void SetRotationQuaternion(XMVECTOR xmv) { XMStoreFloat4(&m_xmf4RotationQuaternion, xmv); }
-
-	XMVECTOR GetScale() { return XMLoadFloat4(&m_xmf4Scale); }
-	void SetScale(XMVECTOR xmv) { XMStoreFloat4(&m_xmf4Scale, xmv); }
-
 	//aabb
 	virtual bool IsVisible(shared_ptr<CCamera> pCamera);//계층구조의 녀석들은 다시 만들어줄 필요가 있음
 	//ray picking 
 	bool CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance);
-
+	virtual void PickingProc();
 protected:
 	
 	BoundingBox m_OriBoundingBox;

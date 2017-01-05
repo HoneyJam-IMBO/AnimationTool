@@ -37,12 +37,14 @@ public:
 	void AddBoolBar(const char* barName, const char* groupName, const char* menuName, void* var);
 	void AddMinMaxBar(const char* barName, const char* groupName, const char* menuName, void* var,
 		float min=0.f, float max=1.f, float step = 0.1f);
-
+	
 	//light dir float3에 사용하기 좋은 화살표 bar
 	void AddDirBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj);
 	//rotation object float4에 사용하기 좋은 동그라미 bar
 	void AddRotationBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj);
-
+	//position 
+	void AddPositionBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj,
+		float min = 0.0f, float max = 1.0f, float step = 0.01f);
 
 	void DeleteBar(const char* barName);
 private:
@@ -60,3 +62,10 @@ public:
 //callback
 void TW_CALL SetQuaternionToTwBar(const void *value, void * clientData);
 void TW_CALL GetQuaternionToTwBar(void *value, void * clientData);
+
+void TW_CALL SetPositionXToTwBar(const void *value, void * clientData);
+void TW_CALL GetPositionXToTwBar(void *value, void * clientData);
+void TW_CALL SetPositionYToTwBar(const void *value, void * clientData);
+void TW_CALL GetPositionYToTwBar(void *value, void * clientData);
+void TW_CALL SetPositionZToTwBar(const void *value, void * clientData);
+void TW_CALL GetPositionZToTwBar(void *value, void * clientData);

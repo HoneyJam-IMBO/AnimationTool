@@ -13,7 +13,7 @@
 #include "SkyBoxMesh.h"//skybox
 #include "SpaceMesh.h"//space
 #include "TerrainMesh.h"//terrain
-#include "AABBMesh.h"//aabb
+#include "BoundingBoxMesh.h"//BoundingBox mesh
 #include "DebugTextureMesh.h"//debug texture mesh
 #include "CoordinateSysMesh.h"//CoordinateSystem Mesh
 #include "UseFBXMesh.h"//fbx mesh

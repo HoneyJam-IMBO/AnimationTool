@@ -149,10 +149,10 @@ CRenderContainer* CRenderContainerSeller::GetRenderContainer(object_id objectid)
 		m_mRenderContainer[objectid] = new CDebugRenderContainer(m_pd3dDevice, m_pd3dDeviceContext);
 		//m_mRenderContainer[objectid] = new CRenderContainer(m_pCamera, m_pd3dDevice, m_pd3dDeviceContext);
 
-		m_mRenderContainer[objectid]->SetMesh(RESOURCEMGR->GetMesh("AABB"));
-		m_mRenderContainer[objectid]->SetShader(RESOURCEMGR->GetRenderShader("AABB"));
-		m_mRenderContainer[objectid]->AddMaterial(RESOURCEMGR->GetMaterial("AABB"));
-		m_mRenderContainer[objectid]->AddInstanceBuffer(RESOURCEMGR->GetBuffer("AABBIB"));
+		m_mRenderContainer[objectid]->SetMesh(RESOURCEMGR->GetMesh("BoundingBox"));
+		m_mRenderContainer[objectid]->SetShader(RESOURCEMGR->GetRenderShader("BoundingBox"));
+		m_mRenderContainer[objectid]->AddMaterial(RESOURCEMGR->GetMaterial("BoundingBox"));
+		m_mRenderContainer[objectid]->AddInstanceBuffer(RESOURCEMGR->GetBuffer("BoundingBoxIB"));
 
 		m_mRenderContainer[objectid]->Begin();
 		break;

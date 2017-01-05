@@ -65,6 +65,7 @@ public:
 	
 	//render container controll
 	virtual void RegistToContainer();
+	virtual void RegistToDebuger();
 	CRenderContainer* GetRenderContainer() { return m_pRenderContainer; }
 	//virtual void RegistToLayer(mapLayer & mLayer);
 //	void SetRenderContainer(CRenderContainerSeller* pSeller);
@@ -77,22 +78,21 @@ public:
 	float GetTerrainHeight();
 	void SetTerrainContainer(CTerrainContainer* pTerrainContainer) { m_pTerrainContainer = pTerrainContainer; };
 
-	//aabb
-	virtual bool IsVisible(shared_ptr<CCamera> pCamera);//계층구조의 녀석들은 다시 만들어줄 필요가 있음
-	BoundingBox GetBoundingBox() { return m_BoundingBox; }
-
+	
 	XMVECTOR GetRotationQuaternion() { return XMLoadFloat4(&m_xmf4RotationQuaternion); }
 	void SetRotationQuaternion(XMVECTOR xmv) { XMStoreFloat4(&m_xmf4RotationQuaternion, xmv); }
 
 	XMVECTOR GetScale() { return XMLoadFloat4(&m_xmf4Scale); }
 	void SetScale(XMVECTOR xmv) { XMStoreFloat4(&m_xmf4Scale, xmv); }
 
+	//aabb
+	virtual bool IsVisible(shared_ptr<CCamera> pCamera);//계층구조의 녀석들은 다시 만들어줄 필요가 있음
 	//ray picking 
 	bool CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance);
+
 protected:
 	
 	BoundingBox m_OriBoundingBox;
-	BoundingBox m_BoundingBox;
 
 	bool m_bIsVisible{ true }; 
 	bool m_bActive{ true };

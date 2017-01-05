@@ -2,7 +2,7 @@
 #include "Mesh.h"
 
 
-class CAABBMesh : public CMesh {
+class CBoundingBoxMesh : public CMesh {
 
 public:
 	//----------------------------dxobject-----------------------------
@@ -20,6 +20,6 @@ private:
 	//----------------------vertex buffers---------------------------
 
 public:
-	CAABBMesh(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext);
-	virtual ~CAABBMesh();
+	CBoundingBoxMesh(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext);
+	virtual ~CBoundingBoxMesh();
 };

@@ -3,7 +3,7 @@
 #include "SingleTon.h"
 
 #include "GameObject.h"
-#include "AABB.h"
+#include "BoundingBox.h"
 #include "CoordinateSys.h"
 
 #include "RenderContainer.h"
@@ -25,6 +25,8 @@ public:
 
 	void RegistToDebugRenderContainer(CGameObject* pObject);
 	void RegistCoordinateSys(FXMMATRIX mtx);
+	void RegistAABB(BoundingBox& aabb);
+	void RegistOBB(BoundingOrientedBox& obb);
 
 	void DebugRender(shared_ptr<CCamera> pCamera);
 	
@@ -56,7 +58,7 @@ private:
 	ID3D11RasterizerState* m_pRasterizerState{ nullptr };
 
 	//aabb 랜더를 위한 객체.
-	AABB** m_ppAABB{ nullptr };
+	CBoundingBox** m_ppBoundingBox{ nullptr };
 	UINT m_nAABB{ 0 };
 	//CoordinateSys 랜더를 위한 객체.
 	CCoordinateSys** m_ppCoordinateSys{ nullptr };

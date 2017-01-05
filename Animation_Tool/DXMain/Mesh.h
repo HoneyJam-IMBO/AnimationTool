@@ -71,6 +71,9 @@ public:
 protected:
 	//aabb
 	BoundingBox m_BoundingBox;
+	//obb
+	vector<BoundingOrientedBox> m_vOBB;
+
 	vector<shared_ptr<CTexture>> m_vMeshTexture;
 
 	//topology

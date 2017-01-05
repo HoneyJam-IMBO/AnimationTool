@@ -51,8 +51,8 @@ void CDirectionalLight::SetColor(float r, float g, float b){
 }
 
 bool CDirectionalLight::IsVisible(shared_ptr<CCamera> pCamera){
-	m_BoundingBox = m_OriBoundingBox;
-	m_BoundingBox.Transform(m_BoundingBox, GetWorldMtx());
+	//m_BoundingBox = m_OriBoundingBox;
+	//m_BoundingBox.Transform(m_BoundingBox, GetWorldMtx());
 
 	return true;
 }

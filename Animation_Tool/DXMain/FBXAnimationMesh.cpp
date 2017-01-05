@@ -85,6 +85,11 @@ bool CFBXAnimationMesh::Begin(UINT index){
 		}
 	}
 	for (int j = 0; j < m_nJoint; ++j) {
+		BoundingOrientedBox obb;
+		BoundingBox boundingBox;
+		BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(-5.f, -5.f, -5.f, 0.f), XMVectorSet(5.f, 5.f, 5.f, 0.f));
+		BoundingOrientedBox::CreateFromBoundingBox(obb, boundingBox);
+		m_vOBB.push_back(obb);
 		m_pAnimationJointOffsetMtx[j] = ConvertFbxMtxToXMMATRIX(FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetOffsetMtx());
 	}
 
@@ -139,6 +144,9 @@ void CFBXAnimationMesh::SetShaderState(){
 		pAnimationData[jointIndex++] = XMMatrixTranspose(m_pAnimationJointOffsetMtx[j] * m_ppAnimationData[m_nFrame][j]);
 
 		DEBUGER->RegistCoordinateSys(m_ppAnimationData[m_nFrame][j]);
+		BoundingOrientedBox originObb = m_vOBB[j];
+		originObb.Transform(originObb, m_ppAnimationData[m_nFrame][j]);
+		DEBUGER->RegistOBB(originObb);
 	}
 	
 	m_pAnimBuffer->Unmap();

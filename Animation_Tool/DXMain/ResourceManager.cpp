@@ -303,20 +303,20 @@ void CResourceManager::CreateRenderShader(){
 	pShader->Begin();
 	m_mRenderShader.insert(pairShader("Terrain", pShader));
 	//terrain
-	//aabb
+	//BoundingBox
 	pShader = make_shared<CRenderShader>(m_pd3dDevice, m_pd3dDeviceContext);
-	D3D11_INPUT_ELEMENT_DESC AABBDesc[] =
+	D3D11_INPUT_ELEMENT_DESC BoundingBoxDesc[] =
 	{
 		{ "INSTANCEPOS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "EXTEND", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "QUATERNION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
-	pShader->CreateVS(TEXT("VSAABB.cso"), AABBDesc, 3);
-	pShader->CreateGS(TEXT("GSAABB.cso"));
-	pShader->CreatePS(TEXT("PSAABB.cso"));
+	pShader->CreateVS(TEXT("VSBoundingBox.cso"), BoundingBoxDesc, 3);
+	pShader->CreateGS(TEXT("GSBoundingBox.cso"));
+	pShader->CreatePS(TEXT("PSBoundingBox.cso"));
 	pShader->Begin();
-	m_mRenderShader.insert(pairShader("AABB", pShader));
-	//aabb
+	m_mRenderShader.insert(pairShader("BoundingBox", pShader));
+	//BoundingBox
 
 	//debug textue
 	D3D11_INPUT_ELEMENT_DESC DebugTextureDesc[] =
@@ -420,9 +420,9 @@ void CResourceManager::CreateMesh(){
 	pMesh->Begin();
 	m_mMesh.insert(pairMesh("Terrain", pMesh));
 
-	pMesh = make_shared<CAABBMesh>(m_pd3dDevice, m_pd3dDeviceContext);
+	pMesh = make_shared<CBoundingBoxMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 	pMesh->Begin();
-	m_mMesh.insert(pairMesh("AABB", pMesh));
+	m_mMesh.insert(pairMesh("BoundingBox", pMesh));
 
 	//debug
 	pMesh = make_shared<CDebugTextureMesh>(m_pd3dDevice, m_pd3dDeviceContext);
@@ -537,15 +537,15 @@ void CResourceManager::CreateBuffer(){
 	pInstanceBuffer->Begin(nObject, BufferStride);//terrain
 	m_mBuffer.insert(pairBuffer("TerrainIB", pInstanceBuffer));
 	
-	nObject = { AABB_NUM };
-	BufferStride = sizeof(VS_VB_AABB_INSTANCE);
+	nObject = { BOUNDINGBOX_NUM };
+	BufferStride = sizeof(VS_VB_BOUNDINGBOX_INSTANCE);
 	pInstanceBuffer = make_shared<CInstanceBuffer>(m_pd3dDevice, m_pd3dDeviceContext);
-	pInstanceBuffer->Begin(nObject, BufferStride);//aabb
-	m_mBuffer.insert(pairBuffer("AABBIB", pInstanceBuffer));
+	pInstanceBuffer->Begin(nObject, BufferStride);//BoundingBox
+	m_mBuffer.insert(pairBuffer("BoundingBoxIB", pInstanceBuffer));
 	nObject = { COORD_NUM };
 	BufferStride = sizeof(VS_VB_INSTANCE);
 	pInstanceBuffer = make_shared<CInstanceBuffer>(m_pd3dDevice, m_pd3dDeviceContext);
-	pInstanceBuffer->Begin(nObject, BufferStride);//aabb
+	pInstanceBuffer->Begin(nObject, BufferStride);//coordinateSys
 	m_mBuffer.insert(pairBuffer("CoordinateSysIB", pInstanceBuffer));
 	//debug texture
 	nObject = { 1 };
@@ -680,10 +680,10 @@ void CResourceManager::CreateMaterial(){
 	pMaterial = make_shared<CMaterial>(m_pd3dDevice, m_pd3dDeviceContext);
 	pMaterial->Begin(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 8.0f, 5.0f);
 	m_mMaterial.insert(pairMaterial("Terrain", pMaterial));
-	//aabb
+	//BoundingBox
 	pMaterial = make_shared<CMaterial>(m_pd3dDevice, m_pd3dDeviceContext);
 	pMaterial->Begin(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 8.0f, 2.0f);
-	m_mMaterial.insert(pairMaterial("AABB", pMaterial));
+	m_mMaterial.insert(pairMaterial("BoundingBox", pMaterial));
 	//fbx
 	pMaterial = make_shared<CMaterial>(m_pd3dDevice, m_pd3dDeviceContext);
 	pMaterial->Begin(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1.f, 1.f);

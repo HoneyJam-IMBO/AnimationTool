@@ -20,9 +20,9 @@ bool CDebuger::Begin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext){
 	}
 	
 	//aabb객체 미리 할당
-	m_ppAABB = new AABB*[AABB_NUM];
-	for (int i = 0; i < AABB_NUM; ++i) {
-		m_ppAABB[i] = new AABB;
+	m_ppBoundingBox = new CBoundingBox*[BOUNDINGBOX_NUM];
+	for (int i = 0; i < BOUNDINGBOX_NUM; ++i) {
+		m_ppBoundingBox[i] = new CBoundingBox;
 	}
 	//aabb객체 미리 할당
 
@@ -84,8 +84,8 @@ bool CDebuger::Begin(ID3D11Device* pDevice, ID3D11DeviceContext* pContext){
 }
 
 bool CDebuger::End() {
-	for (int i = 0; i < AABB_NUM; ++i) {
-		delete m_ppAABB[i];
+	for (int i = 0; i < BOUNDINGBOX_NUM; ++i) {
+		delete m_ppBoundingBox[i];
 	}
 	for (int j = 0; j < COORD_NUM; ++j) {
 		delete m_ppCoordinateSys[j];
@@ -119,11 +119,18 @@ void CDebuger::RegistCoordinateSys(FXMMATRIX mtx) {
 	m_mDebugRenderContainer[object_id::OBJECT_DEBUG_COORD]->AddObject(m_ppCoordinateSys[m_nCoordinateSys++]);
 }
 
+void CDebuger::RegistAABB(BoundingBox& aabb){
+	m_ppBoundingBox[m_nAABB]->SetBoundingBoxInfo(aabb);
+	m_mDebugRenderContainer[object_id::OBJECT_DEBUG_AABB]->AddObject(m_ppBoundingBox[m_nAABB++]);
+
+}
+void CDebuger::RegistOBB(BoundingOrientedBox & obb){
+	m_ppBoundingBox[m_nAABB]->SetBoundingBoxInfo(obb);
+	m_mDebugRenderContainer[object_id::OBJECT_DEBUG_AABB]->AddObject(m_ppBoundingBox[m_nAABB++]);
+}
+
 void CDebuger::RegistToDebugRenderContainer(CGameObject * pObject){
 	object_id id = pObject->GetObjectID();
-
-	m_ppAABB[m_nAABB]->SetBoundingBoxInfo(pObject);
-	m_mDebugRenderContainer[object_id::OBJECT_DEBUG_AABB]->AddObject(m_ppAABB[m_nAABB++]);
 
 	switch (id) {
 	case object_id::OBJECT_POINT_LIGHT:

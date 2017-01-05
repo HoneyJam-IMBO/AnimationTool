@@ -56,6 +56,7 @@ void CRenderContainer::UpdateShaderState(shared_ptr<CCamera> pCamera) {
 	for (auto pObject : m_lpObjects) {
 		if (pObject->IsVisible(pCamera)) {
 			DEBUGER->RegistToDebugRenderContainer(pObject);
+			pObject->RegistToDebuger();
 			pObject->SetBufferInfo(m_ppBufferData, nInstance, pCamera);
 			nInstance++;
 		}

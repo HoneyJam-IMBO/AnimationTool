@@ -17,7 +17,7 @@ bool CGameObject::Begin() {
 		m_OriBoundingBox = m_pRenderContainer->GetMesh()->GetBoundingBox();
 	}
 	else {//없으면 최대 최소 aabb를 얻어온다.
-		BoundingBox::CreateFromPoints(m_OriBoundingBox, XMVectorSet(+FLT_MAX, +FLT_MAX, +FLT_MAX,0.f), XMVectorSet(-FLT_MAX, -FLT_MAX, -FLT_MAX, 0.f));
+		BoundingBox::CreateFromPoints(m_OriBoundingBox, XMVectorSet(+10.f, +10.f, +10.f, 0.f), XMVectorSet(-10.f, -10.f, -10.f, 0.f));
 	}
 
 	XMStoreFloat4(&m_xmf4RotationQuaternion, XMQuaternionIdentity());
@@ -225,6 +225,13 @@ void CGameObject::RegistToContainer() {
 	m_pRenderContainer->AddObject(this);
 }
 
+void CGameObject::RegistToDebuger(){
+	BoundingBox BoundingBox;
+	BoundingBox = m_OriBoundingBox;
+	BoundingBox.Transform(BoundingBox, GetWorldMtx());
+	DEBUGER->RegistAABB(BoundingBox);
+}
+
 //void CGameObject::SetRenderContainer(CRenderContainerSeller * pSeller) {
 //	m_pRenderContainer = pSeller->GetRenderContainer(m_objectID);
 //	if (m_pRenderContainer->GetMesh())//mesh가 있으면
@@ -242,19 +249,22 @@ float CGameObject::GetTerrainHeight(){
 }
 //flustum culling
 bool CGameObject::IsVisible(shared_ptr<CCamera> pCamera){
+	BoundingBox BoundingBox;
 
 	m_bIsVisible = (m_bActive) ? true : false;
-	if (m_bActive)
-	{
-		m_BoundingBox = m_OriBoundingBox;
-		m_BoundingBox.Transform(m_BoundingBox, GetWorldMtx());
-		if (pCamera) m_bIsVisible = pCamera->IsInFrustum(m_BoundingBox);
+	if (m_bActive){
+		BoundingBox = m_OriBoundingBox;
+		BoundingBox.Transform(BoundingBox, GetWorldMtx());
+		if (pCamera) m_bIsVisible = pCamera->IsInFrustum(BoundingBox);
 	}
 	return(m_bIsVisible);
 }
 
 bool CGameObject::CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float & distance){
-	return m_BoundingBox.Intersects(xmvWorldCameraStartPos, xmvRayDir, distance);
+	BoundingBox BoundingBox;
+	BoundingBox = m_OriBoundingBox;
+	BoundingBox.Transform(BoundingBox, GetWorldMtx());
+	return BoundingBox.Intersects(xmvWorldCameraStartPos, xmvRayDir, distance);
 }
 
 

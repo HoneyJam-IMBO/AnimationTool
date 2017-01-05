@@ -228,9 +228,6 @@
     <Filter Include="HLSL\Debug">
       <UniqueIdentifier>{fdf133fb-57e0-497e-bef3-f839dd0dd20f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HLSL\Debug\AABB">
-      <UniqueIdentifier>{6774b43b-68f9-4c95-a6e8-ba200d80b6a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="HLSL\Debug\DebugTexture">
       <UniqueIdentifier>{f67dea93-e5ff-4f38-9dd7-02eb408eda00}</UniqueIdentifier>
     </Filter>
@@ -312,9 +309,6 @@
     <Filter Include="소스 파일\44.GameObject\DEBUG\DebugTexture">
       <UniqueIdentifier>{e15c8bda-3098-4f20-bbb2-4cd414780378}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\44.GameObject\DEBUG\AABB">
-      <UniqueIdentifier>{6e3e4bbf-d10b-4d3b-a26b-0d592a213b86}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\44.GameObject\DEBUG\CoordinateSys">
       <UniqueIdentifier>{e8bd453c-d0b0-431e-bb74-87b6ba586284}</UniqueIdentifier>
     </Filter>
@@ -323,9 +317,6 @@
     </Filter>
     <Filter Include="소스 파일\33.DXObject\22.Mesh\DEBUG\DebugTextureMesh">
       <UniqueIdentifier>{bc85fbd4-f783-4bc3-b937-ad8a59ddaff7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\33.DXObject\22.Mesh\DEBUG\AABBMesh">
-      <UniqueIdentifier>{19b35fbc-3779-4b14-98e7-b0bb838a44cc}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\33.DXObject\22.Mesh\OBJECT">
       <UniqueIdentifier>{e12f5885-8042-4adc-9193-319829c08759}</UniqueIdentifier>
@@ -354,8 +345,14 @@
     <Filter Include="HLSL\Debug\CoordinateSys">
       <UniqueIdentifier>{9021bc77-3d53-4923-bdb6-52ed258f699d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\44.GameObject\DEBUG\OBB">
-      <UniqueIdentifier>{c2e1ed03-e7fa-471d-8ef8-375fa1ff858c}</UniqueIdentifier>
+    <Filter Include="소스 파일\44.GameObject\DEBUG\BoundingBox">
+      <UniqueIdentifier>{6e3e4bbf-d10b-4d3b-a26b-0d592a213b86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL\Debug\BoundingBox">
+      <UniqueIdentifier>{6774b43b-68f9-4c95-a6e8-ba200d80b6a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\33.DXObject\22.Mesh\DEBUG\BoundingBoxMesh">
+      <UniqueIdentifier>{19b35fbc-3779-4b14-98e7-b0bb838a44cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -554,12 +551,6 @@
     <ClInclude Include="Debuger.h">
       <Filter>소스 파일\SingleTon\Debuger</Filter>
     </ClInclude>
-    <ClInclude Include="AABBMesh.h">
-      <Filter>소스 파일\33.DXObject\22.Mesh\DEBUG\AABBMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>소스 파일\44.GameObject\DEBUG\AABB</Filter>
-    </ClInclude>
     <ClInclude Include="DebugRenderContainer.h">
       <Filter>소스 파일\33.DXObject\11.Container\RenderContainer\DeBugRenderContainer</Filter>
     </ClInclude>
@@ -646,6 +637,12 @@
     </ClInclude>
     <ClInclude Include="CoordinateSysMesh.h">
       <Filter>소스 파일\33.DXObject\22.Mesh\DEBUG\CoordinateSysMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBox.h">
+      <Filter>소스 파일\44.GameObject\DEBUG\BoundingBox</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBoxMesh.h">
+      <Filter>소스 파일\33.DXObject\22.Mesh\DEBUG\BoundingBoxMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -832,12 +829,6 @@
     <ClCompile Include="Debuger.cpp">
       <Filter>소스 파일\SingleTon\Debuger</Filter>
     </ClCompile>
-    <ClCompile Include="AABBMesh.cpp">
-      <Filter>소스 파일\33.DXObject\22.Mesh\DEBUG\AABBMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="AABB.cpp">
-      <Filter>소스 파일\44.GameObject\DEBUG\AABB</Filter>
-    </ClCompile>
     <ClCompile Include="DebugRenderContainer.cpp">
       <Filter>소스 파일\33.DXObject\11.Container\RenderContainer\DeBugRenderContainer</Filter>
     </ClCompile>
@@ -924,6 +915,12 @@
     </ClCompile>
     <ClCompile Include="CoordinateSysMesh.cpp">
       <Filter>소스 파일\33.DXObject\22.Mesh\DEBUG\CoordinateSysMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBox.cpp">
+      <Filter>소스 파일\44.GameObject\DEBUG\BoundingBox</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBoxMesh.cpp">
+      <Filter>소스 파일\33.DXObject\22.Mesh\DEBUG\BoundingBoxMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1042,15 +1039,6 @@
     <FxCompile Include="HSTerrain.hlsl">
       <Filter>HLSL\Terrain</Filter>
     </FxCompile>
-    <FxCompile Include="VSAABB.hlsl">
-      <Filter>HLSL\Debug\AABB</Filter>
-    </FxCompile>
-    <FxCompile Include="PSAABB.hlsl">
-      <Filter>HLSL\Debug\AABB</Filter>
-    </FxCompile>
-    <FxCompile Include="GSAABB.hlsl">
-      <Filter>HLSL\Debug\AABB</Filter>
-    </FxCompile>
     <FxCompile Include="PSDebugLight.hlsl">
       <Filter>HLSL\Light</Filter>
     </FxCompile>
@@ -1080,6 +1068,15 @@
     </FxCompile>
     <FxCompile Include="PSCoordinateSys.hlsl">
       <Filter>HLSL\Debug\CoordinateSys</Filter>
+    </FxCompile>
+    <FxCompile Include="GSBoundingBox.hlsl">
+      <Filter>HLSL\Debug\BoundingBox</Filter>
+    </FxCompile>
+    <FxCompile Include="PSBoundingBox.hlsl">
+      <Filter>HLSL\Debug\BoundingBox</Filter>
+    </FxCompile>
+    <FxCompile Include="VSBoundingBox.hlsl">
+      <Filter>HLSL\Debug\BoundingBox</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

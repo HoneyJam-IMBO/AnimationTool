@@ -183,7 +183,7 @@ enum shader_value_num {
 //space
 
 //aabb
-#define AABB_NUM 50000
+#define BOUNDINGBOX_NUM 50000
 //coordinatesystem
 #define COORD_NUM 10000
 //singleton

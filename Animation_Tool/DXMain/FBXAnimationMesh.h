@@ -96,7 +96,7 @@ private:
 	XMFLOAT4* m_pxmf4BoneIndex;
 	XMFLOAT3* m_pxmf3Weight;
 	XMMATRIX** m_ppAnimationData;
-	XMMATRIX* m_pAnimationBindingData;
+	XMMATRIX* m_pAnimationJointOffsetMtx;
 	int m_nJoint{ 0 };
 	int m_nFrameCnt{ 0 };
 	ID3D11RasterizerState* m_pPreRasterizerState{ nullptr };

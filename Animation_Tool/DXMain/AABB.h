@@ -6,6 +6,7 @@
 struct VS_VB_AABB_INSTANCE {
 	XMFLOAT3 m_xmf3Pos;
 	XMFLOAT3 m_xmf3Extend;
+	XMFLOAT4 m_xmf4Quaternion;
 };
 
 class AABB : public CGameObject{

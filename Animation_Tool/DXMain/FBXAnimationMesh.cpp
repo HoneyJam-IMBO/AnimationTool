@@ -72,25 +72,34 @@ bool CFBXAnimationMesh::Begin(UINT index){
 	for (int iframe = 0; iframe < m_nFrameCnt; ++iframe) {
 		m_ppAnimationData[iframe] = new XMMATRIX[m_nJoint];
 	}
-	m_pAnimationBindingData = new XMMATRIX[m_nJoint];
+	m_pAnimationJointOffsetMtx = new XMMATRIX[m_nJoint];
 
 	for (int i = 0; i < m_nFrameCnt; ++i) {
 		for (int j = 0; j < m_nJoint; ++j) {
-			FbxAMatrix BoneTransform;
+			FbxAMatrix FrameTransform;
 			if (FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetKeyFrames().empty())
-				BoneTransform.SetIdentity();
-			else BoneTransform = FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetKeyFrames()[i].GetKeyFrameTransformMtx();
+				FrameTransform.SetIdentity();
+			else FrameTransform = FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetKeyFrames()[i].GetKeyFrameTransformMtx();
 
-			//BoneTransform *= FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetOffsetMtx();
-
-			m_ppAnimationData[i][j] = XMMatrixTranspose(ConvertFbxMtxToXMMATRIX(BoneTransform));//그럼 최종 행렬 = A*B*C*D
+			m_ppAnimationData[i][j] = ConvertFbxMtxToXMMATRIX(FrameTransform);//그럼 최종 행렬 = A*B*C*D
 		}
 	}
 	for (int j = 0; j < m_nJoint; ++j) {
-		m_pAnimationBindingData[j] = m_ppAnimationData[m_nFrame][j];
+		m_pAnimationJointOffsetMtx[j] = ConvertFbxMtxToXMMATRIX(FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetOffsetMtx());
 	}
+
+	XMMATRIX* pMtx = new XMMATRIX[m_nJoint];
+
+	for (int j = 0; j < m_nJoint; ++j) {
+		pMtx[j] = XMMatrixTranspose(m_pAnimationJointOffsetMtx[j] * m_ppAnimationData[m_nFrame][j]);
+	}
+
+
 	m_pAnimBuffer = new CStaticBuffer(m_pd3dDevice, m_pd3dDeviceContext);
-	m_pAnimBuffer->Begin(1, 6128, m_pAnimationBindingData, 10, BIND_VS);
+	m_pAnimBuffer->Begin(1, 6128, pMtx, 10, BIND_VS);
+
+	delete[] pMtx;
+
 
 	//delete[] pAnimationData;
 	//bone data set
@@ -104,7 +113,7 @@ bool CFBXAnimationMesh::End(){
 		delete[] m_ppAnimationData[i];
 	}
 	delete[] m_ppAnimationData;
-	delete[] m_pAnimationBindingData;
+	delete[] m_pAnimationJointOffsetMtx;
 	return CUseFBXMesh::End();
 }
 
@@ -127,20 +136,9 @@ void CFBXAnimationMesh::SetShaderState(){
 	int jointIndex = 0;
 	
 	for (int j = 0; j < m_nJoint; ++j) {
-		pAnimationData[jointIndex++] = m_ppAnimationData[m_nFrame][j];
+		pAnimationData[jointIndex++] = XMMatrixTranspose(m_pAnimationJointOffsetMtx[j] * m_ppAnimationData[m_nFrame][j]);
 
-		XMMATRIX mtx;
-		//mtx = XMMatrixInverse(nullptr, m_ppAnimationData[m_nFrame][j]);
-		mtx = m_ppAnimationData[m_nFrame][j];
-		XMFLOAT4X4 xmf4Test;
-		XMStoreFloat4x4(&xmf4Test, mtx);
-		xmf4Test._41 = xmf4Test._14;
-		xmf4Test._42 = xmf4Test._24;
-		xmf4Test._43 = xmf4Test._34;
-
-		DEBUGER->RegistCoordinateSys(XMLoadFloat4x4(&xmf4Test));
-
-		//DEBUGER->RegistCoordinateSys(m_ppAnimationData[m_nFrame][j]);
+		DEBUGER->RegistCoordinateSys(m_ppAnimationData[m_nFrame][j]);
 	}
 	
 	m_pAnimBuffer->Unmap();

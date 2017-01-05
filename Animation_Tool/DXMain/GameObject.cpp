@@ -19,6 +19,8 @@ bool CGameObject::Begin() {
 	else {//없으면 최대 최소 aabb를 얻어온다.
 		BoundingBox::CreateFromPoints(m_OriBoundingBox, XMVectorSet(+FLT_MAX, +FLT_MAX, +FLT_MAX,0.f), XMVectorSet(-FLT_MAX, -FLT_MAX, -FLT_MAX, 0.f));
 	}
+
+	XMStoreFloat4(&m_xmf4RotationQuaternion, XMQuaternionIdentity());
 	return true;
 }
 bool CGameObject::End() {
@@ -49,7 +51,7 @@ void CGameObject::Move(XMVECTOR xmvDir, float fDistance) {
 void CGameObject::Rotate(XMMATRIX xmMtx) {
 	XMMATRIX xmmtxRotate = XMMatrixMultiply(xmMtx, XMLoadFloat4x4(&m_xmf4x4World));
 	XMStoreFloat4x4(&m_xmf4x4World, xmmtxRotate);
-	//SetRotationQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
+	SetRotationQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
 }
 void CGameObject::Rotate(float x, float y, float z) {
 	XMMATRIX xmmtxRotate;
@@ -57,21 +59,25 @@ void CGameObject::Rotate(float x, float y, float z) {
 	{
 		xmmtxRotate = XMMatrixRotationAxis(GetRight(), (float)XMConvertToRadians(x));
 		XMStoreFloat4x4(&m_xmf4x4World, XMMatrixMultiply(xmmtxRotate, XMLoadFloat4x4(&m_xmf4x4World)));
+		//SetRotationQuaternion(XMQuaternionRotationAxis(GetRight(), x));
 	}
 	if (y != 0.0f)
 	{
 		//플레이어의 로컬 y-축을 기준으로 회전하는 행렬을 생성한다.
 		xmmtxRotate = XMMatrixRotationAxis(GetUp(), (float)XMConvertToRadians(y));
 		XMStoreFloat4x4(&m_xmf4x4World, XMMatrixMultiply(xmmtxRotate, XMLoadFloat4x4(&m_xmf4x4World)));
+		//SetRotationQuaternion(XMQuaternionRotationAxis(GetUp(), y));
 	}
 	if (z != 0.0f)
 	{
 		//플레이어의 로컬 z-축을 기준으로 회전하는 행렬을 생성한다.
 		xmmtxRotate = XMMatrixRotationAxis(GetLook(), (float)XMConvertToRadians(z));
 		XMStoreFloat4x4(&m_xmf4x4World, XMMatrixMultiply(xmmtxRotate, XMLoadFloat4x4(&m_xmf4x4World)));
+		//SetRotationQuaternion(XMQuaternionRotationAxis(GetLook(), z));
 	}
-	//SetRotationQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
-	//SetRotationQuaternion(XMQuaternionRotationMatrix(xmmtxRotate));
+	
+	
+	SetRotationQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
 }
 void CGameObject::SetPosition(XMVECTOR pos) {
 	XMFLOAT3 xmfPos;

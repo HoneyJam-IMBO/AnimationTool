@@ -7,7 +7,8 @@ public:
 	//------------------------------내가 만들어 줘야 하는 함수---------------------------
 	virtual bool Begin();
 	virtual bool End();
-	virtual XMMATRIX Animate(XMMATRIX xmmtxWorld, float fTimeElapsed) { return XMMatrixIdentity(); }
+	//virtual XMMATRIX Animate(XMMATRIX xmmtxWorld, float fTimeElapsed) { return XMMatrixIdentity(); }
+	virtual void Animate(float fTimeElapsed) = 0;
 	//------------------------------내가 만들어 줘야 하는 함수---------------------------
 
 	//------------------------------컴포넌트 Update----------------------------

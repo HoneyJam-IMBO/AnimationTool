@@ -20,7 +20,8 @@ void CAnimateComponent::Update(float fTimeElapsed) {
 	//1. owner mtx get
 	//2. animate
 	//3. owner mtx set
-	m_pOwner->SetWorldMtx(Animate(m_pOwner->GetWorldMtx(), fTimeElapsed));
+	Animate(fTimeElapsed);
+	//m_pOwner->SetWorldMtx(Animate(m_pOwner->GetWorldMtx(), fTimeElapsed));
 }
 
 CAnimateComponent::CAnimateComponent() : CComponent(){

@@ -354,6 +354,9 @@
     <Filter Include="HLSL\Debug\CoordinateSys">
       <UniqueIdentifier>{9021bc77-3d53-4923-bdb6-52ed258f699d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\44.GameObject\DEBUG\OBB">
+      <UniqueIdentifier>{c2e1ed03-e7fa-471d-8ef8-375fa1ff858c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1105,6 +1108,9 @@
     <None Include="ClassDiagram1.cd" />
     <None Include="GetWorldNormal.hlsli">
       <Filter>HLSL\Terrain</Filter>
+    </None>
+    <None Include="Quaternion.hlsli">
+      <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
 </Project>

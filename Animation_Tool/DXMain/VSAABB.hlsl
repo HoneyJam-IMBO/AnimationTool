@@ -16,16 +16,19 @@
 //
 //	return output;
 //}
+
 struct VS_INS_INPUT{
 	//float3 size : SIZE;
 	float3 position : INSTANCEPOS;
-	float3 extend : TEXCOORD;
+	float3 extend : EXTEND;
+	float4 quaternion : QUATERNION;
 };
 
 struct VS_INS_OUTPUT{
 	//float3 size : SIZE;
 	float3 position : POSITION;
 	float3 extend : EXTEND;
+	float4 quaternion : QUATERNION;
 };
 
 VS_INS_OUTPUT main(VS_INS_INPUT input)
@@ -38,6 +41,7 @@ VS_INS_OUTPUT main(VS_INS_INPUT input)
 	//output.size = input.size;
 	output.position = input.position;
 	output.extend = input.extend;
+	output.quaternion = input.quaternion;
 	//output.positionW = position.xyz;
 
 

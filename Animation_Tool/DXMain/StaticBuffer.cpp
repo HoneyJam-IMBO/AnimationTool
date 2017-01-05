@@ -87,7 +87,7 @@ ID3D11Buffer * CStaticBuffer::CreateStaticBuffer(UINT nByteWidth, void * pData){
 	d3dBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	
 	//초기화 data 없음! buffer 안만듬
-	if (pData == nullptr) return nullptr;
+//	if (pData == nullptr) return nullptr;
 
 	D3D11_SUBRESOURCE_DATA d3dBufferData;
 	ZeroMemory(&d3dBufferData, sizeof(D3D11_SUBRESOURCE_DATA));

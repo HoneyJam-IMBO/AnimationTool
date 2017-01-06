@@ -11,8 +11,9 @@ public:
 	//----------------------------dxobject-----------------------------
 
 	virtual void SetPosition(XMVECTOR pos);
+	virtual void PickingProc();
 private:
-
+	bool test;
 
 public:
 	CBunny();

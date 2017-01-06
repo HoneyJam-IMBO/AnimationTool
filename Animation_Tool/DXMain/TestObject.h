@@ -11,6 +11,7 @@ public:
 	//----------------------------dxobject-----------------------------
 
 	virtual void SetPosition(XMVECTOR pos);
+	virtual void PickingProc();
 private:
 
 

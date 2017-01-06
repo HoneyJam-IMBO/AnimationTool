@@ -45,10 +45,10 @@ public:
 	float GetPositionY() { return m_xmf4x4World._42; };
 	float GetPositionZ() { return m_xmf4x4World._43; };
 	XMVECTOR GetPosition();
-	XMVECTOR GetRotationQuaternion() { return XMLoadFloat4(&m_xmf4RotationQuaternion); }
-	void SetRotationQuaternion(XMVECTOR xmv) { XMStoreFloat4(&m_xmf4RotationQuaternion, xmv); }
-	XMVECTOR GetScale() { return XMLoadFloat4(&m_xmf4Scale); }
-	void SetScale(XMVECTOR xmv) { XMStoreFloat4(&m_xmf4Scale, xmv); }
+	XMVECTOR GetQuaternion() { return XMLoadFloat4(&m_xmf4Quaternion); }
+	void SetQuaternion(XMVECTOR xmv) { XMStoreFloat4(&m_xmf4Quaternion, xmv); }
+	XMVECTOR GetScale() { return XMVectorSet(m_xmf4Scale.x*m_xmf4Scale.w, m_xmf4Scale.y*m_xmf4Scale.w, m_xmf4Scale.z*m_xmf4Scale.w, 1.0f); }
+	void SetScale(XMVECTOR xmv);
 
 	void SetRotation(XMMATRIX mtxRotation);
 
@@ -89,6 +89,12 @@ public:
 	//ray picking 
 	bool CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance);
 	virtual void PickingProc();
+
+	//world
+	XMFLOAT4X4 m_xmf4x4World;
+	XMFLOAT3 m_xmf3Position{ 0.f, 0.f, 0.f };
+	XMFLOAT4 m_xmf4Quaternion;
+	XMFLOAT4 m_xmf4Scale{ 1.f, 1.f, 1.f, 1.f };
 protected:
 	
 	BoundingBox m_OriBoundingBox;
@@ -99,10 +105,7 @@ protected:
 	//terrain container
 	CTerrainContainer* m_pTerrainContainer{ nullptr };
 
-	//world
-	XMFLOAT4X4 m_xmf4x4World;
-	XMFLOAT4 m_xmf4RotationQuaternion;
-	XMFLOAT4 m_xmf4Scale{ 1.f, 1.f, 1.f, 1.f };
+	//component
 	mapComponent m_mapComponents;
 
 	CRenderContainer* m_pRenderContainer{ nullptr };

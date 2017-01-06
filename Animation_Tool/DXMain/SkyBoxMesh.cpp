@@ -99,7 +99,10 @@ bool CSkyBoxMesh::CreateVertexBuffer() {
 	AssembleToVertexBuffer(2, pd3dBuffers, pnBufferStrides, pnBufferOffsets);
 
 	//create space mesh aabb
-	BoundingBox::CreateFromPoints(m_BoundingBox, XMVectorSet(-fx, -fx, -fx, 0.f), XMVectorSet(fx, fx, fx, 0.f));
+	BoundingBox boundingBox;
+	BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(-fx, -fx, -fx, 0.f), XMVectorSet(fx, fx, fx, 0.f));
+	m_AABB.SetBoundingBoxInfo(boundingBox);
+	
 
 	if (m_ppd3dVertexBuffers)	return true;
 

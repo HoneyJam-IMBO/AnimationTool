@@ -98,12 +98,21 @@ void CTwBarManager::AddBoolBar(const char * barName, const char* groupName, cons
 	TwAddVarRW(m_mTwBar[barName], menuName, TW_TYPE_BOOLCPP, var, buff);
 }
 
-void CTwBarManager::AddMinMaxBar(const char * barName, const char * groupName, const char * menuName, void * var, float min, float max, float step){
+void CTwBarManager::AddMinMaxBarRW(const char * barName, const char * groupName, const char * menuName, void * var, float min, float max, float step){
 	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
 	char buff[256];
-	sprintf(buff, "min=%f max=%f step=%f group=%s keyincr=+ keydecr=-",min, max, step, groupName);
+	sprintf(buff, "min=%f max=%f step=%f group=%s keyincr=PGUP keydecr=PGDOWN",min, max, step, groupName);
 
 	TwAddVarRW(m_mTwBar[barName], menuName, TW_TYPE_FLOAT, var, buff);
+}
+
+void CTwBarManager::AddMinMaxBarCB(const char * barName, const char * groupName, const char * menuName, TwSetVarCallback setCallback, TwGetVarCallback getCallback, void * clientData, float min, float max, float step){
+	//bool값과 obb의 크기 값을 수정 가능해야 한다. 
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
+	char buff[256];
+	sprintf(buff, "min=%f max=%f step=%f group=%s keyincr=+ keydecr=-", min, max, step, groupName);
+
+	AddVarCB(barName, menuName, TW_TYPE_FLOAT, setCallback, getCallback, clientData, buff);
 }
 
 void CTwBarManager::AddDirBar(const char * barName, const char * groupName, const char * menuName, CGameObject* pObj){
@@ -136,11 +145,47 @@ void CTwBarManager::AddPositionBar(const char * barName, const char * groupName,
 	char subMenuNameZ[64];
 	sprintf(subMenuNameZ, "%sZ", menuName);
 
-	AddVarCB(barName, subMenuNameZ, TW_TYPE_FLOAT, SetPositionZToTwBar, GetPositionZToTwBar, pObj, buff);
-	AddVarCB(barName, subMenuNameY, TW_TYPE_FLOAT, SetPositionYToTwBar, GetPositionYToTwBar, pObj, buff);
 	AddVarCB(barName, subMenuNameX, TW_TYPE_FLOAT, SetPositionXToTwBar, GetPositionXToTwBar, pObj, buff);
+	AddVarCB(barName, subMenuNameY, TW_TYPE_FLOAT, SetPositionYToTwBar, GetPositionYToTwBar, pObj, buff);
+	AddVarCB(barName, subMenuNameZ, TW_TYPE_FLOAT, SetPositionZToTwBar, GetPositionZToTwBar, pObj, buff);
 }
 
+void CTwBarManager::AddOBBBar(const char * barName, const char * groupName, const char * menuName, BoundingOrientedBox * pJointData){
+	//bool값과 obb의 크기 값을 수정 가능해야 한다. 
+	char subMenuNameScale[64];
+	sprintf(subMenuNameScale, "%sScale", menuName);
+	char subMenuNameX[64];
+	sprintf(subMenuNameX, "%sX", menuName);
+	char subMenuNameY[64];
+	sprintf(subMenuNameY, "%sY", menuName);
+	char subMenuNameZ[64];
+	sprintf(subMenuNameZ, "%sZ", menuName);
+
+	
+	AddMinMaxBarCB(barName, groupName, subMenuNameScale, SetScaleToTwBar, GetScaleToTwBar, pJointData, 0.f, 100.0f, 0.1f);
+	AddMinMaxBarRW(barName, groupName, subMenuNameScale, &pJointData->Extents.x, 0.f, 100.0f, 0.1f);
+	AddMinMaxBarRW(barName, groupName, subMenuNameX, &pJointData->Extents.x, 0.f, 100.0f, 0.1f);
+	AddMinMaxBarRW(barName, groupName, subMenuNameY, &pJointData->Extents.y, 0.f, 100.0f, 0.1f);
+	AddMinMaxBarRW(barName, groupName, subMenuNameZ, &pJointData->Extents.z, 0.f, 100.0f, 0.1f);
+}
+void CTwBarManager::AddScaleBar(const char * barName, const char * groupName, const char * menuName, CGameObject * pObj,
+	float min, float max, float step) {
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
+
+	char subMenuNameScale[64];
+	sprintf(subMenuNameScale, "%sScale", menuName);
+	char subMenuNameX[64];
+	sprintf(subMenuNameX, "%sX", menuName);
+	char subMenuNameY[64];
+	sprintf(subMenuNameY, "%sY", menuName);
+	char subMenuNameZ[64];
+	sprintf(subMenuNameZ, "%sZ", menuName);
+
+	AddMinMaxBarCB(barName, groupName, subMenuNameScale, SetScaleToTwBar, GetScaleToTwBar, pObj, min, max, step);
+	AddMinMaxBarCB(barName, groupName, subMenuNameX, SetScaleXToTwBar, GetScaleXToTwBar, pObj, min, max, step);
+	AddMinMaxBarCB(barName, groupName, subMenuNameY, SetScaleYToTwBar, GetScaleYToTwBar, pObj, min, max, step);
+	AddMinMaxBarCB(barName, groupName, subMenuNameZ, SetScaleZToTwBar, GetScaleZToTwBar, pObj, min, max, step);
+}
 
 void CTwBarManager::DeleteBar(const char * barName){
 	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;//없으면 return;
@@ -149,19 +194,21 @@ void CTwBarManager::DeleteBar(const char * barName){
 	m_mTwBar.erase(barName);
 }
 
+
+//proc
 //quaternion
 void TW_CALL SetQuaternionToTwBar(const void * value, void * clientData) {
 	if (nullptr == clientData) return;
 	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
-	pObj->SetRotationQuaternion(XMLoadFloat4(static_cast<const XMFLOAT4 *>(value)));
+	pObj->SetQuaternion(XMLoadFloat4(static_cast<const XMFLOAT4 *>(value)));
 
-	pObj->SetWorldMtx(XMMatrixAffineTransformation(pObj->GetScale(), XMQuaternionIdentity(), pObj->GetRotationQuaternion(), pObj->GetPosition()));
+	pObj->SetWorldMtx(XMMatrixAffineTransformation(pObj->GetScale(), XMQuaternionIdentity(), pObj->GetQuaternion(), pObj->GetPosition()));
 }
 void TW_CALL GetQuaternionToTwBar(void * value, void * clientData) {
 	if (nullptr == clientData) return;
 	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
 	XMFLOAT4 xmf4;
-	XMStoreFloat4(&xmf4, pObj->GetRotationQuaternion());
+	XMStoreFloat4(&xmf4, pObj->GetQuaternion());
 	
 	*static_cast<XMFLOAT4 *>(value) = xmf4;
 }
@@ -197,4 +244,49 @@ void TW_CALL GetPositionZToTwBar(void * value, void * clientData) {
 	if (nullptr == clientData) return;
 	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
 	*static_cast<float *>(value) = pObj->GetPositionZ();
+}
+
+//scale
+void TW_CALL SetScaleToTwBar(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	pObj->SetScale(XMVectorSet(pObj->m_xmf4Scale.x, pObj->m_xmf4Scale.y, pObj->m_xmf4Scale.z, *static_cast<const float *>(value)));
+}
+void TW_CALL GetScaleToTwBar(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->m_xmf4Scale.w;
+}
+//x
+void TW_CALL SetScaleXToTwBar(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	pObj->SetScale(XMVectorSet(*static_cast<const float *>(value), pObj->m_xmf4Scale.y, pObj->m_xmf4Scale.z, pObj->m_xmf4Scale.w));
+}
+void TW_CALL GetScaleXToTwBar(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->m_xmf4Scale.x;
+}
+//y
+void TW_CALL SetScaleYToTwBar(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	pObj->SetScale(XMVectorSet(pObj->m_xmf4Scale.x, *static_cast<const float *>(value), pObj->m_xmf4Scale.z, pObj->m_xmf4Scale.w));
+}
+void TW_CALL GetScaleYToTwBar(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->m_xmf4Scale.y;
+}
+//z
+void TW_CALL SetScaleZToTwBar(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	pObj->SetScale(XMVectorSet(pObj->m_xmf4Scale.x, pObj->m_xmf4Scale.y, *static_cast<const float *>(value), pObj->m_xmf4Scale.w));
+}
+void TW_CALL GetScaleZToTwBar(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->m_xmf4Scale.z;
 }

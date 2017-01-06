@@ -14,7 +14,10 @@ bool CDirectionalLightMesh::CreateVertexBuffer() {
 
 	//create space mesh aabb
 	//BoundingBox::CreateFromPoints(m_BoundingBox, XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(fx, fy, fz, 0.f));
-	BoundingBox::CreateFromPoints(m_BoundingBox, XMVectorSet(+10.f, +10.f, +10.f, 0.f), XMVectorSet(-10.f, -10.f, -10.f, 0.f));
+	BoundingBox boundingBox;
+	BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(+10.f, +10.f, +10.f, 0.f), XMVectorSet(-10.f, -10.f, -10.f, 0.f));
+	m_AABB.SetBoundingBoxInfo(boundingBox);
+	
 
 	return true;
 }

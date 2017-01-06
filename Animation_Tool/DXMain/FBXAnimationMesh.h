@@ -1,6 +1,7 @@
 #pragma once
 #include "UseFBXMesh.h"
 #include "StaticBuffer.h"
+#include "FbxJointData.h"
 
 struct KeyFrame {
 	FbxLongLong		mFrameNum;
@@ -18,7 +19,7 @@ struct Joint{
 	int m_MyIndex{ 0 };
 	std::string m_Name;
 
-	FbxAMatrix m_mtxGlobalBindposeInverse;
+	XMMATRIX m_mtxGlobalBindposeInverse;
 	FbxNode* m_pNode{ nullptr };
 
 	//프레임의 개수만큼 정보가 있어야 한다.
@@ -27,7 +28,7 @@ struct Joint{
 	Joint() :
 		m_pNode(nullptr)
 	{
-		m_mtxGlobalBindposeInverse.SetIdentity();
+		m_mtxGlobalBindposeInverse = XMMatrixIdentity();
 	}
 
 	~Joint(){
@@ -66,6 +67,8 @@ public:
 	virtual void CleanShaderState() { m_pAnimBuffer->CleanShaderState(); CMesh::CleanShaderState(); }
 	//----------------------------dxobject-----------------------------
 
+	vector<CFbxJointData>& GetvJoint() { return m_Skeleton; }
+
 	//---------------------------mesh----------------------------------
 	//virtual void RenderExcute(UINT nnInstance);
 	//begin func
@@ -77,7 +80,7 @@ public:
 	//---------------------------mesh----------------------------------
 private:
 	//skelleton
-	vector<Joint> m_Skeleton;
+	vector<CFbxJointData> m_Skeleton;
 	bool m_bHasAnimation{ true };
 	//ctrl point
 	unordered_map<unsigned int, CtrlPoint*> m_mControlPoints;

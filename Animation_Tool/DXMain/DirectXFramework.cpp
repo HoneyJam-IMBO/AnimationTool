@@ -554,8 +554,7 @@ void CDirectXFramework::Render(){
 	//scene
 	
 	PostProcessing();
-	//-----------------------------현재 씬 실행--------------------------------------
-	
+
 
 	if (INPUTMGR->GetDebugMode()) {
 	//if(testBotton){
@@ -676,9 +675,7 @@ LRESULT CALLBACK CDirectXFramework::OnProcessingWindowMessage(HWND hWnd, UINT nM
 	switch (nMessageID)
 	{
 		/*윈도우의 크기가 변경될 때(현재는 “Alt+Enter“ 전체 화면 모드와 윈도우 모드로 전환될 때) 스왑 체인의 후면버퍼 크기를 조정하고 후면버퍼에 대한 렌더 타겟 뷰를 다시 생성한다. */
-	case WM_SIZE:
-	{
-
+	case WM_SIZE:{
 		m_rcClient.right = LOWORD(lParam);
 		m_rcClient.bottom = HIWORD(lParam);
 
@@ -812,17 +809,15 @@ void CDirectXFramework::LightRender() {
 }
 void CDirectXFramework::PostProcessing() {
 	//postprocessing
-	//clear depthStencilview를 잊지 말자
+	//clear depthStencilview
 	ClearDepthStencilView();
 
 	//진짜 rtv set!
-	//m_pFrameWork->ClearRenderTargetView();
 	SetMainRenderTargetView();
 
 	for (auto texture : m_vLightLayerResultTexture) {
 		texture->SetShaderState();
 	}
-	
 	//rtv에 풀스크린 드로우 
 	m_pPostProcessingLayer->Render(m_pCamera);
 

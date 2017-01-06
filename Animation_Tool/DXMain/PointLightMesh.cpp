@@ -15,8 +15,9 @@ bool CPointLightMesh::CreateVertexBuffer() {
 	float fx = WIDTH*0.5f, fy = HEIGHT*0.5f, fz = DEPTH*0.5f;
 
 	//create space mesh aabb
-	BoundingBox::CreateFromPoints(m_BoundingBox, XMVectorSet(-fx, -fy, -fz, 0.f), XMVectorSet(fx, fy, fz, 0.f));
-
+	BoundingBox boundingBox;
+	BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(-fx, -fy, -fz, 0.f), XMVectorSet(fx, fy, fz, 0.f));
+	m_AABB.SetBoundingBoxInfo(boundingBox);
 
 	return true;
 }

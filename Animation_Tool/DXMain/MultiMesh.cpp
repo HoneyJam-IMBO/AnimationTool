@@ -35,7 +35,10 @@ bool CMultiMesh::Begin(string path){
 	pMesh->SetpVertices(pVertices);
 
 	//create space mesh aabb
-	BoundingBox::CreateFromPoints(m_BoundingBox, (size_t)nVertices, pVertices, (size_t)sizeof(XMFLOAT3));
+	BoundingBox boundingBox;
+	BoundingBox::CreateFromPoints(boundingBox, (size_t)nVertices, pVertices, (size_t)sizeof(XMFLOAT3));
+	m_AABB.SetBoundingBoxInfo(boundingBox);
+
 
 
 	m_pd3dPositionBuffer = CreateBuffer(sizeof(XMFLOAT3), nVertices, m_pVertices, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);

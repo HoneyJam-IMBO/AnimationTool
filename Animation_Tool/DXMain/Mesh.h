@@ -2,6 +2,7 @@
 
 #include "DXObject.h"
 #include "Texture.h"
+#include "BoundingBox.h"
 
 // 꼭짓점별 데이터를 꼭짓점 셰이더로 보내는 데 사용됩니다.
 struct VertexPositionColor
@@ -29,7 +30,11 @@ public:
 	//begin func
 
 	//aabb 
-	BoundingBox GetBoundingBox() { return m_BoundingBox; }
+	BoundingBox GetAABB() { return m_AABB.GetAABB(); }
+	UINT GetOBBCnt() { return static_cast<UINT>(m_vOBB.size()); }
+	BoundingOrientedBox& GetOBB(UINT index = 0) { return m_vOBB[index].GetOBB(); }
+	CBoundingBox& GetAABBObject(){ return m_AABB; }
+	CBoundingBox& GetOBBObject(UINT index = 0) { return m_vOBB[index]; }
 
 	void CMesh::CalculateVertexNormal(XMVECTOR *pxmvNormals);
 	void CMesh::SetTriAngleListVertexNormal(XMVECTOR *pxmvNormals);
@@ -69,10 +74,11 @@ public:
 	void AddMeshTexture(shared_ptr<CTexture>);
 	//setter
 protected:
+	//CBoundingBox m_tmpBOUNDINGBOX;
 	//aabb
-	BoundingBox m_BoundingBox;
+	CBoundingBox m_AABB;
 	//obb
-	vector<BoundingOrientedBox> m_vOBB;
+	vector<CBoundingBox> m_vOBB;
 
 	vector<shared_ptr<CTexture>> m_vMeshTexture;
 

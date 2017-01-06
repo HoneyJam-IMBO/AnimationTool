@@ -22,19 +22,20 @@ bool CSceneMain::Begin() {
 
 	//--------------------------------°´Ã¼ Á¦ÀÛ------------------------
 	int nMaxObjects = 1;
-	////fbx mesh
-	//CTestObject* pObject = nullptr;
-	//pObject = new CTestObject();
-	//pObject->Begin();
-	//pObject->SetTerrainContainer(m_pTerrainContainer);
-	//pObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
-	//
-	//m_pSpaceContainer->AddObject(pObject);
+
 	m_pRotationTestObject = new CTestCube();
 	m_pRotationTestObject->Begin();
 	m_pRotationTestObject->SetTerrainContainer(m_pTerrainContainer);
 	m_pRotationTestObject->SetPosition(XMLoadFloat3(&XMFLOAT3(0, 0, 0)));
 	m_pSpaceContainer->AddObject(m_pRotationTestObject);
+
+	//fbx mesh
+	//CTestObject* pObject = nullptr;
+	//pObject = new CTestObject();
+	//pObject->Begin();
+	//pObject->SetTerrainContainer(m_pTerrainContainer);
+	//pObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
+	//m_pSpaceContainer->AddObject(pObject);
 
 	CBunny* pBunny = new CBunny();
 	pBunny->Begin();

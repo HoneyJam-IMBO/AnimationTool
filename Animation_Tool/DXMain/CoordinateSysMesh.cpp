@@ -19,7 +19,6 @@ bool CCoordinateSysMesh::CreateVertexBuffer() {
 	XMFLOAT2 pxmf2TexCoords[6];
 	int i = 0;
 
-	//직육면체의 각 면(삼각형 2개)에 하나의 텍스쳐 이미지 전체가 맵핑되도록 텍스쳐 좌표를 설정한다.
 	m_pVertices[i++] = XMFLOAT3(0.f, 0.f, 0.f);
 	m_pVertices[i++] = XMFLOAT3(+fx, 0.f, 0.f);
 
@@ -38,7 +37,10 @@ bool CCoordinateSysMesh::CreateVertexBuffer() {
 	AssembleToVertexBuffer(1, pd3dBuffers, pnBufferStrides, pnBufferOffsets);
 
 	//create space mesh aabb
-	BoundingBox::CreateFromPoints(m_BoundingBox, XMVectorSet(0.0f, 0.0f, 0.0f, 0.f), XMVectorSet(fx, fy, fz, 0.f));
+	BoundingBox boundingBox;
+	BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(0.0f, 0.0f, 0.0f, 0.f), XMVectorSet(fx, fy, fz, 0.f));
+	m_AABB.SetBoundingBoxInfo(boundingBox);
+	
 
 	if (m_ppd3dVertexBuffers)	return true;
 

@@ -442,6 +442,9 @@ void CResourceManager::CreateMesh(){
 #else
 	shared_ptr<CUseFBXMesh> pTestFBXMesh = make_shared<CUseFBXMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #endif
+	
+	//CreateMultiMesh("../../Assets/Model/fbx/Bless_Elf.fbx");
+
 	//pMultiMesh->Begin("../../Assets/Model/Test/03_Monster/Zombunny_running.fbx");
 	//pMultiMesh->Begin("../../Assets/Model/fbx/Bless_Elf.fbx");
 	//m_pTestMultiMesh = pMultiMesh;
@@ -456,7 +459,6 @@ void CResourceManager::CreateMesh(){
 	//pTestFBXMesh->Begin("../../Assets/Model/Test/humanoid.fbx");
 	m_mMesh.insert(pairMesh("BUNNY", pTestFBXMesh));
 
-	//CreateMultiMesh("../../Assets/Model/fbx/Bless_Elf.fbx");
 
 	//mesh
 }

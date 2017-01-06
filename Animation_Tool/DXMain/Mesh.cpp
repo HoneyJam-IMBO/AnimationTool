@@ -3,8 +3,11 @@
 
 bool CMesh::Begin() {
 
-	//create default aabb
-	BoundingBox::CreateFromPoints(m_BoundingBox, XMVectorSet(+FLT_MAX, +FLT_MAX, +FLT_MAX, 0.f), XMVectorSet(-FLT_MAX, -FLT_MAX, -FLT_MAX, 0.f));
+	//create default aabbzzz
+	BoundingBox boundingBox;
+	BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(+FLT_MAX, +FLT_MAX, +FLT_MAX, 0.f), XMVectorSet(-FLT_MAX, -FLT_MAX, -FLT_MAX, 0.f));
+	m_AABB.SetBoundingBoxInfo(boundingBox);
+	
 	
 	if (false == CreateVertexBuffer()) return false;
 

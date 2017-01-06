@@ -255,6 +255,8 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 			FbxCluster* currCluster = currSkin->GetCluster(clusterIndex);
 		
 			std::string currJointName = currCluster->GetLink()->GetName();
+			AnimationData.GetJointDatas()[clusterIndex].SetJointName(currJointName);
+
 			//새로운 joint index 구하기
 			//UINT currJointIndex = clusterIndex + currMeshJointIndexOffset;
 			UINT currJointIndex = clusterIndex;

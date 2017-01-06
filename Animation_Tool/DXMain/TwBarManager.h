@@ -1,12 +1,7 @@
 #pragma once
 //#include "Camera.h"
 #include "SingleTon.h"
-/*
-rotaion 예제 TwAddVarRW(bar, "Rotation", TW_TYPE_QUAT4F, &g_SpongeRotation, "opened=true axisz=-z group=Sponge");
-TwAddVarRW(bar, "Camera distance", TW_TYPE_FLOAT, &g_CamDistance, "min=0 max=4 step=0.01 keyincr=PGUP keydecr=PGDOWN");0~4 사이 0.01크기로 증가하는 bar 
-TwAddVarRW(bar, "Background", TW_TYPE_COLOR4F, &g_BackgroundColor, "colormode=hls");//color정해주기 이렇게 하면 해당 color데이터를 가지고 색을 정하는 메뉴가 자동으로 나타남
-TwAddVarRW(bar, "Animation", TW_TYPE_BOOLCPP, &g_Animate, "group=Sponge key=a"); botton o/x bool type
-*/
+
 class CTwBarManager : public CSingleTonBase<CTwBarManager> {
 public:
 	bool Begin(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext, const char* def);
@@ -27,23 +22,28 @@ public:
 /*
 	만들어 놓은 틀인데 이건 Tw자료형과 같은 녀석이어야함 쿼터니언이나. color등
 */
-	//light dir float3에 사용하기 좋은 화살표 bar
+	//rotation float3
 	void AddDirBar(const char* barName, const char* groupName, const char* menuName, void* var);
-	//rotation object float4에 사용하기 좋은 동그라미 bar
+	//rotation object float4
 	void AddRotationBar(const char* barName, const char* groupName, const char* menuName, void* var);
-	//color에 사용하기 적당한 색상 변경 bar 색상 변경 menu가 자동으로 생김
+	//color 
 	void AddColorBar(const char* barName, const char* groupName, const char* menuName, void* var);
-	//bool botton o/x에 사용하기 적당한 버튼 ui
+	//bool botton o/x 
 	void AddBoolBar(const char* barName, const char* groupName, const char* menuName, void* var);
-	void AddMinMaxBar(const char* barName, const char* groupName, const char* menuName, void* var,
+	void AddMinMaxBarRW(const char* barName, const char* groupName, const char* menuName, void* var,
 		float min=0.f, float max=1.f, float step = 0.1f);
-	
-	//light dir float3에 사용하기 좋은 화살표 bar
+	void AddMinMaxBarCB(const char* barName, const char* groupName, const char* menuName, TwSetVarCallback setCallback, TwGetVarCallback getCallback, void* clientData,
+		float min = 0.f, float max = 1.f, float step = 0.1f);
+
+	//rotation float3 bar!
 	void AddDirBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj);
-	//rotation object float4에 사용하기 좋은 동그라미 bar
+	//rotation quaternion bar!
 	void AddRotationBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj);
-	//position 
+	//position bar!
 	void AddPositionBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj,
+		float min = 0.0f, float max = 1.0f, float step = 0.01f);
+	void AddOBBBar(const char* barName, const char* groupName, const char* menuName, BoundingOrientedBox* pOBB);
+	void AddScaleBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj,
 		float min = 0.0f, float max = 1.0f, float step = 0.01f);
 
 	void DeleteBar(const char* barName);
@@ -69,3 +69,12 @@ void TW_CALL SetPositionYToTwBar(const void *value, void * clientData);
 void TW_CALL GetPositionYToTwBar(void *value, void * clientData);
 void TW_CALL SetPositionZToTwBar(const void *value, void * clientData);
 void TW_CALL GetPositionZToTwBar(void *value, void * clientData);
+
+void TW_CALL SetScaleToTwBar(const void *value, void * clientData);
+void TW_CALL GetScaleToTwBar(void *value, void * clientData);
+void TW_CALL SetScaleXToTwBar(const void *value, void * clientData);
+void TW_CALL GetScaleXToTwBar(void *value, void * clientData);
+void TW_CALL SetScaleYToTwBar(const void *value, void * clientData);
+void TW_CALL GetScaleYToTwBar(void *value, void * clientData);
+void TW_CALL SetScaleZToTwBar(const void *value, void * clientData);
+void TW_CALL GetScaleZToTwBar(void *value, void * clientData);

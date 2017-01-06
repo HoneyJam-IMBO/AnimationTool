@@ -53,7 +53,10 @@ bool CTerrainMesh::CreateVertexBuffer() {
 //	//-----------------------------------버퍼 조립-----------------------------------
 
 	//create space mesh aabb
-	BoundingBox::CreateFromPoints(m_BoundingBox, XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(ONESPACE_SIZE, ONESPACE_SIZE, ONESPACE_SIZE, 0.f));
+	BoundingBox boundingBox;
+	BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(ONESPACE_SIZE, ONESPACE_SIZE, ONESPACE_SIZE, 0.f));
+	m_AABB.SetBoundingBoxInfo(boundingBox);
+	
 
 
 	if (m_ppd3dVertexBuffers) return true;

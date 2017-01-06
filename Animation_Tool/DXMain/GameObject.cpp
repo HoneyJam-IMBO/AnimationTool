@@ -14,13 +14,13 @@ bool CGameObject::Begin() {
 	m_pRenderContainer = RCSELLER->GetRenderContainer(m_objectID);
 	if (m_pRenderContainer->GetMesh())//mesh가 있으면
 	{//aabb 해당 mesh에서 aabb를 얻어온다.
-		m_OriBoundingBox = m_pRenderContainer->GetMesh()->GetBoundingBox();
+		m_OriBoundingBox = m_pRenderContainer->GetMesh()->GetAABB();
 	}
 	else {//없으면 최대 최소 aabb를 얻어온다.
 		BoundingBox::CreateFromPoints(m_OriBoundingBox, XMVectorSet(+10.f, +10.f, +10.f, 0.f), XMVectorSet(-10.f, -10.f, -10.f, 0.f));
 	}
 
-	XMStoreFloat4(&m_xmf4RotationQuaternion, XMQuaternionIdentity());
+	XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionIdentity());
 	return true;
 }
 bool CGameObject::End() {
@@ -51,7 +51,7 @@ void CGameObject::Move(XMVECTOR xmvDir, float fDistance) {
 void CGameObject::Rotate(XMMATRIX xmMtx) {
 	XMMATRIX xmmtxRotate = XMMatrixMultiply(xmMtx, XMLoadFloat4x4(&m_xmf4x4World));
 	XMStoreFloat4x4(&m_xmf4x4World, xmmtxRotate);
-	SetRotationQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
+	SetQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
 }
 void CGameObject::Rotate(float x, float y, float z) {
 	XMMATRIX xmmtxRotate;
@@ -76,31 +76,39 @@ void CGameObject::Rotate(float x, float y, float z) {
 		//SetRotationQuaternion(XMQuaternionRotationAxis(GetLook(), z));
 	}
 	
-	
-	SetRotationQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
+	SetQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
 }
 void CGameObject::SetPosition(XMVECTOR pos) {
-	XMFLOAT3 xmfPos;
-	XMStoreFloat3(&xmfPos, pos);
+	XMFLOAT3 m_xmf3Position;
+	XMStoreFloat3(&m_xmf3Position, pos);
 
-	m_xmf4x4World._41 = xmfPos.x;
-	m_xmf4x4World._42 = xmfPos.y;
-	m_xmf4x4World._43 = xmfPos.z;
+	m_xmf4x4World._41 = m_xmf3Position.x;
+	m_xmf4x4World._42 = m_xmf3Position.y;
+	m_xmf4x4World._43 = m_xmf3Position.z;
 	if (m_pTerrainContainer) {
 		m_xmf4x4World._42 = GetTerrainHeight();
+		m_xmf3Position.y = GetTerrainHeight();
 	}
 }
 void CGameObject::SetPositionX(const float pos){
 	m_xmf4x4World._41 = pos;
+	m_xmf3Position.x = pos;
 }
 void CGameObject::SetPositionY(const float pos) {
 	m_xmf4x4World._42 = pos;
+	m_xmf3Position.y = pos;
 }
 void CGameObject::SetPositionZ(const float pos) {
 	m_xmf4x4World._43 = pos;
+	m_xmf3Position.z = pos;
 }
 void CGameObject::SetWorldMtx(XMMATRIX mtxWorld) {
 	XMStoreFloat4x4(&m_xmf4x4World, mtxWorld);
+}
+
+void CGameObject::SetScale(XMVECTOR xmv){
+	XMStoreFloat4(&m_xmf4Scale, xmv);
+	SetWorldMtx(XMMatrixAffineTransformation(GetScale(), XMQuaternionIdentity(), GetQuaternion(), GetPosition()));
 }
 
 void CGameObject::SetRotation(XMMATRIX mtxRotation){
@@ -279,6 +287,7 @@ bool CGameObject::CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvR
 void CGameObject::PickingProc(){
 	TWBARMGR->AddRotationBar("PickingBar", "Object", "Rotation", this);
 	TWBARMGR->AddPositionBar("PickingBar", "Object", "Position", this, 0.f, SPACE_SIZE - 1.0f, 1.0f);
+	TWBARMGR->AddScaleBar("PickingBar", "Object", "Scale", this, 0.1f, 100.f, 0.1f);
 }
 
 

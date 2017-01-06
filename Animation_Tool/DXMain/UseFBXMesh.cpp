@@ -39,8 +39,9 @@ bool CUseFBXMesh::CreateVertexBuffer() {
 		m_pUVs[nVertex++] = FBXIMPORTER->GetMeshDatas()[m_nIndex].GetVertexDatas()[j].GetUV();
 	}
 	//create space mesh aabb
-	BoundingBox::CreateFromPoints(m_BoundingBox, (size_t)m_nVertices, m_pVertices, (size_t)sizeof(XMFLOAT3));
-
+	BoundingBox boundingBox;
+	BoundingBox::CreateFromPoints(boundingBox, (size_t)m_nVertices, m_pVertices, (size_t)sizeof(XMFLOAT3));
+	m_AABB.SetBoundingBoxInfo(boundingBox);
 
 	m_pd3dPositionBuffer = CreateBuffer(sizeof(XMFLOAT3), m_nVertices, m_pVertices, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
 	m_pd3dNormalBuffer = CreateBuffer(sizeof(XMFLOAT3), m_nVertices, m_pNormals, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
@@ -146,7 +147,9 @@ void CUseFBXMesh::GetPositionData(FbxMesh* pMesh){
 		}
 
 		//create space mesh aabb
-		BoundingBox::CreateFromPoints(m_BoundingBox, (size_t)nVertices, pVertices, (size_t)sizeof(XMFLOAT3));
+		BoundingBox boundingBox;
+		BoundingBox::CreateFromPoints(boundingBox, (size_t)m_nVertices, m_pVertices, (size_t)sizeof(XMFLOAT3));
+		m_AABB.SetBoundingBoxInfo(boundingBox);
 
 		//사용안하는 녀석들 release
 		//delete[] m_pnIndices;

@@ -7,7 +7,7 @@ void CBoundingBox::SetDebugBufferInfo(void ** ppMappedResources, int & nInstance
 
 	//정보 주입
 	pnInstances[nInstance].m_xmf3Pos = m_xmf3Position;
-	pnInstances[nInstance].m_xmf3Extend = m_xmf3Extents;
+	pnInstances[nInstance].m_xmf3Extend = XMFLOAT3(m_xmf4Scale.x, m_xmf4Scale.y, m_xmf4Scale.z);
 	pnInstances[nInstance].m_xmf4Quaternion = m_xmf4Quaternion;
 
 	//CGameObject::Begin();
@@ -21,19 +21,35 @@ void CBoundingBox::SetBufferInfo(void ** ppMappedResources, int & nInstance, sha
 	//XMStoreFloat4(&m_xmf4RotationQuaternion, XMQuaternionIdentity());
 	//정보 주입
 	pnInstances[nInstance].m_xmf3Pos = m_xmf3Position;
-	pnInstances[nInstance].m_xmf3Extend = m_xmf3Extents;
+	pnInstances[nInstance].m_xmf3Extend = XMFLOAT3(m_xmf4Scale.x, m_xmf4Scale.y, m_xmf4Scale.z);
 	pnInstances[nInstance].m_xmf4Quaternion = m_xmf4Quaternion;
 }
 
 void CBoundingBox::SetBoundingBoxInfo(BoundingBox& aabb){
 	m_xmf3Position = aabb.Center;
-	m_xmf3Extents = aabb.Extents;
-	XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionIdentity());
+	m_xmf4Scale = XMFLOAT4(aabb.Extents.x, aabb.Extents.y, aabb.Extents.z, 1.f);
+	XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionIdentity()); 
 }
 void CBoundingBox::SetBoundingBoxInfo(BoundingOrientedBox& obb) {
 	m_xmf3Position = obb.Center;
-	m_xmf3Extents = obb.Extents;
+	m_xmf4Scale = XMFLOAT4(obb.Extents.x, obb.Extents.y, obb.Extents.z, 1.f);
 	m_xmf4Quaternion = obb.Orientation;
+}
+
+BoundingBox CBoundingBox::GetAABB(){
+	BoundingBox aabb;
+	aabb.Center = m_xmf3Position;
+
+	XMStoreFloat3(&aabb.Extents, GetScale());
+	return aabb;
+}
+
+BoundingOrientedBox CBoundingBox::GetOBB(){
+	BoundingOrientedBox obb;
+	obb.Center = m_xmf3Position;
+	XMStoreFloat3(&obb.Extents, GetScale());
+	obb.Orientation = m_xmf4Quaternion;
+	return obb;
 }
 
 CBoundingBox::CBoundingBox() :CGameObject("boundingbox"){

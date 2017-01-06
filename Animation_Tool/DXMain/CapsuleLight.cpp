@@ -10,10 +10,10 @@ bool CCapsuleLight::Begin(CAPSULE_LIGHT& light_info) {
 	m_fHalfSegmentLen = m_CapsuleData.CapsuleLightLen*0.5f;
 	m_fCapsuleLightRangeRcp = 1 / m_CapsuleData.CapsuleLightRange;
 
-	//새로운 객체가 생겨나면 Begin에서 Component들을 set해준다. 
-	CComponent* pComponent = new CRotateComponent;
-	pComponent->Begin();
-	SetComponent(pComponent);
+	////새로운 객체가 생겨나면 Begin에서 Component들을 set해준다. 
+	//CComponent* pComponent = new CRotateComponent;
+	//pComponent->Begin();
+	//SetComponent(pComponent);
 
 
 	return CLight::Begin();

@@ -21,10 +21,10 @@ bool CSpotLight::Begin(SPOT_LIGHT& light_info) {
 	m_xmmtxScale = XMMatrixScalingFromVector(XMVECTOR(XMVectorSet(SpotLightRange, SpotLightRange, SpotLightRange, 1.0f)));
 
 
-	//새로운 객체가 생겨나면 Begin에서 Component들을 set해준다. 
-	CComponent* pComponent = new CRotateComponent;
-	pComponent->Begin();
-	SetComponent(pComponent);
+	////새로운 객체가 생겨나면 Begin에서 Component들을 set해준다. 
+	//CComponent* pComponent = new CRotateComponent;
+	//pComponent->Begin();
+	//SetComponent(pComponent);
 
 	return CLight::Begin();
 }

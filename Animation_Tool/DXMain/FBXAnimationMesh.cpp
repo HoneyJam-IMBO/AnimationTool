@@ -68,6 +68,8 @@ bool CFBXAnimationMesh::Begin(UINT index){
 	m_nJoint = static_cast<int>(FBXIMPORTER->GetAnimationDatas()[index].GetJointCnt());
 	m_nFrameCnt = static_cast<int>(FBXIMPORTER->GetAnimStackData().GetAnimationLength());
 
+	m_Skeleton.resize(m_nJoint);
+
 	m_ppAnimationData = new XMMATRIX*[m_nFrameCnt];
 	for (int iframe = 0; iframe < m_nFrameCnt; ++iframe) {
 		m_ppAnimationData[iframe] = new XMMATRIX[m_nJoint];
@@ -87,10 +89,18 @@ bool CFBXAnimationMesh::Begin(UINT index){
 	for (int j = 0; j < m_nJoint; ++j) {
 		BoundingOrientedBox obb;
 		BoundingBox boundingBox;
+		//BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(-1.f, -1.f, -1.f, 0.f), XMVectorSet(1.f, 1.f, 1.f, 0.f));
 		BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(-5.f, -5.f, -5.f, 0.f), XMVectorSet(5.f, 5.f, 5.f, 0.f));
 		BoundingOrientedBox::CreateFromBoundingBox(obb, boundingBox);
-		m_vOBB.push_back(obb);
+
+		CBoundingBox bb;
+		bb.SetBoundingBoxInfo(obb);
+		m_vOBB.push_back(bb);
 		m_pAnimationJointOffsetMtx[j] = ConvertFbxMtxToXMMATRIX(FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetOffsetMtx());
+
+		m_Skeleton[j].SetOffsetMtx(FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetOffsetMtx());
+		m_Skeleton[j].SetMyIndex(FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetMyIndex());
+		m_Skeleton[j].SetJointName(FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetJointName());
 	}
 
 	XMMATRIX* pMtx = new XMMATRIX[m_nJoint];
@@ -144,7 +154,7 @@ void CFBXAnimationMesh::SetShaderState(){
 		pAnimationData[jointIndex++] = XMMatrixTranspose(m_pAnimationJointOffsetMtx[j] * m_ppAnimationData[m_nFrame][j]);
 
 		DEBUGER->RegistCoordinateSys(m_ppAnimationData[m_nFrame][j]);
-		BoundingOrientedBox originObb = m_vOBB[j];
+		BoundingOrientedBox originObb = m_vOBB[j].GetOBB();
 		originObb.Transform(originObb, m_ppAnimationData[m_nFrame][j]);
 		DEBUGER->RegistOBB(originObb);
 	}
@@ -257,7 +267,7 @@ void CFBXAnimationMesh::ProcessSkeletonHierarchyRecursively(FbxNode * inNode, in
 		currJoint.m_ParentIndex = inParentIndex;
 		currJoint.m_Name = inNode->GetName();
 		currJoint.m_MyIndex = myIndex;
-		m_Skeleton.push_back(currJoint);
+		//m_Skeleton.push_back(currJoint);
 	}
 	for (int i = 0; i < inNode->GetChildCount(); i++)
 	{
@@ -303,8 +313,8 @@ void CFBXAnimationMesh::ProcessJointsAndAnimations(FbxNode * pNode){
 			globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix *geometryTransform;
 
 			// Update the information in mSkeleton 
-			m_Skeleton[currJointIndex].m_mtxGlobalBindposeInverse = globalBindposeInverseMatrix;
-			m_Skeleton[currJointIndex].m_pNode = currCluster->GetLink();
+			//m_Skeleton[currJointIndex].m_mtxGlobalBindposeInverse = globalBindposeInverseMatrix;
+			//m_Skeleton[currJointIndex].m_pNode = currCluster->GetLink();
 
 			// Associate each joint with the control points it affects
 			unsigned int numOfIndices = currCluster->GetControlPointIndicesCount();
@@ -335,7 +345,7 @@ void CFBXAnimationMesh::ProcessJointsAndAnimations(FbxNode * pNode){
 				pKeyFrame->mFrameNum = i;
 				FbxAMatrix currentTransformOffset = pNode->EvaluateGlobalTransform(currTime) * geometryTransform;
 				pKeyFrame->mGlobalTransform = currentTransformOffset.Inverse() * currCluster->GetLink()->EvaluateGlobalTransform(currTime);
-				m_Skeleton[currJointIndex].m_vpKeyFrame.push_back(pKeyFrame);
+				//m_Skeleton[currJointIndex].m_vpKeyFrame.push_back(pKeyFrame);
 			}
 		}
 	}
@@ -413,12 +423,11 @@ unsigned int CFBXAnimationMesh::FindJointIndexUsingName(const std::string& inJoi
 {
 	for (unsigned int i = 0; i < m_Skeleton.size(); ++i)
 	{
-		if (m_Skeleton[i].m_Name == inJointName)
+		//if (m_Skeleton[i].m_Name == inJointName)
 		{
 			return i;
 		}
 	}
-
 	throw std::exception("Skeleton information in FBX file is corrupted.");
 }
 

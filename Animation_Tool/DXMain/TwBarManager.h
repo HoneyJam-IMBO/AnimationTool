@@ -30,23 +30,37 @@ public:
 	void AddColorBar(const char* barName, const char* groupName, const char* menuName, void* var);
 	//bool botton o/x 
 	void AddBoolBar(const char* barName, const char* groupName, const char* menuName, void* var);
+	void AddBoolBarCB(const char* barName, const char* groupName, const char* menuName, TwSetVarCallback setCallback, TwGetVarCallback getCallback, void* clientData);
 	void AddMinMaxBarRW(const char* barName, const char* groupName, const char* menuName, void* var,
 		float min=0.f, float max=1.f, float step = 0.1f);
 	void AddMinMaxBarCB(const char* barName, const char* groupName, const char* menuName, TwSetVarCallback setCallback, TwGetVarCallback getCallback, void* clientData,
 		float min = 0.f, float max = 1.f, float step = 0.1f);
+	//button ui
+	void AddButtonCB(const char* barName, const char* groupName, const char* menuName, TwButtonCallback buttonCallback, void* clientData);
+	//saperator ui 그냥 나누는 선
+	void AddSeparator(const char* barName, const char* groupName, const char* menuName);
 
+	//custom func
 	//rotation float3 bar!
 	void AddDirBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj);
 	//rotation quaternion bar!
 	void AddRotationBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj);
+	//rotation float3 value bar 정확한 값을 입력 가능한 min max bar
+	void AddRotationMinMaxBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj);
 	//position bar!
 	void AddPositionBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj,
 		float min = 0.0f, float max = 1.0f, float step = 0.01f);
 	void AddOBBBar(const char* barName, const char* groupName, const char* menuName, BoundingOrientedBox* pOBB);
 	void AddScaleBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj,
 		float min = 0.0f, float max = 1.0f, float step = 0.01f);
+	//bounding box active bar
+	void AddBoundingBoxActiveBar(const char* barName, const char* groupName, const char* menuName, CFbxJointData* pJoint);
+	//custom func
 
 	void DeleteBar(const char* barName);
+	void DeleteAllBars();
+	void DeleteVar(const char* barName, const char* menuName);
+	void DeleteAllVars(const char* barName);
 private:
 	ID3D11Device* m_pd3dDevice;
 	ID3D11DeviceContext* m_pd3dDeviceContext;
@@ -63,12 +77,22 @@ public:
 void TW_CALL SetQuaternionToTwBar(const void *value, void * clientData);
 void TW_CALL GetQuaternionToTwBar(void *value, void * clientData);
 
+//pos
 void TW_CALL SetPositionXToTwBar(const void *value, void * clientData);
 void TW_CALL GetPositionXToTwBar(void *value, void * clientData);
 void TW_CALL SetPositionYToTwBar(const void *value, void * clientData);
 void TW_CALL GetPositionYToTwBar(void *value, void * clientData);
 void TW_CALL SetPositionZToTwBar(const void *value, void * clientData);
 void TW_CALL GetPositionZToTwBar(void *value, void * clientData);
+
+//rotation
+void TW_CALL SetRotationXToTwBar(const void *value, void * clientData);
+void TW_CALL GetRotationXToTwBar(void *value, void * clientData);
+void TW_CALL SetRotationYToTwBar(const void *value, void * clientData);
+void TW_CALL GetRotationYToTwBar(void *value, void * clientData);
+void TW_CALL SetRotationZToTwBar(const void *value, void * clientData);
+void TW_CALL GetRotationZToTwBar(void *value, void * clientData);
+
 
 void TW_CALL SetScaleToTwBar(const void *value, void * clientData);
 void TW_CALL GetScaleToTwBar(void *value, void * clientData);
@@ -78,3 +102,7 @@ void TW_CALL SetScaleYToTwBar(const void *value, void * clientData);
 void TW_CALL GetScaleYToTwBar(void *value, void * clientData);
 void TW_CALL SetScaleZToTwBar(const void *value, void * clientData);
 void TW_CALL GetScaleZToTwBar(void *value, void * clientData);
+
+//bounding box active bar
+void TW_CALL SetBoundingBoxActiveToTwBar(const void *value, void * clientData);
+void TW_CALL GetBoundingBoxActiveToTwBar(void *value, void * clientData);

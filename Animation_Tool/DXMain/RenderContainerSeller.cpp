@@ -228,7 +228,7 @@ CRenderContainer* CRenderContainerSeller::GetRenderContainer(object_id objectid)
 #else
 		m_mRenderContainer[objectid]->SetShader(RESOURCEMGR->GetRenderShader("Core"));
 #endif
-		m_mRenderContainer[objectid]->AddInstanceBuffer(RESOURCEMGR->GetBuffer("FBX"));
+		m_mRenderContainer[objectid]->AddBuffer(RESOURCEMGR->GetBuffer("FBX"));
 		m_mRenderContainer[objectid]->AddTexture(RESOURCEMGR->GetTexture("FBX"));
 		m_mRenderContainer[objectid]->AddMaterial(RESOURCEMGR->GetMaterial("FBX"));
 
@@ -243,7 +243,7 @@ CRenderContainer* CRenderContainerSeller::GetRenderContainer(object_id objectid)
 #else
 		m_mRenderContainer[objectid]->SetShader(RESOURCEMGR->GetRenderShader("Core"));
 #endif
-		m_mRenderContainer[objectid]->AddInstanceBuffer(RESOURCEMGR->GetBuffer("FBX"));
+		m_mRenderContainer[objectid]->AddBuffer(RESOURCEMGR->GetBuffer("FBX"));
 		m_mRenderContainer[objectid]->AddTexture(RESOURCEMGR->GetTexture("FBX"));
 		m_mRenderContainer[objectid]->AddMaterial(RESOURCEMGR->GetMaterial("BUNNY"));
 

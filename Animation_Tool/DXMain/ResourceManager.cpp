@@ -205,12 +205,8 @@ void CResourceManager::CreateRenderShader(){
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 2, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },//uv
 		{ "BONE_INDEX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },//bone index
 		{ "BONE_WEIGHT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 4, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },//bone weight
-		{ "INSTANCEPOS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 5, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "INSTANCEPOS", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 5, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "INSTANCEPOS", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 5, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "INSTANCEPOS", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 5, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 	};
-	pShader->CreateVS(TEXT("VSAnimationObject.cso"), AnimationvertexDesc, 9);
+	pShader->CreateVS(TEXT("VSAnimationObject.cso"), AnimationvertexDesc, 5);
 	pShader->CreatePS(TEXT("PSAnimationObject.cso"));
 	pShader->Begin();
 	m_mRenderShader.insert(pairShader("AnimationObject", pShader));
@@ -444,19 +440,21 @@ void CResourceManager::CreateMesh(){
 #endif
 	
 	//CreateMultiMesh("../../Assets/Model/fbx/Bless_Elf.fbx");
+	//CreateMultiMesh("../../Assets/Model/fbx/ATK1_45.fbx");
+	//CreateMultiMesh("../../Assets/Model/fbx/1-2/Die_85.fbx");
+	//CreateMultiMesh("../../Assets/Model/fbx/2-1/ATK1_45.fbx");
 
-	//pMultiMesh->Begin("../../Assets/Model/Test/03_Monster/Zombunny_running.fbx");
-	//pMultiMesh->Begin("../../Assets/Model/fbx/Bless_Elf.fbx");
-	//m_pTestMultiMesh = pMultiMesh;
-	FBXIMPORTER->Begin("../../Assets/Model/Test/03_Monster/Zombunny_running.fbx");
-	pTestFBXMesh->Begin();
-	FBXIMPORTER->End();
+
 	//pTestFBXMesh->Begin("../../Assets/Model/fbx/Bless_Elf.fbx");
 	//pTestFBXMesh->Begin("../../Assets/Model/Test/02_Character_Juno/Juno_idle.fbx");
 	//pTestFBXMesh->Begin("../../Assets/Model/Test/unit04_attack.fbx");
 	//pTestFBXMesh->Begin("../../Assets/Model/Test/assback3_11_attack.fbx");
 	//pTestFBXMesh->Begin("../../Assets/Model/Test/character1_move_r.fbx");
 	//pTestFBXMesh->Begin("../../Assets/Model/Test/humanoid.fbx");
+	FBXIMPORTER->Begin("../../Assets/Model/Test/03_Monster/Zombunny_running.fbx");
+	pTestFBXMesh->Begin();
+	FBXIMPORTER->End();
+
 	m_mMesh.insert(pairMesh("BUNNY", pTestFBXMesh));
 
 
@@ -516,10 +514,6 @@ void CResourceManager::CreateBuffer(){
 	pInstanceBuffer = make_shared<CInstanceBuffer>(m_pd3dDevice, m_pd3dDeviceContext);
 	pInstanceBuffer->Begin(nObject, BufferStride);
 	m_mBuffer.insert(pairBuffer("IB4", pInstanceBuffer));
-	//test fbx
-	pInstanceBuffer = make_shared<CInstanceBuffer>(m_pd3dDevice, m_pd3dDeviceContext);
-	pInstanceBuffer->Begin(nObject, BufferStride);
-	m_mBuffer.insert(pairBuffer("FBX", pInstanceBuffer));
 
 	nObject = { 50000 };
 	pInstanceBuffer = make_shared<CInstanceBuffer>(m_pd3dDevice, m_pd3dDeviceContext);
@@ -590,6 +584,15 @@ void CResourceManager::CreateBuffer(){
 	pConstantBuffer->Begin(nObject, BufferStride, Slot, BindFlag, Offset);
 	m_mBuffer.insert(pairBuffer("PointLightCB2", pConstantBuffer));
 
+	//test fbx
+	Slot = { VS_CB_MODEL };
+	BufferStride = { sizeof(VS_VB_INSTANCE) };
+	BindFlag = { BIND_VS };
+	nObject = { 1 };
+	Offset = { 0 };
+	pConstantBuffer = make_shared<CConstantBuffer>(m_pd3dDevice, m_pd3dDeviceContext);
+	pConstantBuffer->Begin(nObject, BufferStride, Slot, BindFlag, Offset);
+	m_mBuffer.insert(pairBuffer("FBX", pConstantBuffer));
 	////debug
 	//Slot = { DS_OBJECT_BUFFER_SLOT };
 	//BufferStride = { sizeof(POINT_LIGHT_DS_CB) };

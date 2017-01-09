@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "SceneMain.h"
 
-static XMFLOAT4 xmf4TestRotation;
-
 bool CSceneMain::Begin() {
 
 	//m_pPlayer = new CPlayer;
@@ -29,7 +27,7 @@ bool CSceneMain::Begin() {
 	m_pRotationTestObject->SetPosition(XMLoadFloat3(&XMFLOAT3(0, 0, 0)));
 	m_pSpaceContainer->AddObject(m_pRotationTestObject);
 
-	//fbx mesh
+	////fbx mesh
 	//CTestObject* pObject = nullptr;
 	//pObject = new CTestObject();
 	//pObject->Begin();
@@ -43,7 +41,7 @@ bool CSceneMain::Begin() {
 	pBunny->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
 	m_pSpaceContainer->AddObject(pBunny);
 	//fbx mesh
-	
+
 	int space_size = static_cast<int>(SPACE_SIZE);
 	CPointLight* pPointLight = nullptr;
 	int nPointLight = 5;
@@ -121,7 +119,6 @@ bool CSceneMain::Begin() {
 	CreateRenderLayers();
 	//create layer
 
-	TWBARMGR->AddColorBar("TweakBarTest", "rotation", "testCo", &xmf4DirectionalLightColor);
 	return true;
 }
 

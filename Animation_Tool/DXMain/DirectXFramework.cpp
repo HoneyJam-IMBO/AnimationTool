@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "DirectXFramework.h"
 
-static bool testBotton{ false };
-static bool testBotton2{ false };
-static XMFLOAT4 xmf4Xolor;
-
 void CDirectXFramework::Begin(HINSTANCE hInstance, HWND hWnd)
 {
 
@@ -64,13 +60,6 @@ void CDirectXFramework::Begin(HINSTANCE hInstance, HWND hWnd)
 	//------------------------------------------카메라 제작--------------------------------------
 
 
-//	//ui
-	int barSize[2] = { 224, 320 };
-	TWBARMGR->SetParam("TweakBarTest", "size", TW_PARAM_INT32, 2, barSize);
-
-	TWBARMGR->AddBoolBar("TweakBarTest", "Button", "TestBool", &testBotton);
-	TWBARMGR->AddBoolBar("TweakBarTest", "Botton", "TestBool2", &testBotton2);
-	TWBARMGR->AddColorBar("TweakBarTest", "Botton", "TestColor", &xmf4Xolor);
 	//TwDefine(" GLOBAL help='This example shows how to integrate AntTweakBar into a DirectX11 application.' "); // Message added to the help bar.
 	//int barSize[2] = { 224, 320 };
 	//TwSetParam(bar, NULL, "size", TW_PARAM_INT32, 2, barSize);
@@ -749,7 +738,8 @@ void CDirectXFramework::PushScene(CScene* pScene) {
 //--------------------------------------scene-----------------------------------------
 void CDirectXFramework::SetForwardRenderTargets() {
 	ID3D11RenderTargetView *pd3dRTVs[RENDER_TARGET_NUMBER] = { m_pd3drtvColorSpecInt, m_pd3drtvNormal, m_pd3drtvSpecPow };
-	float fClearColor[4] = { xmf4Xolor.x, xmf4Xolor.y, xmf4Xolor.z, xmf4Xolor.w };
+	//float fClearColor[4] = { xmf4Xolor.x, xmf4Xolor.y, xmf4Xolor.z, xmf4Xolor.w };
+	float fClearColor[4] = { 0.f, 0.f, 0.f, 0.f };
 	if (m_pd3drtvColorSpecInt) m_pd3dDeviceContext->ClearRenderTargetView(m_pd3drtvColorSpecInt, fClearColor);
 	if (m_pd3drtvNormal) m_pd3dDeviceContext->ClearRenderTargetView(m_pd3drtvNormal, fClearColor);
 	if (m_pd3drtvSpecPow) m_pd3dDeviceContext->ClearRenderTargetView(m_pd3drtvSpecPow, fClearColor);

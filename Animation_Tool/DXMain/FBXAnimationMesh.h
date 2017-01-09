@@ -78,6 +78,10 @@ public:
 	//begin func
 	void TransferkeyVertexInfo();
 	//---------------------------mesh----------------------------------
+
+	float& GetCurFrame() { return m_nFrame; }
+	int& GetFrameCnt() { return m_nFrameCnt; }
+	bool& GetbAnimation() { return m_bAnimation; }
 private:
 	//skelleton
 	vector<CFbxJointData> m_Skeleton;
@@ -103,8 +107,9 @@ private:
 	int m_nJoint{ 0 };
 	int m_nFrameCnt{ 0 };
 	ID3D11RasterizerState* m_pPreRasterizerState{ nullptr };
-	int m_nFrame{ 0 };
+	float m_nFrame{ 0 };
 	int m_nTime{ 0 };
+	bool m_bAnimation{ true };
 	//test
 
 	//helper func

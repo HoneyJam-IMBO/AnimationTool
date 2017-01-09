@@ -3,12 +3,11 @@
 
 bool CFbxImporter::Begin(string path){
 	m_FileName = path;
-
 	//scene importer는 재사용 불가 
 	m_pScene = FbxScene::Create(m_pManager, "tempName");
 
 	m_pImporter = FbxImporter::Create(m_pManager, "");
-	if (!m_pImporter->Initialize(path.c_str(), -1, m_pManager->GetIOSettings())){
+	if (!m_pImporter->Initialize(path.c_str(), -1, m_pIoSettings)){
 		//DEBUGER->DebugMessageBox("Begin()", "FBX Import Error");
 		return false;
 	}
@@ -284,8 +283,7 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 
 
 			// 현재 Joint의 Offset 행렬 구하기 
-			AnimationData.GetJointDatas()[clusterIndex].SetOffsetMtx(globalBindposeInverseMatrix);
-			XMMATRIX mtx = ConvertFbxMtxToXMMATRIX(globalBindposeInverseMatrix);
+			AnimationData.GetJointDatas()[clusterIndex].SetOffsetMtx(ConvertFbxMtxToXMMATRIX(globalBindposeInverseMatrix));
 
 			for (FbxLongLong i = m_AnimStackData.GetTimeStart(); i <= m_AnimStackData.GetTimeEnd(); ++i) {
 				FbxTime currTime;
@@ -299,7 +297,7 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 						mGlobalTransform.GetT().mData[2] * m_MeshScale));
 
 
-				CKeyFrame KeyFrame{ (double)i, mGlobalTransform };//이게 프레임 타임
+				CKeyFrame KeyFrame{ (double)i, ConvertFbxMtxToXMMATRIX(mGlobalTransform) };//이게 프레임 타임
 				
 				AnimationData.GetJointDatas()[clusterIndex].GetKeyFrames().push_back(KeyFrame);
 			}

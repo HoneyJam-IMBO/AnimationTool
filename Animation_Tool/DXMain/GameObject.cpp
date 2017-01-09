@@ -78,6 +78,33 @@ void CGameObject::Rotate(float x, float y, float z) {
 	
 	SetQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
 }
+
+void CGameObject::RotateWorldAxis(float x, float y, float z) {
+	XMMATRIX xmmtxRotate;
+	if (x != 0.0f)
+	{
+		xmmtxRotate = XMMatrixRotationAxis(XMVectorSet(1.f,0.f,0.f,0.f), (float)XMConvertToRadians(x));
+		XMStoreFloat4x4(&m_xmf4x4World, XMMatrixMultiply(xmmtxRotate, XMLoadFloat4x4(&m_xmf4x4World)));
+		//SetRotationQuaternion(XMQuaternionRotationAxis(GetRight(), x));
+	}
+	if (y != 0.0f)
+	{
+		//플레이어의 로컬 y-축을 기준으로 회전하는 행렬을 생성한다.
+		xmmtxRotate = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), (float)XMConvertToRadians(y));
+		XMStoreFloat4x4(&m_xmf4x4World, XMMatrixMultiply(xmmtxRotate, XMLoadFloat4x4(&m_xmf4x4World)));
+		//SetRotationQuaternion(XMQuaternionRotationAxis(GetUp(), y));
+	}
+	if (z != 0.0f)
+	{
+		//플레이어의 로컬 z-축을 기준으로 회전하는 행렬을 생성한다.
+		xmmtxRotate = XMMatrixRotationAxis(XMVectorSet(0.f, 0.f, 1.f, 0.f), (float)XMConvertToRadians(z));
+		XMStoreFloat4x4(&m_xmf4x4World, XMMatrixMultiply(xmmtxRotate, XMLoadFloat4x4(&m_xmf4x4World)));
+		//SetRotationQuaternion(XMQuaternionRotationAxis(GetLook(), z));
+	}
+
+	m_xmf3Rotate = XMFLOAT3{ m_xmf3Rotate.x + x, m_xmf3Rotate.y + y, m_xmf3Rotate.z + z };
+	SetQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
+}
 void CGameObject::SetPosition(XMVECTOR pos) {
 	XMFLOAT3 m_xmf3Position;
 	XMStoreFloat3(&m_xmf3Position, pos);
@@ -285,9 +312,9 @@ bool CGameObject::CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvR
 }
 
 void CGameObject::PickingProc(){
-	TWBARMGR->AddRotationBar("PickingBar", "Object", "Rotation", this);
-	TWBARMGR->AddPositionBar("PickingBar", "Object", "Position", this, 0.f, SPACE_SIZE - 1.0f, 1.0f);
-	TWBARMGR->AddScaleBar("PickingBar", "Object", "Scale", this, 0.1f, 100.f, 0.1f);
+	TWBARMGR->AddRotationMinMaxBar("PickingBar", "Rotation World", "Rotate", this);
+	TWBARMGR->AddPositionBar("PickingBar", "Position", "Position", this, 0.f, SPACE_SIZE - 1.0f, 1.0f);
+	TWBARMGR->AddScaleBar("PickingBar", "Scale", "Scale", this, 0.1f, 100.f, 0.1f);
 }
 
 

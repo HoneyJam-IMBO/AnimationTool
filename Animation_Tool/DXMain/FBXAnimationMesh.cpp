@@ -78,12 +78,12 @@ bool CFBXAnimationMesh::Begin(UINT index){
 
 	for (int i = 0; i < m_nFrameCnt; ++i) {
 		for (int j = 0; j < m_nJoint; ++j) {
-			FbxAMatrix FrameTransform;
+			XMMATRIX FrameTransform;
 			if (FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetKeyFrames().empty())
-				FrameTransform.SetIdentity();
+				FrameTransform = XMMatrixIdentity();
 			else FrameTransform = FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetKeyFrames()[i].GetKeyFrameTransformMtx();
 
-			m_ppAnimationData[i][j] = ConvertFbxMtxToXMMATRIX(FrameTransform);//그럼 최종 행렬 = A*B*C*D
+			m_ppAnimationData[i][j] = FrameTransform;//그럼 최종 행렬 = A*B*C*D
 		}
 	}
 	for (int j = 0; j < m_nJoint; ++j) {
@@ -96,17 +96,18 @@ bool CFBXAnimationMesh::Begin(UINT index){
 		CBoundingBox bb;
 		bb.SetBoundingBoxInfo(obb);
 		m_vOBB.push_back(bb);
-		m_pAnimationJointOffsetMtx[j] = ConvertFbxMtxToXMMATRIX(FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetOffsetMtx());
+		m_pAnimationJointOffsetMtx[j] = FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetOffsetMtx();
 
 		m_Skeleton[j].SetOffsetMtx(FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetOffsetMtx());
 		m_Skeleton[j].SetMyIndex(FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetMyIndex());
 		m_Skeleton[j].SetJointName(FBXIMPORTER->GetAnimationDatas()[index].GetJointDatas()[j].GetJointName());
+		m_Skeleton[j].SetFrameCnt(m_nFrameCnt);
 	}
 
 	XMMATRIX* pMtx = new XMMATRIX[m_nJoint];
 
 	for (int j = 0; j < m_nJoint; ++j) {
-		pMtx[j] = XMMatrixTranspose(m_pAnimationJointOffsetMtx[j] * m_ppAnimationData[m_nFrame][j]);
+		pMtx[j] = XMMatrixTranspose(m_pAnimationJointOffsetMtx[j] * m_ppAnimationData[static_cast<int>(m_nFrame)][j]);
 	}
 
 
@@ -143,20 +144,33 @@ void CFBXAnimationMesh::SetShaderState(){
 	void* pData = m_pAnimBuffer->Map();
 	XMMATRIX* pAnimationData = static_cast<XMMATRIX*>(pData);
 	
-	if (m_nTime++ > 5) {
-		m_nTime = 0;
-		m_nFrame++;
-		m_nFrame = (m_nFrame) % m_nFrameCnt;
+	if (m_bAnimation) {
+		if (m_nTime++ > 5) {
+			m_nTime = 0;
+			m_nFrame++;
+			m_nFrame = (static_cast<int>(m_nFrame)) % m_nFrameCnt;
+		}
 	}
 	int jointIndex = 0;
 	
 	for (int j = 0; j < m_nJoint; ++j) {
-		pAnimationData[jointIndex++] = XMMatrixTranspose(m_pAnimationJointOffsetMtx[j] * m_ppAnimationData[m_nFrame][j]);
+		m_Skeleton[j].SetCurFrame(m_nFrame);
+		
+		pAnimationData[jointIndex++] = XMMatrixTranspose(m_pAnimationJointOffsetMtx[j] * m_ppAnimationData[static_cast<int>(m_nFrame)][j]);
+		if (m_Skeleton[j].IsActiveTime(m_nFrame)) {
+			m_vOBB[j].SetActive(true); m_Skeleton[j].SetActive(true);
+		}
+		else {
+			m_vOBB[j].SetActive(false); m_Skeleton[j].SetActive(false);
+		}
 
-		DEBUGER->RegistCoordinateSys(m_ppAnimationData[m_nFrame][j]);
-		BoundingOrientedBox originObb = m_vOBB[j].GetOBB();
-		originObb.Transform(originObb, m_ppAnimationData[m_nFrame][j]);
-		DEBUGER->RegistOBB(originObb);
+		if (m_vOBB[j].GetActive()) {
+			
+			DEBUGER->RegistCoordinateSys(m_ppAnimationData[static_cast<int>(m_nFrame)][j]);
+			BoundingOrientedBox originObb = m_vOBB[j].GetOBB();
+			originObb.Transform(originObb, m_ppAnimationData[static_cast<int>(m_nFrame)][j]);
+			DEBUGER->RegistOBB(originObb);
+		}
 	}
 	
 	m_pAnimBuffer->Unmap();

@@ -2,6 +2,10 @@
 #include "GameObject.h"
 #include "RotateComponent.h"
 
+struct CTestStruct {
+	CFBXAnimationMesh* pMesh;
+	CFbxJointData* pJoint;
+};
 class CBunny : public CGameObject {
 
 public:

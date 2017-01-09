@@ -3,18 +3,18 @@
 
 class CKeyFrame : public CObject {
 public:
-	void SetKeyFrameTransformMtx(FbxAMatrix& mtx) { m_FbxATransformMtx = mtx; }
-	FbxAMatrix& GetKeyFrameTransformMtx() { return m_FbxATransformMtx; }
+	void SetKeyFrameTransformMtx(XMMATRIX& mtx) { m_xmmtxTransform = mtx; }
+	XMMATRIX& GetKeyFrameTransformMtx() { return m_xmmtxTransform; }
 	void SetFrameTime(double time) { m_dFrameTime = time; }
 	double GetFrameTime() { return m_dFrameTime; }
 
 private:
-	FbxAMatrix m_FbxATransformMtx;
+	XMMATRIX m_xmmtxTransform;
 	double m_dFrameTime;
 
 public:
 	CKeyFrame() : CObject("keyframe") {};
-	CKeyFrame(double curFrameTime, FbxAMatrix mtx) : CObject("keyframe"),
-		m_dFrameTime(curFrameTime), m_FbxATransformMtx(mtx) {};
+	CKeyFrame(double curFrameTime, XMMATRIX mtx) : CObject("keyframe"),
+		m_dFrameTime(curFrameTime), m_xmmtxTransform(mtx) {};
 	~CKeyFrame() {};
 };

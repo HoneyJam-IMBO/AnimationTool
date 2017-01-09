@@ -14,6 +14,7 @@ bool CTwBarManager::Begin(ID3D11Device * pd3dDevice, ID3D11DeviceContext * pd3dD
 	}
 
 	TwDefine(def); // Message added to the help bar.
+	
 	return true;
 }
 
@@ -98,6 +99,14 @@ void CTwBarManager::AddBoolBar(const char * barName, const char* groupName, cons
 	TwAddVarRW(m_mTwBar[barName], menuName, TW_TYPE_BOOLCPP, var, buff);
 }
 
+void CTwBarManager::AddBoolBarCB(const char * barName, const char * groupName, const char * menuName, TwSetVarCallback setCallback, TwGetVarCallback getCallback, void * clientData){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
+	char buff[256];
+	sprintf(buff, "group=%s", groupName);
+
+	AddVarCB(barName, menuName, TW_TYPE_BOOLCPP, setCallback, getCallback, clientData, buff);
+}
+
 void CTwBarManager::AddMinMaxBarRW(const char * barName, const char * groupName, const char * menuName, void * var, float min, float max, float step){
 	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
 	char buff[256];
@@ -115,6 +124,22 @@ void CTwBarManager::AddMinMaxBarCB(const char * barName, const char * groupName,
 	AddVarCB(barName, menuName, TW_TYPE_FLOAT, setCallback, getCallback, clientData, buff);
 }
 
+void CTwBarManager::AddButtonCB(const char * barName, const char * groupName, const char * menuName, TwButtonCallback buttonCallback, void * clientData){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
+	char buff[256];
+	sprintf(buff, "group=%s", groupName);
+
+	TwAddButton(m_mTwBar[barName], menuName, buttonCallback, clientData, buff);
+}
+
+void CTwBarManager::AddSeparator(const char * barName, const char * groupName, const char * menuName){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
+	char buff[256];
+	sprintf(buff, "group=%s", groupName);
+
+	TwAddSeparator(m_mTwBar[barName], menuName, buff);
+}
+
 void CTwBarManager::AddDirBar(const char * barName, const char * groupName, const char * menuName, CGameObject* pObj){
 	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
 	char buff[256];
@@ -129,6 +154,23 @@ void CTwBarManager::AddRotationBar(const char * barName, const char * groupName,
 	sprintf(buff, "opened=true axisz=-z group=%s", groupName);
 
 	AddVarCB(barName, menuName, TW_TYPE_QUAT4F, SetQuaternionToTwBar, GetQuaternionToTwBar, pObj, buff);
+}
+
+void CTwBarManager::AddRotationMinMaxBar(const char * barName, const char * groupName, const char * menuName, CGameObject * pObj){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
+	char buff[256];
+	sprintf(buff, "min=%f max=%f step=%f group=%s keyincr=+ keydecr=-", -360.f, 360.f, 0.1f, groupName);
+
+	char subMenuNameX[64];
+	sprintf(subMenuNameX, "%sX", menuName);
+	char subMenuNameY[64];
+	sprintf(subMenuNameY, "%sY", menuName);
+	char subMenuNameZ[64];
+	sprintf(subMenuNameZ, "%sZ", menuName);
+
+	AddVarCB(barName, subMenuNameX, TW_TYPE_FLOAT, SetRotationXToTwBar, GetRotationXToTwBar, pObj, buff);
+	AddVarCB(barName, subMenuNameY, TW_TYPE_FLOAT, SetRotationYToTwBar, GetRotationYToTwBar, pObj, buff);
+	AddVarCB(barName, subMenuNameZ, TW_TYPE_FLOAT, SetRotationZToTwBar, GetRotationZToTwBar, pObj, buff);
 }
 
 void CTwBarManager::AddPositionBar(const char * barName, const char * groupName, const char * menuName, CGameObject * pObj,
@@ -187,11 +229,31 @@ void CTwBarManager::AddScaleBar(const char * barName, const char * groupName, co
 	AddMinMaxBarCB(barName, groupName, subMenuNameZ, SetScaleZToTwBar, GetScaleZToTwBar, pObj, min, max, step);
 }
 
+void CTwBarManager::AddBoundingBoxActiveBar(const char * barName, const char * groupName, const char * menuName, CFbxJointData* pJoint){
+	AddBoolBarCB(barName, groupName, menuName, SetBoundingBoxActiveToTwBar, GetBoundingBoxActiveToTwBar, pJoint);
+}
+
 void CTwBarManager::DeleteBar(const char * barName){
 	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;//없으면 return;
 
 	TwDeleteBar(m_mTwBar[barName]);
 	m_mTwBar.erase(barName);
+}
+
+void CTwBarManager::DeleteAllBars(){
+	TwDeleteAllBars();
+}
+
+void CTwBarManager::DeleteVar(const char * barName, const char * menuName){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;//없으면 return;
+
+	TwRemoveVar(m_mTwBar[barName], menuName);
+}
+
+void CTwBarManager::DeleteAllVars(const char * barName){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;//없으면 return;
+
+	TwRemoveAllVars(m_mTwBar[barName]);
 }
 
 
@@ -246,6 +308,47 @@ void TW_CALL GetPositionZToTwBar(void * value, void * clientData) {
 	*static_cast<float *>(value) = pObj->GetPositionZ();
 }
 
+void TW_CALL SetRotationXToTwBar(const void * value, void * clientData){
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	float rotate = (*static_cast<const float *>(value)) - pObj->GetRotateX();
+	pObj->RotateWorldAxis(rotate, 0.f, 0.f);
+}
+
+void TW_CALL GetRotationXToTwBar(void * value, void * clientData){
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->GetRotateX();
+}
+
+void TW_CALL SetRotationYToTwBar(const void * value, void * clientData)
+{
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	float rotate = (*static_cast<const float *>(value)) - pObj->GetRotateY();
+	pObj->RotateWorldAxis(0.f, rotate, 0.f);
+}
+
+void TW_CALL GetRotationYToTwBar(void * value, void * clientData){
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->GetRotateY();
+}
+
+void TW_CALL SetRotationZToTwBar(const void * value, void * clientData)
+{
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	float rotate = (*static_cast<const float *>(value))- pObj->GetRotateZ();
+	pObj->RotateWorldAxis(0.f, 0.f, rotate);
+}
+
+void TW_CALL GetRotationZToTwBar(void * value, void * clientData){
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->GetRotateZ();
+}
+
 //scale
 void TW_CALL SetScaleToTwBar(const void * value, void * clientData) {
 	if (nullptr == clientData) return;
@@ -289,4 +392,23 @@ void TW_CALL GetScaleZToTwBar(void * value, void * clientData) {
 	if (nullptr == clientData) return;
 	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
 	*static_cast<float *>(value) = pObj->m_xmf4Scale.z;
+}
+
+void TW_CALL SetBoundingBoxActiveToTwBar(const void * value, void * clientData){
+	if (nullptr == clientData) return;
+	CFbxJointData* pObj = reinterpret_cast<CFbxJointData*>(clientData);
+	pObj->SetActive((*static_cast<const bool *>(value)));
+	if ((*static_cast<const bool *>(value))) {
+		//들어온 값이 true면 off 중에 on을 누른것 이다.
+		pObj->ProcOn(pObj->GetCurFrame());
+	}
+	else {
+		pObj->ProcOff(pObj->GetCurFrame());
+	}
+}
+
+void TW_CALL GetBoundingBoxActiveToTwBar(void * value, void * clientData){
+	if (nullptr == clientData) return;
+	CFbxJointData* pObj = reinterpret_cast<CFbxJointData*>(clientData);
+	*static_cast<bool *>(value) = pObj->GetActive();
 }

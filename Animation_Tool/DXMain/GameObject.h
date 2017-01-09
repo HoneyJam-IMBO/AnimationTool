@@ -28,6 +28,9 @@ public:
 
 	object_id GetObjectID() { return m_objectID; }
 
+	void SetActive(bool b) { m_bActive = b; }
+	bool& GetActive() { return m_bActive; }
+
 	XMVECTOR GetRight();
 	XMVECTOR GetUp();
 	XMVECTOR GetLook();
@@ -57,6 +60,10 @@ public:
 	virtual void Move(XMVECTOR xmvDir, float fDistance);
 	virtual void Rotate(XMMATRIX xmMtx);
 	virtual void Rotate(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+	void RotateWorldAxis(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+	float& GetRotateX() { return m_xmf3Rotate.x; };
+	float& GetRotateY() { return m_xmf3Rotate.y; };
+	float& GetRotateZ() { return m_xmf3Rotate.z; };
 
 	//자신의 component 실행 + a
 	virtual void Animate(float fTimeElapsed);
@@ -95,6 +102,7 @@ public:
 	XMFLOAT3 m_xmf3Position{ 0.f, 0.f, 0.f };
 	XMFLOAT4 m_xmf4Quaternion;
 	XMFLOAT4 m_xmf4Scale{ 1.f, 1.f, 1.f, 1.f };
+	XMFLOAT3 m_xmf3Rotate{ 0.f,0.f, 0.f };
 protected:
 	
 	BoundingBox m_OriBoundingBox;

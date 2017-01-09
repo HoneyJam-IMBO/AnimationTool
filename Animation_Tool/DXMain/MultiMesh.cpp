@@ -128,14 +128,14 @@ bool CMultiMesh::Begin(string path){
 	XMMATRIX* pAnimationData = new XMMATRIX[size];
 	for (UINT i = 0; i < FBXIMPORTER->GetMeshCnt(); ++i) {
 		for (UINT j = 0; j < FBXIMPORTER->GetAnimationDatas()[i].GetJointCnt(); ++j) {
-			FbxAMatrix BoneTransform;
+			XMMATRIX BoneTransform;
 			if (FBXIMPORTER->GetAnimationDatas()[i].GetJointDatas()[j].GetKeyFrames().empty())
-				BoneTransform.SetIdentity();
+				BoneTransform = XMMatrixIdentity();
 			else BoneTransform = FBXIMPORTER->GetAnimationDatas()[i].GetJointDatas()[j].GetKeyFrames()[0].GetKeyFrameTransformMtx();
 
 			BoneTransform *= FBXIMPORTER->GetAnimationDatas()[i].GetJointDatas()[j].GetOffsetMtx();
 
-			pAnimationData[jointIndex++] = XMMatrixTranspose(FBXIMPORTER->ConvertFbxMtxToXMMATRIX(BoneTransform));//그럼 최종 행렬 = A*B*C*D
+			pAnimationData[jointIndex++] = XMMatrixTranspose(BoneTransform);//그럼 최종 행렬 = A*B*C*D
 		}
 	}
 	m_pAnimBuffer = new CStaticBuffer(m_pd3dDevice, m_pd3dDeviceContext);
@@ -179,13 +179,13 @@ void CMultiMesh::SetShaderState(){
 	int jointIndex = 0;
 	for (UINT i = 0; i < FBXIMPORTER->GetMeshCnt(); ++i) {
 		for (UINT j = 0; j < FBXIMPORTER->GetAnimationDatas()[i].GetJointCnt(); ++j) {
-			FbxAMatrix BoneTransform;
-			if (FBXIMPORTER->GetAnimationDatas()[i].GetJointDatas()[j].GetKeyFrames().empty()) BoneTransform.SetIdentity();
+			XMMATRIX BoneTransform;
+			if (FBXIMPORTER->GetAnimationDatas()[i].GetJointDatas()[j].GetKeyFrames().empty()) BoneTransform = XMMatrixIdentity();
 			else BoneTransform = FBXIMPORTER->GetAnimationDatas()[i].GetJointDatas()[j].GetKeyFrames()[m_nFrame].GetKeyFrameTransformMtx();
 
 			BoneTransform *= FBXIMPORTER->GetAnimationDatas()[i].GetJointDatas()[j].GetOffsetMtx();
 
-			pAnimationData[jointIndex++] = XMMatrixTranspose(FBXIMPORTER->ConvertFbxMtxToXMMATRIX(BoneTransform));
+			pAnimationData[jointIndex++] = XMMatrixTranspose(BoneTransform);
 		}
 	}
 

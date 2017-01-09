@@ -24,6 +24,7 @@ void CDirectXFramework::Begin(HINSTANCE hInstance, HWND hWnd)
 	INPUTMGR->Begin(m_hWnd);
 	TWBARMGR->Begin(m_pd3dDevice, m_pd3dDeviceContext, 
 		" GLOBAL help='test ui death' ");
+
 	//singleton Init
 	//post processing layer
 	m_pPostProcessingLayer = new CPostProcessingLayer(m_pd3dDevice, m_pd3dDeviceContext);
@@ -669,8 +670,6 @@ void CDirectXFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, 
 
 LRESULT CALLBACK CDirectXFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
-//	//ui
-	if (TWBARMGR->OnProcessingWindowMessage(hWnd, nMessageID, wParam, lParam)) return 0;
 
 	switch (nMessageID)
 	{

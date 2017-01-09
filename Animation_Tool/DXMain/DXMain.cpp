@@ -156,6 +156,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	//	//ui
+	if (TWBARMGR->OnProcessingWindowMessage(hWnd, message, wParam, lParam)) return 0;
+
     switch (message)
     {
     case WM_COMMAND:

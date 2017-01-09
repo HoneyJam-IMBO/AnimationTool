@@ -29,6 +29,8 @@ public:
 	virtual bool CreateIndexBuffer() { return true; }
 	//begin func
 
+	virtual void Update(float fTimeElapsed) {}
+
 	//aabb 
 	BoundingBox GetAABB() { return m_AABB.GetAABB(); }
 	UINT GetOBBCnt() { return static_cast<UINT>(m_vOBB.size()); }

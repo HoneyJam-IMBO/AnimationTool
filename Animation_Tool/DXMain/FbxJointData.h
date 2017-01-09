@@ -80,6 +80,8 @@ public:
 	bool operator!=(CFbxJointData& data) {
 		return m_sName != data.m_sName;
 	}
+
+	CBoundingBox* GetpOBB() { return m_pBoundingBox; }
 private:
 	vector<CKeyFrame> m_vKeyFrame;
 	string m_sName;
@@ -91,7 +93,16 @@ private:
 	list<ActiveTime> m_lActiveTime;
 	int m_FrameCnt;
 	int m_curFrame;
+	CBoundingBox* m_pBoundingBox{ nullptr };
 public:
-	CFbxJointData() :CGameObject("fbxjointdata") { };
+	CFbxJointData() :CGameObject("fbxjointdata") {
+		m_pBoundingBox = new CBoundingBox();
+		BoundingOrientedBox obb;
+		BoundingBox boundingBox;
+		//BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(-1.f, -1.f, -1.f, 0.f), XMVectorSet(1.f, 1.f, 1.f, 0.f));
+		BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(-5.f, -5.f, -5.f, 0.f), XMVectorSet(5.f, 5.f, 5.f, 0.f));
+		BoundingOrientedBox::CreateFromBoundingBox(obb, boundingBox);
+		m_pBoundingBox->SetBoundingBoxInfo(obb);
+	};
 	~CFbxJointData() {}
 };

@@ -144,25 +144,16 @@ void CFBXAnimationMesh::SetShaderState(){
 	void* pData = m_pAnimBuffer->Map();
 	XMMATRIX* pAnimationData = static_cast<XMMATRIX*>(pData);
 	
-	if (m_bAnimation) {
-		if (m_nTime++ > 5) {
-			m_nTime = 0;
-			m_nFrame++;
-			m_nFrame = (static_cast<int>(m_nFrame)) % m_nFrameCnt;
-		}
-	}
-	int jointIndex = 0;
-	
 	for (int j = 0; j < m_nJoint; ++j) {
 		m_Skeleton[j].SetCurFrame(m_nFrame);
 		
-		pAnimationData[jointIndex++] = XMMatrixTranspose(m_pAnimationJointOffsetMtx[j] * m_ppAnimationData[static_cast<int>(m_nFrame)][j]);
-		if (m_Skeleton[j].IsActiveTime(m_nFrame)) {
-			m_vOBB[j].SetActive(true); m_Skeleton[j].SetActive(true);
-		}
-		else {
-			m_vOBB[j].SetActive(false); m_Skeleton[j].SetActive(false);
-		}
+		pAnimationData[j] = XMMatrixTranspose(m_pAnimationJointOffsetMtx[j] * m_ppAnimationData[static_cast<int>(m_nFrame)][j]);
+		//if (m_Skeleton[j].IsActiveTime(m_nFrame)) {
+		//	m_vOBB[j].SetActive(true); m_Skeleton[j].SetActive(true);
+		//}
+		//else {
+		//	m_vOBB[j].SetActive(false); m_Skeleton[j].SetActive(false);
+		//}
 
 		if (m_vOBB[j].GetActive()) {
 			
@@ -180,6 +171,15 @@ void CFBXAnimationMesh::SetShaderState(){
 }
 
 
+
+void CFBXAnimationMesh::Update(float fTimeElapsed){
+	if (m_bAnimation) {
+		m_nFrame = m_nFrame + (fTimeElapsed*m_fAnimationSpd);
+	}
+	if (m_nFrame > m_nFrameCnt) {
+		m_nFrame = 0.f;
+	}
+}
 
 void CFBXAnimationMesh::ProcessGetCtrlPoint(FbxNode * pNode){
 	FbxMesh* pMesh = pNode->GetMesh();

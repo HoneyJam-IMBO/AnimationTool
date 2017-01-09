@@ -548,9 +548,9 @@ void CDirectXFramework::Render(){
 
 	if (INPUTMGR->GetDebugMode()) {
 	//if(testBotton){
-		DEBUGER->AddTexture(XMFLOAT2(100, 100), XMFLOAT2(250, 250), m_pd3dsrvColorSpecInt);
-		DEBUGER->AddTexture(XMFLOAT2(100, 250), XMFLOAT2(250, 400), m_pd3dsrvNormal);
-		DEBUGER->AddTexture(XMFLOAT2(100, 400), XMFLOAT2(250, 550), m_pd3dsrvLight);
+		//DEBUGER->AddTexture(XMFLOAT2(100, 100), XMFLOAT2(250, 250), m_pd3dsrvColorSpecInt);
+		//DEBUGER->AddTexture(XMFLOAT2(100, 250), XMFLOAT2(250, 400), m_pd3dsrvNormal);
+		//DEBUGER->AddTexture(XMFLOAT2(100, 400), XMFLOAT2(250, 550), m_pd3dsrvLight);
 		//DEBUGER->AddTexture(XMFLOAT2(250, 100), XMFLOAT2(500, 350), m_pd3dsrvSpecPow);
 		//이건 꼭 여기서 해줘야함.
 

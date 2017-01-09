@@ -70,6 +70,7 @@ public:
 	vector<CFbxJointData>& GetvJoint() { return m_Skeleton; }
 
 	//---------------------------mesh----------------------------------
+	virtual void Update(float fTimeElapsed);
 	//virtual void RenderExcute(UINT nnInstance);
 	//begin func
 	void ProcessGetCtrlPoint(FbxNode* pNode);
@@ -82,6 +83,7 @@ public:
 	float& GetCurFrame() { return m_nFrame; }
 	int& GetFrameCnt() { return m_nFrameCnt; }
 	bool& GetbAnimation() { return m_bAnimation; }
+	float& GetAnimationSpd() { return m_fAnimationSpd; }
 private:
 	//skelleton
 	vector<CFbxJointData> m_Skeleton;
@@ -110,6 +112,7 @@ private:
 	float m_nFrame{ 0 };
 	int m_nTime{ 0 };
 	bool m_bAnimation{ true };
+	float m_fAnimationSpd{ 1.0f };
 	//test
 
 	//helper func

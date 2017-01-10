@@ -5,7 +5,7 @@
 #include "RenderContainerSeller.h"
 #include "TerrainContainer.h"
 #include "Layer.h"
-
+#include "Animater.h"
 
 bool CGameObject::Begin() {
 
@@ -19,6 +19,8 @@ bool CGameObject::Begin() {
 	else {//없으면 최대 최소 aabb를 얻어온다.
 		BoundingBox::CreateFromPoints(m_OriBoundingBox, XMVectorSet(+10.f, +10.f, +10.f, 0.f), XMVectorSet(-10.f, -10.f, -10.f, 0.f));
 	}
+
+	if (m_pRenderContainer->GetAnimater()) m_pAnimater = m_pRenderContainer->GetAnimater();
 
 	XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionIdentity());
 	return true;

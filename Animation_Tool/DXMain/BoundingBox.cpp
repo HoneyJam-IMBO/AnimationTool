@@ -1,6 +1,13 @@
 #include "stdafx.h"
 #include "BoundingBox.h"
 
+bool CBoundingBox::Begin(XMVECTOR Position, XMVECTOR Extend) {
+	SetPosition(Position);
+	SetScale(Extend);
+	XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionIdentity());
+	return true;
+}
+
 void CBoundingBox::SetDebugBufferInfo(void ** ppMappedResources, int & nInstance, shared_ptr<CCamera> pCamera){
 	//Çüº¯È¯
 	VS_VB_BOUNDINGBOX_INSTANCE* pnInstances = (VS_VB_BOUNDINGBOX_INSTANCE*)ppMappedResources[0];

@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
 #include "KeyFrame.h"
+#include "BoundingBox.h"
 
 struct ActiveTime {
 	UINT m_nMin;

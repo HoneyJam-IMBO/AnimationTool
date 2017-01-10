@@ -168,6 +168,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animater.h" />
+    <ClInclude Include="AnimationInfo.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="BoundingBoxMesh.h" />
     <ClInclude Include="Buffer.h" />
@@ -265,6 +267,8 @@
     <ClInclude Include="VertexData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animater.cpp" />
+    <ClCompile Include="AnimationInfo.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="BoundingBoxMesh.cpp" />
     <ClCompile Include="Buffer.cpp" />

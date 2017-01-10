@@ -19,7 +19,7 @@ bool CRenderContainer::End() {
 	m_vpTexture.clear();
 	m_vpBuffer.clear();
 	m_vpMesh.clear();
-
+	
 	delete[] m_ppBufferData;
 	delete[] m_ppGlobalBufferData;
 
@@ -91,20 +91,28 @@ void CRenderContainer::SetShaderState() {
 }
 
 void CRenderContainer::RenderExcute() {
+	UINT MeshIndex{ 0 };
+
 	for (auto p : m_vpMesh) {
+		if (m_pAnimater)m_pAnimater->SetShaderState(MeshIndex);
 		p->UpdateShaderState();
 		p->SetShaderState();
 		p->RenderExcute(m_nInstance);
 		p->CleanShaderState();
+		if (m_pAnimater)m_pAnimater->CleanShaderState();
 	}
 	
 }
 void CRenderContainer::RenderExcuteWithOutObject(){
+	UINT MeshIndex{ 0 };
+
 	for (auto p : m_vpMesh) {
+		if (m_pAnimater)m_pAnimater->SetShaderState(MeshIndex);
 		p->UpdateShaderState();
 		p->SetShaderState();
 		p->RenderExcute(1);
 		p->CleanShaderState();
+		if (m_pAnimater)m_pAnimater->CleanShaderState();
 	}
 	
 }

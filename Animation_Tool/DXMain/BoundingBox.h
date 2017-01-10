@@ -11,6 +11,9 @@ struct VS_VB_BOUNDINGBOX_INSTANCE {
 
 class CBoundingBox : public CGameObject{
 public:
+	bool Begin(XMVECTOR Position, XMVECTOR Extend);
+	virtual bool End() { return CGameObject::End(); };
+
 	//debug buffer controll
 	virtual void SetDebugBufferInfo(void** ppMappedResources, int& nInstance, shared_ptr<CCamera> pCamera);
 	//buffer controll

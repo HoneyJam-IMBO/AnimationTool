@@ -3,6 +3,8 @@
 #include "SingleTon.h"
 #include "DirectXFramework.h"
 
+#include "Animater.h"//animater!!
+
 #include "DirectionalLightMesh.h"
 #include "PointLightMesh.h"
 #include "SpotLightMesh.h"
@@ -46,6 +48,7 @@
 #include "Sampler.h"
 #include "RenderShader.h"
 
+
 class CResourceManager : public CSingleTonBase<CResourceManager> {
 
 public:
@@ -60,6 +63,7 @@ public:
 	void CreateBuffer();
 	void CreateGlobalBuffer();
 	void CreateMaterial();
+	void CreateAnimater();
 
 	//end func
 	void ReleaseTexture();
@@ -68,6 +72,7 @@ public:
 	void ReleaseBuffer();
 	void ReleaseGlobalBuffer();
 	void ReleaseMaterial();
+	void ReleaseAnimater();
 
 	shared_ptr<CTexture> GetTexture(string name) { return m_mTexture[name]; }
 	shared_ptr<CRenderShader> GetRenderShader(string name) { return m_mRenderShader[name]; }
@@ -75,7 +80,7 @@ public:
 	shared_ptr<CBuffer> GetBuffer(string name) { return m_mBuffer[name]; }
 	shared_ptr<CGlobalBuffer> GetGlobalBuffer(string name) { return m_mGlobalBuffer[name]; }
 	shared_ptr<CMaterial> GetMaterial(string name) { return m_mMaterial[name]; }
-
+	shared_ptr<CAnimater> GetAnimater(string name) { return m_mAnimater[name]; }
 private:
 	ID3D11Device* m_pd3dDevice{ nullptr };
 	ID3D11DeviceContext* m_pd3dDeviceContext{ nullptr };
@@ -94,7 +99,9 @@ private:
 	using pairMaterial = pair<string, shared_ptr<CMaterial>>;
 	map<string, shared_ptr<CSampler>> m_mSampler;
 	using pairSampler = pair<string, shared_ptr<CSampler>>;
-
+	//animater
+	map<string, shared_ptr<CAnimater>> m_mAnimater;
+	using pairAnimater = pair<string, shared_ptr<CAnimater>>;
 public:
 	CResourceManager();
 	virtual ~CResourceManager();

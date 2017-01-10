@@ -13,9 +13,9 @@ bool CSceneMain::Begin() {
 	//space
 	m_pSpaceContainer = new CSpaceContainer();
 	m_pSpaceContainer->Begin(static_cast<int>(SPACE_SIZE), static_cast<int>(SPACE_LEVEL));
-	//terrain
-	m_pTerrainContainer = new CTerrainContainer();
-	m_pTerrainContainer->Begin(L"../../Assets/HeightMap.raw", 257, 257, 0.5, m_pSpaceContainer);
+	////terrain
+	//m_pTerrainContainer = new CTerrainContainer();
+	//m_pTerrainContainer->Begin(L"../../Assets/HeightMap.raw", 257, 257, 0.5, m_pSpaceContainer);
 	//--------------------------------------space-------------------------------------
 
 	//--------------------------------按眉 力累------------------------
@@ -23,7 +23,7 @@ bool CSceneMain::Begin() {
 
 	m_pRotationTestObject = new CTestCube();
 	m_pRotationTestObject->Begin();
-	m_pRotationTestObject->SetTerrainContainer(m_pTerrainContainer);
+	//m_pRotationTestObject->SetTerrainContainer(m_pTerrainContainer);
 	m_pRotationTestObject->SetPosition(XMLoadFloat3(&XMFLOAT3(0, 0, 0)));
 	m_pSpaceContainer->AddObject(m_pRotationTestObject);
 
@@ -37,53 +37,53 @@ bool CSceneMain::Begin() {
 
 	CBunny* pBunny = new CBunny();
 	pBunny->Begin();
-	pBunny->SetTerrainContainer(m_pTerrainContainer);
+	//pBunny->SetTerrainContainer(m_pTerrainContainer);
 	pBunny->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
 	m_pSpaceContainer->AddObject(pBunny);
 	//fbx mesh
 
-	int space_size = static_cast<int>(SPACE_SIZE);
-	CPointLight* pPointLight = nullptr;
-	int nPointLight = 5;
-	//int nPointLight = 0;
-	float fStartX = 0;
-	float fStartZ = 0;
-	for (int i = 0; i < nPointLight; ++i) {
-			pPointLight = new CPointLight;
-			pPointLight->Begin(POINT_LIGHT{ 8.5f, XMFLOAT3(rand() % 5, rand() % 5, rand() % 5) });
-			pPointLight->SetTerrainContainer(m_pTerrainContainer);
-
-			pPointLight->SetPosition(XMVectorSet(rand() % space_size, 100, rand() % space_size, 0.f));
-			m_pSpaceContainer->AddObject(pPointLight);
-	}
-	
-	fStartX += 500;
-	fStartZ += 500;
-	CCapsuleLight* pCapsuleLight = nullptr;
-	int nCapsuleLight = 5;
-	
-	for (int i = 0; i < nCapsuleLight; ++i) {
-		pCapsuleLight = new CCapsuleLight;
-		pCapsuleLight->Begin(CAPSULE_LIGHT{ 10.f, XMFLOAT3(rand() % 5, rand() % 5, rand() % 5), 5.f});
-		pCapsuleLight->SetTerrainContainer(m_pTerrainContainer);
-
-		pCapsuleLight->SetPosition(XMVectorSet(rand() % space_size, rand() % 50 + 100, rand() % space_size, 0.f));
-		m_pSpaceContainer->AddObject(pCapsuleLight);
-	}
-	
-	fStartX += 500;
-	fStartZ += 500;
-	
-	int nSpotLight = 5;
-	CSpotLight* pSpotLight = nullptr;
-	for (int i = 0; i < nSpotLight; ++i) {
-			pSpotLight = new CSpotLight;
-			pSpotLight->Begin(SPOT_LIGHT{ 10.f, XMFLOAT3(rand() % 100, rand() % 100, rand() % 100), 5.f, 5.f });
-			pSpotLight->SetTerrainContainer(m_pTerrainContainer);
-
-			pSpotLight->SetPosition(XMVectorSet(rand() % space_size, rand()%50+100, rand() % space_size, 0.f));
-			m_pSpaceContainer->AddObject(pSpotLight);
-	}
+	//int space_size = static_cast<int>(SPACE_SIZE);
+	//CPointLight* pPointLight = nullptr;
+	//int nPointLight = 5;
+	////int nPointLight = 0;
+	//float fStartX = 0;
+	//float fStartZ = 0;
+	//for (int i = 0; i < nPointLight; ++i) {
+	//		pPointLight = new CPointLight;
+	//		pPointLight->Begin(POINT_LIGHT{ 8.5f, XMFLOAT3(rand() % 5, rand() % 5, rand() % 5) });
+	//		//pPointLight->SetTerrainContainer(m_pTerrainContainer);
+	//
+	//		pPointLight->SetPosition(XMVectorSet(rand() % space_size, 100, rand() % space_size, 0.f));
+	//		m_pSpaceContainer->AddObject(pPointLight);
+	//}
+	//
+	//fStartX += 500;
+	//fStartZ += 500;
+	//CCapsuleLight* pCapsuleLight = nullptr;
+	//int nCapsuleLight = 5;
+	//
+	//for (int i = 0; i < nCapsuleLight; ++i) {
+	//	pCapsuleLight = new CCapsuleLight;
+	//	pCapsuleLight->Begin(CAPSULE_LIGHT{ 10.f, XMFLOAT3(rand() % 5, rand() % 5, rand() % 5), 5.f});
+	//	//pCapsuleLight->SetTerrainContainer(m_pTerrainContainer);
+	//
+	//	pCapsuleLight->SetPosition(XMVectorSet(rand() % space_size, rand() % 50 + 100, rand() % space_size, 0.f));
+	//	m_pSpaceContainer->AddObject(pCapsuleLight);
+	//}
+	//
+	//fStartX += 500;
+	//fStartZ += 500;
+	//
+	//int nSpotLight = 5;
+	//CSpotLight* pSpotLight = nullptr;
+	//for (int i = 0; i < nSpotLight; ++i) {
+	//		pSpotLight = new CSpotLight;
+	//		pSpotLight->Begin(SPOT_LIGHT{ 10.f, XMFLOAT3(rand() % 100, rand() % 100, rand() % 100), 5.f, 5.f });
+	//		//pSpotLight->SetTerrainContainer(m_pTerrainContainer);
+	//
+	//		pSpotLight->SetPosition(XMVectorSet(rand() % space_size, rand()%50+100, rand() % space_size, 0.f));
+	//		m_pSpaceContainer->AddObject(pSpotLight);
+	//}
 
 	//--------------------------傈开 按眉 力累-------------------------
 	//skybox
@@ -98,7 +98,7 @@ bool CSceneMain::Begin() {
 		XMFLOAT4(1.0f, -1.0f, 1.0f, 0.0f),XMFLOAT4(0.0f, 0.1f, 0.1f, 0.0f) , XMFLOAT4(1.5f, 1.5f, 1.5f, 1.f),//dir
 		XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f), XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f), XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f), XMFLOAT4(5.1f, 5.1f, 5.1f, 1.f)//ambient
 	});
-	m_pDirectionalLight->SetPosition(XMVectorSet(SPACE_SIZE / 2.f, SPACE_SIZE / 2.f, SPACE_SIZE / 2.f, 0.f));
+	m_pDirectionalLight->SetPosition(XMVectorSet(SPACE_SIZE / 2.f, SPACE_SIZE, SPACE_SIZE / 2.f, 0.f));
 	m_pDirectionalLight->Rotate(30.f, 0.f, 0.f);
 	/*
 	XMFLOAT4 m_DirToLight;

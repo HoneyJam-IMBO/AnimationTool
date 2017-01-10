@@ -5,6 +5,7 @@
 #include "Object.h"
 
 class CTerrainContainer;
+class CAnimater;
 
 //rendercontainer 더미 클래스
 class CRenderContainer;
@@ -122,6 +123,8 @@ protected:
 
 	//space
 	int m_spaceIndex{ 0 };
+	//animater
+	shared_ptr<CAnimater> m_pAnimater{ nullptr };
 public:
 	CGameObject(string name, tag t = tag::TAG_DEFAULT);
 	virtual ~CGameObject();

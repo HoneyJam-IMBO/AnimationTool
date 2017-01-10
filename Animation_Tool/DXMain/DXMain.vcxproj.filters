@@ -354,6 +354,12 @@
     <Filter Include="소스 파일\33.DXObject\22.Mesh\DEBUG\BoundingBoxMesh">
       <UniqueIdentifier>{19b35fbc-3779-4b14-98e7-b0bb838a44cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\33.DXObject\99. Animater">
+      <UniqueIdentifier>{1e4ff6c2-3f84-4a44-876b-79d2be8f40f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\33.DXObject\99. Animater\AnimationInfo">
+      <UniqueIdentifier>{79e5a01b-e1af-4969-896f-daee357c502d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -644,6 +650,12 @@
     <ClInclude Include="BoundingBoxMesh.h">
       <Filter>소스 파일\33.DXObject\22.Mesh\DEBUG\BoundingBoxMesh</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationInfo.h">
+      <Filter>소스 파일\33.DXObject\99. Animater\AnimationInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Animater.h">
+      <Filter>소스 파일\33.DXObject\99. Animater</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -921,6 +933,12 @@
     </ClCompile>
     <ClCompile Include="BoundingBoxMesh.cpp">
       <Filter>소스 파일\33.DXObject\22.Mesh\DEBUG\BoundingBoxMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationInfo.cpp">
+      <Filter>소스 파일\33.DXObject\99. Animater\AnimationInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="Animater.cpp">
+      <Filter>소스 파일\33.DXObject\99. Animater</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

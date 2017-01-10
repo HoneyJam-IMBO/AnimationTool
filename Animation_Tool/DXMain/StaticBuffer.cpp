@@ -85,17 +85,18 @@ ID3D11Buffer * CStaticBuffer::CreateStaticBuffer(UINT nByteWidth, void * pData){
 	d3dBufferDesc.ByteWidth = nByteWidth;
 	d3dBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	d3dBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	
-	//초기화 data 없음! buffer 안만듬
-//	if (pData == nullptr) return nullptr;
 
-	D3D11_SUBRESOURCE_DATA d3dBufferData;
-	ZeroMemory(&d3dBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
-	d3dBufferData.pSysMem = pData;
-
-	m_pd3dDevice->CreateBuffer(&d3dBufferDesc, &d3dBufferData, &pd3dBuffer);
-
+	if (pData == nullptr) {
+		m_pd3dDevice->CreateBuffer(&d3dBufferDesc, nullptr, &pd3dBuffer);
+	}
+	else {
+		D3D11_SUBRESOURCE_DATA d3dBufferData;
+		ZeroMemory(&d3dBufferData, sizeof(D3D11_SUBRESOURCE_DATA));
+		d3dBufferData.pSysMem = pData;
+		m_pd3dDevice->CreateBuffer(&d3dBufferDesc, &d3dBufferData, &pd3dBuffer);
+	}
 	return pd3dBuffer;
+
 }
 
 

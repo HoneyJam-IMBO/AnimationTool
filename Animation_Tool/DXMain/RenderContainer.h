@@ -9,6 +9,7 @@
 #include "Buffer.h"
 #include "GlobalBuffer.h"
 #include "Material.h"
+#include "Animater.h"//animater!!
 //dxobject
 
 #include "Camera.h"
@@ -53,6 +54,10 @@ public:
 	void AddGlobalBuffer(shared_ptr<CGlobalBuffer> pGlobalBuffer);
 	void SetGlobalObject(CGlobalObject* pGlobalObject) { m_pGlobalObject = pGlobalObject; }
 	//global buffer
+	//animater!
+	void SetAnimater(shared_ptr<CAnimater> pAnimater) { m_pAnimater = pAnimater; }
+	shared_ptr<CAnimater> GetAnimater() { return m_pAnimater; }
+	//animater!
 
 	void SetObejcts(int n, CGameObject** ppObjects);
 	void AddObject(CGameObject* pObject);
@@ -73,7 +78,8 @@ protected:
 	vector<shared_ptr<CTexture>> m_vpTexture;
 	int m_nTexture{ 0 };
 	vector<shared_ptr<CBuffer>> m_vpBuffer;
-	
+	shared_ptr<CAnimater> m_pAnimater{ nullptr };//animater
+
 	int m_nBuffer{ 0 };
 	//global buffer
 	vector<shared_ptr<CGlobalBuffer>> m_vpGlobalBuffer;

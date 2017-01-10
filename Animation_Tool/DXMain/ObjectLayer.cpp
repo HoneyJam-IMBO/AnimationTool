@@ -76,7 +76,7 @@ void CObjectLayer::RenderExcute(shared_ptr<CCamera> pCamera) {
 	//terrain
 	//m_pd3dDeviceContext->RSGetState(&m_pd3dTempRSState);
 	//m_pd3dDeviceContext->RSSetState(m_pd3dSpaceRSState);
-	m_mRenderContainer[object_id::OBJECT_TERRAIN]->Render(pCamera);
+	//m_mRenderContainer[object_id::OBJECT_TERRAIN]->Render(pCamera);
 	//m_pd3dDeviceContext->RSSetState(m_pd3dTempRSState);
 	//terrain
 

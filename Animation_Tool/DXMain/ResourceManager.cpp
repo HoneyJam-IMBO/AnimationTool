@@ -12,6 +12,7 @@ bool CResourceManager::Begin(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 	CreateGlobalBuffer();
 	CreateMesh();
 	CreateMaterial();
+	CreateAnimater();
 
 	return true;
 }
@@ -23,6 +24,7 @@ bool CResourceManager::End(){
 	ReleaseGlobalBuffer();
 	ReleaseMesh();
 	ReleaseMaterial();
+	ReleaseAnimater();
 
 	return true;
 }
@@ -453,6 +455,12 @@ void CResourceManager::CreateMesh(){
 	//pTestFBXMesh->Begin("../../Assets/Model/Test/humanoid.fbx");
 	FBXIMPORTER->Begin("../../Assets/Model/Test/03_Monster/Zombunny_running.fbx");
 	pTestFBXMesh->Begin();
+	shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>(m_pd3dDevice, m_pd3dDeviceContext);
+	pAnimater->Begin();
+	CAnimationInfo* pAnimationInfo = new CAnimationInfo(m_pd3dDevice, m_pd3dDeviceContext);
+	pAnimationInfo->Begin(0);
+	pAnimater->AddAnimationInfo(pAnimationInfo);
+	m_mAnimater.insert(pairAnimater("BUNNY", pAnimater));
 	FBXIMPORTER->End();
 
 	m_mMesh.insert(pairMesh("BUNNY", pTestFBXMesh));
@@ -703,6 +711,10 @@ void CResourceManager::CreateMaterial(){
 	m_mMaterial.insert(pairMaterial("SkyBox", pMaterial));
 }
 
+void CResourceManager::CreateAnimater(){
+
+}
+
 void CResourceManager::ReleaseTexture(){
 	for (auto data : m_mSampler) {
 		if(data.second)data.second->End();
@@ -746,6 +758,13 @@ void CResourceManager::ReleaseMaterial(){
 		if (data.second)data.second->End();
 	}
 	m_mMaterial.clear();
+}
+
+void CResourceManager::ReleaseAnimater(){
+	for (auto data : m_mAnimater) {
+		if (data.second)data.second->End();
+	}
+	m_mAnimater.clear();
 }
 
 CResourceManager::CResourceManager() :CSingleTonBase<CResourceManager>("resourcemanager") {

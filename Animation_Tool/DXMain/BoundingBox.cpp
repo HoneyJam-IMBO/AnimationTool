@@ -43,6 +43,12 @@ void CBoundingBox::SetBoundingBoxInfo(BoundingOrientedBox& obb) {
 	m_xmf4Quaternion = obb.Orientation;
 }
 
+void CBoundingBox::SetBoundingBoxInfo(CBoundingBox & boundingBox){
+	SetPosition(boundingBox.GetPosition());
+	SetScale(boundingBox.GetScale());
+	XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionIdentity());
+}
+
 BoundingBox CBoundingBox::GetAABB(){
 	BoundingBox aabb;
 	aabb.Center = m_xmf3Position;

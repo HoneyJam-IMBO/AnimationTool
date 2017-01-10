@@ -21,10 +21,15 @@ public:
 	string GetAnimationName() { return m_AnimationName; }
 	UINT GetAnimationIndex() { return m_AnimationIndex; }
 
+
 	XMMATRIX GetCurFrameMtx(UINT JointIndex, UINT meshIndex = 0) { return m_mMeshIndexJoints[meshIndex][JointIndex].GetKeyFrames()[m_CurFrame].GetKeyFrameTransformMtx(); };
 	vector<CFbxJointData>& GetJoints(UINT meshIndex = 0) { return m_mMeshIndexJoints[meshIndex]; }
-
+	map<UINT, vector<CFbxJointData>>& GetAnimationInfos() { return m_mMeshIndexJoints; }
+	//ui proc
 	void SelectAnimationProc();
+
+	vector<CBoundingBox>& GetTempOBB() { return m_vTempBoundingBox; }
+	vector<CBoundingBox*>& GetActiveOBB() { return m_vActiveBoundingBox; }
 private:
 	//animation 
 	FbxLongLong m_AnimationLength;
@@ -35,7 +40,8 @@ private:
 	CStaticBuffer* m_pAnimBuffer{ nullptr };
 
 	map<UINT, vector<CFbxJointData>> m_mMeshIndexJoints;
-	vector<CBoundingBox> m_vBoundingBox;
+	vector<CBoundingBox> m_vTempBoundingBox;
+	vector<CBoundingBox*> m_vActiveBoundingBox;
 
 	float m_CurFrame{ 0 };
 	int m_FrameCnt{ 0 };

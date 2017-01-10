@@ -19,6 +19,8 @@ public:
 
 	CAnimationInfo* GetCurAnimationInfo() { return m_vpAnimationInfos[m_CurAnimationIndex]; }
 	CAnimationInfo* GetAnimationInfo(UINT AnimationIndex = 0) { return m_vpAnimationInfos[AnimationIndex]; }
+
+	size_t GetAnimationCnt() { return m_vpAnimationInfos.size(); }
 private:
 	vector<CAnimationInfo*> m_vpAnimationInfos;
 	UINT m_CurAnimationIndex{ 0 };

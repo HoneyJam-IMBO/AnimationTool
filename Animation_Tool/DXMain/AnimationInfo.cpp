@@ -22,7 +22,9 @@ void TW_CALL DeleteOBBButtonCallback(void * clientData) {
 	char deleteGroupName[64];
 	sprintf(deleteGroupName, "%s%d", "OBB", pBoundingBox->GetMyIndex());
 
-	TWBARMGR->DeleteVar("Active Joint", deleteGroupName);
+	pBoundingBox->SetActive(false);
+
+	//TWBARMGR->DeleteVar("Active Joint", deleteGroupName);
 }
 
 void TW_CALL CreateSelectOBBCallback(void * clientData) {
@@ -143,14 +145,24 @@ void CAnimationInfo::CleanShaderState(){
 }
 
 void CAnimationInfo::Update(float fTimeElapsed){
-	for (auto data : m_vActiveBoundingBox) {
-		DEBUGER->RegistCoordinateSys(m_mMeshIndexJoints[data->GetMyMeshIndex()][data->GetMyJointIndex()].GetKeyFrames()[m_CurFrame].GetKeyFrameTransformMtx());
-		BoundingOrientedBox originObb = data->GetOBB();
-		originObb.Transform(originObb, m_mMeshIndexJoints[data->GetMyMeshIndex()][data->GetMyJointIndex()].GetKeyFrames()[m_CurFrame].GetKeyFrameTransformMtx());
-		DEBUGER->RegistOBB(originObb);
-
-
-
+	vector<CBoundingBox*> vDeleteBoundingBox;
+	int DeleteBoxCnt{ 0 };
+	for (auto data : m_lActiveBoundingBox) {
+		if (data->GetActive()) {
+			DEBUGER->RegistCoordinateSys(m_mMeshIndexJoints[data->GetMyMeshIndex()][data->GetMyJointIndex()].GetKeyFrames()[m_CurFrame].GetKeyFrameTransformMtx());
+			BoundingOrientedBox originObb = data->GetOBB();
+			originObb.Transform(originObb, m_mMeshIndexJoints[data->GetMyMeshIndex()][data->GetMyJointIndex()].GetKeyFrames()[m_CurFrame].GetKeyFrameTransformMtx());
+			DEBUGER->RegistOBB(originObb);
+		}
+		else {
+			vDeleteBoundingBox.push_back(data);
+		}
+	}
+	if (false == vDeleteBoundingBox.empty()) {
+		for (auto data : vDeleteBoundingBox) {
+			m_lActiveBoundingBox.remove(data);
+		}
+		DeleteActiveJointProc();
 	}
 	//update animation data
 	if (m_bAnimation) {
@@ -190,6 +202,58 @@ void CAnimationInfo::SelectAnimationProc(){
 			//TWBARMGR->AddBoundingBoxActiveBar("PickingBar", groupName, boolMenuName, NULL);
 
 		}
+	}
+}
+
+void CAnimationInfo::DeleteActiveJointProc(){
+	//기존 유아이 다 지움
+	TWBARMGR->DeleteBar("Active Joint");
+
+	
+	CAnimationInfo* pAnimationInfo = this;
+
+	char* barName = "Active Joint";
+	int TempOBBCnt{ 0 };
+	for (auto data : m_lActiveBoundingBox) {
+		CBoundingBox* pBoundingBox = data;
+		pBoundingBox->SetMyIndex(TempOBBCnt++);
+		//add obb position bar
+		char positionGroupName[64];
+		sprintf(positionGroupName, "%s%d", "OBB", pBoundingBox->GetMyIndex());
+		char positionMenuName[64];
+		sprintf(positionMenuName, "%s %s", positionGroupName, "Position");
+		TWBARMGR->AddSeparator(barName, positionGroupName, nullptr);
+		TWBARMGR->AddPositionBar(barName, positionGroupName, positionMenuName, pBoundingBox,
+			-100.f, 100.f, 0.1f);
+		//add obb scale bar
+		char scaleGroupName[64];
+		sprintf(scaleGroupName, "%s%d", "OBB", pBoundingBox->GetMyIndex());
+		char scaleMenuName[64];
+		sprintf(scaleMenuName, "%s %s", scaleGroupName, "Scale");
+		TWBARMGR->AddSeparator(barName, scaleGroupName, nullptr);
+		TWBARMGR->AddScaleBar(barName, scaleGroupName, scaleMenuName, pBoundingBox,
+			0.1f, 100.f, 0.1f);
+
+		//add min max bar
+		char minmaxGroupName[64];
+		sprintf(minmaxGroupName, "%s%d", "OBB", pBoundingBox->GetMyIndex());
+		TWBARMGR->AddSeparator(barName, minmaxGroupName, nullptr);
+
+		char minmaxMenuName[64];
+		sprintf(minmaxMenuName, "%s%s", minmaxGroupName, " Min");
+		TWBARMGR->AddMinMaxBarRW(barName, minmaxGroupName, minmaxMenuName, &pBoundingBox->GetMin(),
+			0.1f, pAnimationInfo->GetFrameCnt(), 0.1f);
+		sprintf(minmaxMenuName, "%s%s", minmaxGroupName, " Max");
+		TWBARMGR->AddMinMaxBarRW(barName, minmaxGroupName, minmaxMenuName, &pBoundingBox->GetMax(),
+			0.1f, pAnimationInfo->GetFrameCnt(), 0.1f);
+
+		//add obb delete button
+		char deleteGroupName[64];
+		sprintf(deleteGroupName, "%s%d", "OBB", pBoundingBox->GetMyIndex());
+		char deleteMenuName[64];
+		sprintf(deleteMenuName, "%s %s", deleteGroupName, "Delete");
+		TWBARMGR->AddSeparator(barName, deleteGroupName, nullptr);
+		TWBARMGR->AddButtonCB(barName, deleteGroupName, deleteMenuName, DeleteOBBButtonCallback, pBoundingBox);
 	}
 }
 

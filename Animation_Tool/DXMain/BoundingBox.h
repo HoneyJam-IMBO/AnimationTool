@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
-
+//#include "AnimationInfo.h"
 
 struct VS_VB_BOUNDINGBOX_INSTANCE {
 	XMFLOAT3 m_xmf3Pos;
@@ -37,7 +37,7 @@ public:
 	int GetMyJointIndex() { return m_nMyJointIndex; }
 	void SetMyIndex(int index) { m_nMyIndex = index; }
 	int GetMyIndex() { return m_nMyIndex; }
-
+	//void SetAnimater(CAnimationInfo* pAnimationInfo) { m_pAnimationInfo = pAnimationInfo; }
 private:
 	//test
 	float m_fMin;
@@ -46,6 +46,8 @@ private:
 	int m_nMyMeshIndex{ 0 };
 	int m_nMyJointIndex{ 0 };
 	int m_nMyIndex{ 0 };
+
+	//CAnimationInfo* m_pAnimationInfo;
 public:
 	CBoundingBox();
 	~CBoundingBox();

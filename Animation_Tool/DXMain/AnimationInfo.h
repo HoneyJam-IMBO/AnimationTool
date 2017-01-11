@@ -5,6 +5,7 @@
 #include "StaticBuffer.h"
 #include "BoundingBox.h"
 
+
 class CAnimationInfo :public DXObject {
 public:
 	bool Begin(UINT AniamationIndex);
@@ -27,9 +28,10 @@ public:
 	map<UINT, vector<CFbxJointData>>& GetAnimationInfos() { return m_mMeshIndexJoints; }
 	//ui proc
 	void SelectAnimationProc();
+	void DeleteActiveJointProc();
 
 	vector<CBoundingBox>& GetTempOBB() { return m_vTempBoundingBox; }
-	vector<CBoundingBox*>& GetActiveOBB() { return m_vActiveBoundingBox; }
+	list<CBoundingBox*>& GetActiveOBB() { return m_lActiveBoundingBox; }
 private:
 	//animation 
 	FbxLongLong m_AnimationLength;
@@ -41,7 +43,7 @@ private:
 
 	map<UINT, vector<CFbxJointData>> m_mMeshIndexJoints;
 	vector<CBoundingBox> m_vTempBoundingBox;
-	vector<CBoundingBox*> m_vActiveBoundingBox;
+	list<CBoundingBox*> m_lActiveBoundingBox;
 
 	float m_CurFrame{ 0 };
 	int m_FrameCnt{ 0 };

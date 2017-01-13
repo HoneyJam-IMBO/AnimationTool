@@ -91,23 +91,34 @@ bool CAnimationInfo::Begin(UINT AniamationIndex){
 	m_AnimationName = FBXIMPORTER->GetAnimStackData().GetAnimationName();
 	int nJoint{ 0 };
 
-	
-
-	for (int MeshIndex = 0; MeshIndex < FBXIMPORTER->GetAnimationDatas().size(); ++MeshIndex) {
-		nJoint = static_cast<int>(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointCnt());
+		nJoint = FBXIMPORTER->GetAnimStackData().GetJointDatas().size();
 
 		for (int j = 0; j < nJoint; ++j) {
 			XMMATRIX FrameTransform;
-			m_mMeshIndexJoints[MeshIndex].push_back(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointDatas()[j]);
+			m_mMeshIndexJoints[0].push_back(FBXIMPORTER->GetAnimStackData().GetJointDatas()[j]);
 			CBoundingBox boundingBox;
 			boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
 			boundingBox.SetActive(false);
 			m_vTempBoundingBox.push_back(boundingBox);
 		}
-	}
+	
+
+
+//	for (int MeshIndex = 0; MeshIndex < FBXIMPORTER->GetAnimationDatas().size(); ++MeshIndex) {
+//		nJoint = static_cast<int>(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointCnt());
+//
+//		for (int j = 0; j < nJoint; ++j) {
+//			XMMATRIX FrameTransform;
+//			m_mMeshIndexJoints[MeshIndex].push_back(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointDatas()[j]);
+//			CBoundingBox boundingBox;
+//			boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
+//			boundingBox.SetActive(false);
+//			m_vTempBoundingBox.push_back(boundingBox);
+//		}
+//	}
 
 	m_pAnimBuffer = new CStaticBuffer(m_pd3dDevice, m_pd3dDeviceContext);
-	m_pAnimBuffer->Begin(1, 6128, nullptr, 10, BIND_VS);
+	m_pAnimBuffer->Begin(256, sizeof(XMMATRIX), nullptr, 10, BIND_VS);
 	return true;
 }
 
@@ -127,6 +138,11 @@ void CAnimationInfo::SetShaderState(UINT MeshIndex){
 	XMMATRIX* pAnimationData = static_cast<XMMATRIX*>(pData);
 
 	for (int j = 0; j < m_mMeshIndexJoints[MeshIndex].size(); ++j) {
+
+		//pAnimationData[j] = XMMatrixIdentity();
+		if (m_mMeshIndexJoints[MeshIndex][j].GetKeyFrames().empty()) {
+			continue;
+		}
 		pAnimationData[j] = XMMatrixTranspose(m_mMeshIndexJoints[MeshIndex][j].GetOffsetMtx() * m_mMeshIndexJoints[MeshIndex][j].GetKeyFrames()[m_CurFrame].GetKeyFrameTransformMtx());
 		//		if (m_vOBB[j].GetActive()) {
 		//	

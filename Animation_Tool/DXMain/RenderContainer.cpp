@@ -92,29 +92,29 @@ void CRenderContainer::SetShaderState() {
 
 void CRenderContainer::RenderExcute() {
 	UINT MeshIndex{ 0 };
+	if (m_pAnimater)m_pAnimater->SetShaderState(MeshIndex++);
 
 	for (auto p : m_vpMesh) {
-		if (m_pAnimater)m_pAnimater->SetShaderState(MeshIndex++);
 		p->UpdateShaderState();
 		p->SetShaderState();
 		p->RenderExcute(m_nInstance);
 		p->CleanShaderState();
-		if (m_pAnimater)m_pAnimater->CleanShaderState();
 	}
 	
+	if (m_pAnimater)m_pAnimater->CleanShaderState();
 }
 void CRenderContainer::RenderExcuteWithOutObject(){
 	UINT MeshIndex{ 0 };
+		if (m_pAnimater)m_pAnimater->SetShaderState(MeshIndex);
 
 	for (auto p : m_vpMesh) {
-		if (m_pAnimater)m_pAnimater->SetShaderState(MeshIndex);
 		p->UpdateShaderState();
 		p->SetShaderState();
 		p->RenderExcute(1);
 		p->CleanShaderState();
-		if (m_pAnimater)m_pAnimater->CleanShaderState();
 	}
 	
+		if (m_pAnimater)m_pAnimater->CleanShaderState();
 }
 void CRenderContainer::CleanShaderState() {
 	m_pShader->CleanShaderState();

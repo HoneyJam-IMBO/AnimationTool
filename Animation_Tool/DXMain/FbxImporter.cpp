@@ -81,6 +81,9 @@ void CFbxImporter::LoadFile(){
 	//animation name. 얻어오기. 지금은 안씀
 	SetAnimationNameArray();
 
+	//skeleton 트리 정보 얻기
+	LoadSkeleton(m_pScene->GetRootNode());
+
 	//fbx 정보 읽기
 	LoadNodeRecursive(m_pScene->GetRootNode());
 
@@ -113,6 +116,29 @@ void CFbxImporter::LoadAnimStack(){
 //Animation length : %d \n", 
 //m_AnimStackData.GetTimeStart(), m_AnimStackData.GetTimeEnd(), m_AnimStackData.GetAnimationLength());
 
+}
+
+void CFbxImporter::LoadSkeleton(FbxNode* pNode) {
+	for (int childIndex = 0; childIndex < pNode->GetChildCount(); ++childIndex)
+		ProcessSkeletonHierarchyRecursively(pNode->GetChild(childIndex), 0, -1);
+
+	//DEBUGER->DebugGMessageBox(L"LoadSkeleton()", L"Skeleton NUM : %d", m_vAnimationData[0].GetJointDatas().size());
+}
+
+void CFbxImporter::ProcessSkeletonHierarchyRecursively(FbxNode * inNode, int myIndex, int inParentIndex) {
+	if (inNode->GetNodeAttribute()
+		&& inNode->GetNodeAttribute()->GetAttributeType()
+		&& inNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton)
+	{
+		CFbxJointData currJoint;
+		currJoint.SetParentIndex(inParentIndex);
+		currJoint.SetJointName(inNode->GetName());
+		currJoint.SetMyIndex(myIndex);
+		m_AnimStackData.GetJointDatas().push_back(currJoint);
+	}
+	for (int i = 0; i < inNode->GetChildCount(); i++) {
+		ProcessSkeletonHierarchyRecursively(inNode->GetChild(i), m_AnimStackData.GetJointDatas().size(), myIndex);
+	}
 }
 
 void CFbxImporter::LoadNodeRecursive(FbxNode* pNode){
@@ -228,94 +254,170 @@ bool CFbxImporter::ExportMeshData(FbxMesh* pMesh)
 	m_iMeshCount++;
 	return true;
 }
+//
+//bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
+//	FbxMesh* currMesh = pMesh;
+//	unsigned int numOfDeformers = currMesh->GetDeformerCount();
+//	CFbxAnimationData AnimationData;
+//	AnimationData.SetGeometryTransform(GetGeometryTransformation(pMesh));
+//
+//	//deformer 1개당 animation정보 1개씩
+//	for (unsigned int deformerIndex = 0; deformerIndex < numOfDeformers; ++deformerIndex)
+//	{
+//		FbxSkin* currSkin = reinterpret_cast<FbxSkin*>(currMesh->GetDeformer(deformerIndex, FbxDeformer::eSkin));
+//		if (!currSkin) {
+//			continue;
+//		}
+//		//cluster 즉 이 mesh에 영향을 주는 joint수
+//		unsigned int numOfClusters = currSkin->GetClusterCount();
+//		
+//		AnimationData.GetJointDatas().resize(numOfClusters);
+//
+////		UINT currMeshJointIndexOffset = GetCurrMeshJointIndexOffset();
+//		//for (unsigned int clusterIndex = 0; clusterIndex < numOfClusters; ++clusterIndex)
+//		for (unsigned int clusterIndex = 0; clusterIndex < numOfClusters; ++clusterIndex)
+//		{
+//			FbxCluster* currCluster = currSkin->GetCluster(clusterIndex);
+//		
+//			std::string currJointName = currCluster->GetLink()->GetName();
+//			AnimationData.GetJointDatas()[clusterIndex].SetJointName(currJointName);
+//
+//			//새로운 joint index 구하기
+//			//UINT currJointIndex = clusterIndex + currMeshJointIndexOffset;
+//			UINT currJointIndex = clusterIndex;
+//
+//			// 현재 mesh의 현재 Joint의 모든 영향을 받는 점들에 대해
+//			//BlendWeightPair를 저장
+//			unsigned int numOfIndices = currCluster->GetControlPointIndicesCount();
+//			for (unsigned int i = 0; i < numOfIndices; ++i){
+//				CFbxBlendWeightPair currBlendingIndexWeightPair{ currJointIndex , currCluster->GetControlPointWeights()[i] };
+//				m_vMeshData[m_iMeshCount].GetVertexDatas()[currCluster->GetControlPointIndices()[i]].GetBlendWeightPairs().push_back(currBlendingIndexWeightPair);
+//			}
+//			
+//			FbxAMatrix transformMatrix;
+//			FbxAMatrix transformLinkMatrix;
+//			FbxAMatrix globalBindposeInverseMatrix;
+//
+//			currCluster->GetTransformMatrix(transformMatrix);	// The transformation of the mesh at binding time
+//			currCluster->GetTransformLinkMatrix(transformLinkMatrix);	// The transformation of the cluster(joint) at binding time from joint space to world space
+//			globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix; //* AnimationData.GetGeometryTransform();
+//		
+//			globalBindposeInverseMatrix.SetT(
+//				FbxVector4(globalBindposeInverseMatrix.GetT().mData[0] * m_MeshScale,
+//					globalBindposeInverseMatrix.GetT().mData[1] * m_MeshScale,
+//					globalBindposeInverseMatrix.GetT().mData[2] * m_MeshScale));
+//
+//
+//			// 현재 Joint의 Offset 행렬 구하기 
+//			AnimationData.GetJointDatas()[clusterIndex].SetOffsetMtx(ConvertFbxMtxToXMMATRIX(globalBindposeInverseMatrix));
+//
+//			for (FbxLongLong i = m_AnimStackData.GetTimeStart(); i <= m_AnimStackData.GetTimeEnd(); ++i) {
+//				FbxTime currTime;
+//				currTime.SetFrame(i, m_AnimStackData.GetTimeMode());
+//				FbxAMatrix currentTransformOffset = pMesh->GetNode()->EvaluateGlobalTransform(currTime);// *AnimationData.GetGeometryTransform();
+//				FbxAMatrix mGlobalTransform = currentTransformOffset.Inverse() * currCluster->GetLink()->EvaluateGlobalTransform(currTime);
+//
+//				mGlobalTransform.SetT(
+//					FbxVector4(mGlobalTransform.GetT().mData[0] * m_MeshScale,
+//						mGlobalTransform.GetT().mData[1] * m_MeshScale,
+//						mGlobalTransform.GetT().mData[2] * m_MeshScale));
+//
+//
+//				CKeyFrame KeyFrame{ (double)i, ConvertFbxMtxToXMMATRIX(mGlobalTransform) };//이게 프레임 타임
+//				
+//				AnimationData.GetJointDatas()[clusterIndex].GetKeyFrames().push_back(KeyFrame);
+//			}
+//			
+//		}
+//	}
+//
+//	//BlendWeightPair의 수가 4보다 joint가 적으면 채워준다. 0으로
+//	CFbxBlendWeightPair currBlendingIndexWeightPair{ 0,0 };
+//	for (auto itr = m_vMeshData[m_iMeshCount].GetVertexDatas().begin(); itr != m_vMeshData[m_iMeshCount].GetVertexDatas().end(); ++itr){
+//		for (size_t i = itr->GetBlendWeightPairs().size(); i <= 4; ++i){
+//			itr->GetBlendWeightPairs().push_back(currBlendingIndexWeightPair);
+//		}
+//	} 
+//
+//	m_vAnimationData.push_back(AnimationData);
+//	return true;
+//}
 
 bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
+
 	FbxMesh* currMesh = pMesh;
 	unsigned int numOfDeformers = currMesh->GetDeformerCount();
 	CFbxAnimationData AnimationData;
 	AnimationData.SetGeometryTransform(GetGeometryTransformation(pMesh));
 
 	//deformer 1개당 animation정보 1개씩
+	//DEBUGER->DebugGMessageBox(L"ExportAnimationData()", L"numOfDeformers : %d", numOfDeformers);
 	for (unsigned int deformerIndex = 0; deformerIndex < numOfDeformers; ++deformerIndex)
 	{
 		FbxSkin* currSkin = reinterpret_cast<FbxSkin*>(currMesh->GetDeformer(deformerIndex, FbxDeformer::eSkin));
 		if (!currSkin) {
 			continue;
 		}
-		//cluster 즉 이 mesh에 영향을 주는 joint수
-		unsigned int numOfClusters = currSkin->GetClusterCount();
-		
-		AnimationData.GetJointDatas().resize(numOfClusters);
 
-//		UINT currMeshJointIndexOffset = GetCurrMeshJointIndexOffset();
+		unsigned int numOfClusters = currSkin->GetClusterCount();
+		//DEBUGER->DebugGMessageBox(L"ExportAnimationData()", L"numOfClusters : %d", numOfClusters);
+		int test = m_AnimStackData.GetJointCnt();
+
+		//AnimationData.GetJointDatas().resize(m_AnimStackData.GetJointCnt());
 		//for (unsigned int clusterIndex = 0; clusterIndex < numOfClusters; ++clusterIndex)
 		for (unsigned int clusterIndex = 0; clusterIndex < numOfClusters; ++clusterIndex)
 		{
 			FbxCluster* currCluster = currSkin->GetCluster(clusterIndex);
-		
 			std::string currJointName = currCluster->GetLink()->GetName();
-			AnimationData.GetJointDatas()[clusterIndex].SetJointName(currJointName);
+			unsigned int currJointIndex = FindJointIndexUsingName(currJointName);
 
-			//새로운 joint index 구하기
-			//UINT currJointIndex = clusterIndex + currMeshJointIndexOffset;
-			UINT currJointIndex = clusterIndex;
-
-			// 현재 mesh의 현재 Joint의 모든 영향을 받는 점들에 대해
-			//BlendWeightPair를 저장
-			unsigned int numOfIndices = currCluster->GetControlPointIndicesCount();
-			for (unsigned int i = 0; i < numOfIndices; ++i){
-				CFbxBlendWeightPair currBlendingIndexWeightPair{ currJointIndex , currCluster->GetControlPointWeights()[i] };
-				m_vMeshData[m_iMeshCount].GetVertexDatas()[currCluster->GetControlPointIndices()[i]].GetBlendWeightPairs().push_back(currBlendingIndexWeightPair);
-			}
-			
+			//if (m_AnimStackData.GetJointDatas()[currJointIndex].GetKeyFrames().size() >= m_AnimStackData.GetAnimationLength()) continue;
 			FbxAMatrix transformMatrix;
 			FbxAMatrix transformLinkMatrix;
 			FbxAMatrix globalBindposeInverseMatrix;
 
 			currCluster->GetTransformMatrix(transformMatrix);	// The transformation of the mesh at binding time
 			currCluster->GetTransformLinkMatrix(transformLinkMatrix);	// The transformation of the cluster(joint) at binding time from joint space to world space
-			globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix; //* AnimationData.GetGeometryTransform();
-		
-			globalBindposeInverseMatrix.SetT(
-				FbxVector4(globalBindposeInverseMatrix.GetT().mData[0] * m_MeshScale,
-					globalBindposeInverseMatrix.GetT().mData[1] * m_MeshScale,
-					globalBindposeInverseMatrix.GetT().mData[2] * m_MeshScale));
-
+			globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix * AnimationData.GetGeometryTransform();
 
 			// 현재 Joint의 Offset 행렬 구하기 
-			AnimationData.GetJointDatas()[clusterIndex].SetOffsetMtx(ConvertFbxMtxToXMMATRIX(globalBindposeInverseMatrix));
+			m_AnimStackData.GetJointDatas()[currJointIndex].SetOffsetMtx(ConvertFbxMtxToXMMATRIX(globalBindposeInverseMatrix));
 
+		
+			// 현재 Joint의 모든 영향을 받는 점들에 대해
+			//BlendWeightPair를 저장
+			unsigned int numOfIndices = currCluster->GetControlPointIndicesCount();
+			for (unsigned int i = 0; i < numOfIndices; ++i) {
+				CFbxBlendWeightPair currBlendingIndexWeightPair{ currJointIndex , currCluster->GetControlPointWeights()[i] };
+				m_vMeshData[m_iMeshCount].GetVertexDatas()[currCluster->GetControlPointIndices()[i]].
+					GetBlendWeightPairs().push_back(currBlendingIndexWeightPair);
+			}
+			//현재 Joint의 현재 ANimation의 모든 frameMtx를 생성, 저장
 			for (FbxLongLong i = m_AnimStackData.GetTimeStart(); i <= m_AnimStackData.GetTimeEnd(); ++i) {
 				FbxTime currTime;
 				currTime.SetFrame(i, m_AnimStackData.GetTimeMode());
-				FbxAMatrix currentTransformOffset = pMesh->GetNode()->EvaluateGlobalTransform(currTime);// *AnimationData.GetGeometryTransform();
+				FbxAMatrix currentTransformOffset = pMesh->GetNode()->EvaluateGlobalTransform(currTime) * AnimationData.GetGeometryTransform();
 				FbxAMatrix mGlobalTransform = currentTransformOffset.Inverse() * currCluster->GetLink()->EvaluateGlobalTransform(currTime);
 
-				mGlobalTransform.SetT(
-					FbxVector4(mGlobalTransform.GetT().mData[0] * m_MeshScale,
-						mGlobalTransform.GetT().mData[1] * m_MeshScale,
-						mGlobalTransform.GetT().mData[2] * m_MeshScale));
-
-
-				CKeyFrame KeyFrame{ (double)i, ConvertFbxMtxToXMMATRIX(mGlobalTransform) };//이게 프레임 타임
-				
-				AnimationData.GetJointDatas()[clusterIndex].GetKeyFrames().push_back(KeyFrame);
+				CKeyFrame KeyFrame{ (double)i, ConvertFbxMtxToXMMATRIX(mGlobalTransform) };
+				m_AnimStackData.GetJointDatas()[currJointIndex].GetKeyFrames().push_back(KeyFrame);
 			}
-			
 		}
 	}
 
 	//BlendWeightPair의 수가 4보다 joint가 적으면 채워준다. 0으로
 	CFbxBlendWeightPair currBlendingIndexWeightPair{ 0,0 };
-	for (auto itr = m_vMeshData[m_iMeshCount].GetVertexDatas().begin(); itr != m_vMeshData[m_iMeshCount].GetVertexDatas().end(); ++itr){
-		for (size_t i = itr->GetBlendWeightPairs().size(); i <= 4; ++i){
+	for (auto itr = m_vMeshData[m_iMeshCount].GetVertexDatas().begin(); itr != m_vMeshData[m_iMeshCount].GetVertexDatas().end(); ++itr) {
+		//for (auto itr = m_vMeshData[0].GetVertexDatas().begin(); itr != m_vMeshData[0].GetVertexDatas().end(); ++itr){
+		for (unsigned int i = itr->GetBlendWeightPairs().size(); i <= 4; ++i) {
 			itr->GetBlendWeightPairs().push_back(currBlendingIndexWeightPair);
 		}
-	} 
+	}
 
-	m_vAnimationData.push_back(AnimationData);
+	//m_vAnimationData.push_back(AnimationData);
 	return true;
 }
+
 
 bool CFbxImporter::ReformBlendWeightPairInfo() {
 
@@ -347,6 +449,16 @@ bool CFbxImporter::ReformBlendWeightPairInfo() {
 	return true;
 }
 
+
+UINT CFbxImporter::FindJointIndexUsingName(const std::string& inJointName) {
+	for (unsigned int i = 0; i < m_AnimStackData.GetJointDatas().size(); ++i) {
+		if (m_AnimStackData.GetJointDatas()[i].GetJointName() == inJointName) {
+			return i;
+		}
+	}
+
+	throw std::exception("Skeleton information in FBX file is corrupted.");
+}
 UINT CFbxImporter::GetCurrMeshJointIndexOffset(){
 	int offset = 0;
 	for (int i = 0; i < m_iMeshCount; ++i) {

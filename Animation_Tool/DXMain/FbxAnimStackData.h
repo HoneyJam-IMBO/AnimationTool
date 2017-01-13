@@ -20,6 +20,8 @@ public:
 	string GetAnimationName() { return m_sName; }
 	FbxLongLong GetAnimationLength() { return m_tAnimLength; }
 
+	UINT GetJointCnt() { return m_JointDatas.size(); }
+	vector<CFbxJointData>& GetJointDatas() { return m_JointDatas; }
 private:
 	UINT m_BoneCnt{ 0 };
 	string m_sName;
@@ -29,6 +31,8 @@ private:
 	FbxTime m_tStart;
 	FbxTime m_tEnd;
 	FbxLongLong m_tAnimLength;
+
+	vector<CFbxJointData> m_JointDatas;
 public:
 	CFbxAnimStackData() : CObject("fbxskinneddata") {}
 	~CFbxAnimStackData() {}

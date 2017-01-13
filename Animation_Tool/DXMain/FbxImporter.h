@@ -40,8 +40,8 @@ public:
 	//이니메이션 stack
 	void LoadAnimStack();
 	//get skeleton info 
-//	void LoadSkeleton(FbxNode* pNode);
-//	void ProcessSkeletonHierarchyRecursively(FbxNode * inNode, int myIndex, int inParentIndex);
+	void LoadSkeleton(FbxNode* pNode);
+	void ProcessSkeletonHierarchyRecursively(FbxNode * inNode, int myIndex, int inParentIndex);
 	//get skeleton info 
 
 	//본격적인 fbx info get
@@ -51,7 +51,7 @@ public:
 	bool ExportAnimationData(FbxMesh* pMesh);
 	bool ReformBlendWeightPairInfo();
 
-	//UINT FindJointIndexUsingName(const string& JointName);
+	UINT FindJointIndexUsingName(const string& JointName);
 	UINT GetCurrMeshJointIndexOffset();
 	FbxAMatrix GetGeometryTransformation(FbxMesh* pMesh);
 	//helper func

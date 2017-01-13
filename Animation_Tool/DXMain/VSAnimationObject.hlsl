@@ -5,7 +5,7 @@ cbuffer cbWorldMtx : register(b1) {
 
 cbuffer cbSkinned : register(b10){
 	// 한 캐릭터당 최대 뼈대 개수는 96
-	float4x4 gmtxBoneTransforms[96] : packoffset(c0);
+	float4x4 gmtxBoneTransforms[256] : packoffset(c0);
 };
 
 cbuffer ViewProjectionConstantBuffer : register(b0)

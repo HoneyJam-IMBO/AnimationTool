@@ -87,34 +87,21 @@ void CRenderContainer::SetShaderState() {
 		p->SetShaderState();
 	}
 	//if (m_pGlobalBuffer) m_pGlobalBuffer->SetShaderState();
-	
+	if (m_pAnimater)m_pAnimater->SetShaderState();
+
 }
 
 void CRenderContainer::RenderExcute() {
-	UINT MeshIndex{ 0 };
-	if (m_pAnimater)m_pAnimater->SetShaderState(MeshIndex++);
-
 	for (auto p : m_vpMesh) {
-		p->UpdateShaderState();
-		p->SetShaderState();
-		p->RenderExcute(m_nInstance);
-		p->CleanShaderState();
+		p->Render(m_nInstance);
 	}
 	
-	if (m_pAnimater)m_pAnimater->CleanShaderState();
+	
 }
 void CRenderContainer::RenderExcuteWithOutObject(){
-	UINT MeshIndex{ 0 };
-		if (m_pAnimater)m_pAnimater->SetShaderState(MeshIndex);
-
 	for (auto p : m_vpMesh) {
-		p->UpdateShaderState();
-		p->SetShaderState();
-		p->RenderExcute(1);
-		p->CleanShaderState();
+		p->Render(1);
 	}
-	
-		if (m_pAnimater)m_pAnimater->CleanShaderState();
 }
 void CRenderContainer::CleanShaderState() {
 	m_pShader->CleanShaderState();
@@ -131,6 +118,8 @@ void CRenderContainer::CleanShaderState() {
 	for (auto p : m_vpGlobalBuffer) {
 		p->CleanShaderState();
 	}
+
+	if (m_pAnimater)m_pAnimater->CleanShaderState();
 	//if (m_pGlobalBuffer) m_pGlobalBuffer->CleanShaderState();//global buffer
 }
 

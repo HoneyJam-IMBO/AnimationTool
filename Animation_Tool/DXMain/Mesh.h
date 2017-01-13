@@ -23,6 +23,7 @@ public:
 	//----------------------------dxobject-----------------------------
 
 	//---------------------------mesh----------------------------------
+	void Render(UINT nInstance);
 	virtual void RenderExcute(UINT nInstance);
 	//begin func
 	virtual bool CreateVertexBuffer() { return true; }

@@ -4,6 +4,8 @@
 bool CAnimater::Begin(){
 	m_vpAnimationInfos.clear();
 
+	m_pMainBoundingBox = new CBoundingBox();
+	m_pMainBoundingBox->Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(5.f, 5.f, 5.f, 1.f));
 	return true;
 }
 
@@ -16,12 +18,12 @@ bool CAnimater::End(){
 	return true;
 }
 
-void CAnimater::SetShaderState(UINT MeshIndex){
-	if (m_vpAnimationInfos.empty() || m_vpAnimationInfos[m_CurAnimationIndex]->GetAnimationInfos().size() < MeshIndex) {
+void CAnimater::SetShaderState(){
+	if (m_vpAnimationInfos.empty()) {
 
 		return;
 	}
-	m_vpAnimationInfos[m_CurAnimationIndex]->SetShaderState(MeshIndex);
+	m_vpAnimationInfos[m_CurAnimationIndex]->SetShaderState();
 }
 
 void CAnimater::CleanShaderState(){

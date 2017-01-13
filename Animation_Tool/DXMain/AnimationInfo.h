@@ -10,7 +10,7 @@ class CAnimationInfo :public DXObject {
 public:
 	bool Begin(UINT AniamationIndex);
 	virtual bool End();
-	virtual void SetShaderState(UINT MeshIndex = 0);
+	virtual void SetShaderState();
 	virtual void CleanShaderState();
 
 	virtual void Update(float fTimeElapsed);
@@ -23,9 +23,9 @@ public:
 	UINT GetAnimationIndex() { return m_AnimationIndex; }
 
 
-	XMMATRIX GetCurFrameMtx(UINT JointIndex, UINT meshIndex = 0) { return m_mMeshIndexJoints[meshIndex][JointIndex].GetKeyFrames()[m_CurFrame].GetKeyFrameTransformMtx(); };
-	vector<CFbxJointData>& GetJoints(UINT meshIndex = 0) { return m_mMeshIndexJoints[meshIndex]; }
-	map<UINT, vector<CFbxJointData>>& GetAnimationInfos() { return m_mMeshIndexJoints; }
+	XMMATRIX GetCurFrameMtx(UINT JointIndex, UINT meshIndex = 0) { return m_vJoints[JointIndex].GetKeyFrames()[m_CurFrame].GetKeyFrameTransformMtx(); };
+	vector<CFbxJointData>& GetJoints(UINT meshIndex = 0) { return m_vJoints; }
+	//map<UINT, vector<CFbxJointData>>& GetAnimationInfos() { return m_mMeshIndexJoints; }
 	//ui proc
 	void SelectAnimationProc();
 	void DeleteActiveJointProc();
@@ -41,7 +41,8 @@ private:
 	//buffer
 	CStaticBuffer* m_pAnimBuffer{ nullptr };
 
-	map<UINT, vector<CFbxJointData>> m_mMeshIndexJoints;
+	//map<UINT, vector<CFbxJointData>> m_mMeshIndexJoints;
+	vector<CFbxJointData> m_vJoints;
 	vector<CBoundingBox> m_vTempBoundingBox;
 	list<CBoundingBox*> m_lActiveBoundingBox;
 

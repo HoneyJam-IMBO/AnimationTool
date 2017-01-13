@@ -441,8 +441,8 @@ void CResourceManager::CreateMesh(){
 	shared_ptr<CUseFBXMesh> pTestFBXMesh = make_shared<CUseFBXMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #endif
 	
-	//CreateMultiMesh("../../Assets/Model/fbx/Bless_Elf.fbx");
-	CreateMultiMesh("../../Assets/Model/fbx/1-1/ATK1_45.fbx");
+	CreateMultiMesh("../../Assets/Model/fbx/Bless_Elf.fbx");
+	//CreateMultiMesh("../../Assets/Model/fbx/1-1/ATK1_45.fbx");
 	//CreateMultiMesh("../../Assets/Model/fbx/1-2/Die_85.fbx");
 	//CreateMultiMesh("../../Assets/Model/fbx/2-1/ATK1_45.fbx");
 

@@ -57,9 +57,9 @@ void CTestObject::Animate(float fTimeElapsed) {
 	//animation ui
 	//이러면 pMesh에 한해서 이렇게 한거잖아? 여러 메쉬면? 모든 애니메이션 목록은!
 	//모든 joint 목록은!!! 
-
-	CFBXAnimationMesh* pMesh = dynamic_cast<CFBXAnimationMesh*>(m_pRenderContainer->GetMesh(0).get());
-
+	TWBARMGR->AddPositionBar("PickingBar", "MainAABB", "MainAABB Position", m_pAnimater->GetMainAABB(), 0.f, SPACE_SIZE - 1.0f, 1.0f);
+	TWBARMGR->AddScaleBar("PickingBar", "MainAABB", "MainAABB Scale", m_pAnimater->GetMainAABB(), 0.1f, 100.f, 0.1f);
+	
 	//for(모든 애니메이션에 대해서){
 	//TWBARMGR->AddButtonCB("PickingBar", "Animation Select", "Animation name", AnimationSelectCallback, 애니메이션 정보);
 	//}

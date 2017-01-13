@@ -31,22 +31,23 @@ public:
 	//test
 	float& GetMin() { return m_fMin; }
 	float& GetMax() { return m_fMax; }
-	void SetMyMeshIndex(int index) { m_nMyMeshIndex = index; }
-	int GetMyMeshIndex() { return m_nMyMeshIndex; }
 	void SetMyJointIndex(int index) { m_nMyJointIndex = index; }
 	int GetMyJointIndex() { return m_nMyJointIndex; }
 	void SetMyIndex(int index) { m_nMyIndex = index; }
 	int GetMyIndex() { return m_nMyIndex; }
+
+	bool GetToolActive() { return m_bToolAactive; }
+	void SetToolActive(bool b) { m_bToolAactive = b; }
 	//void SetAnimater(CAnimationInfo* pAnimationInfo) { m_pAnimationInfo = pAnimationInfo; }
 private:
 	//test
 	float m_fMin;
 	float m_fMax;
 
-	int m_nMyMeshIndex{ 0 };
 	int m_nMyJointIndex{ 0 };
 	int m_nMyIndex{ 0 };
 
+	bool m_bToolAactive{ true };
 	//CAnimationInfo* m_pAnimationInfo;
 public:
 	CBoundingBox();

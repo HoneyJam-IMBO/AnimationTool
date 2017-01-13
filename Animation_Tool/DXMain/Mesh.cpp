@@ -49,6 +49,12 @@ void CMesh::CleanShaderState(){
 	}
 }
 
+void CMesh::Render(UINT nInstance){
+	SetShaderState();
+	RenderExcute(nInstance);
+	CleanShaderState();
+}
+
 void CMesh::RenderExcute(UINT nInstance) {
 
 	if (m_pd3dIndexBuffer)

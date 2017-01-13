@@ -272,10 +272,18 @@ void CGameObject::RegistToContainer() {
 }
 
 void CGameObject::RegistToDebuger(){
-	BoundingBox BoundingBox;
-	BoundingBox = m_OriBoundingBox;
-	BoundingBox.Transform(BoundingBox, GetWorldMtx());
-	DEBUGER->RegistAABB(BoundingBox);
+	if (nullptr == m_pAnimater) {
+		BoundingBox BoundingBox;
+		BoundingBox = m_OriBoundingBox;
+		BoundingBox.Transform(BoundingBox, GetWorldMtx());
+		DEBUGER->RegistAABB(BoundingBox);
+	}
+	else {
+		BoundingBox BoundingBox;
+		BoundingBox = m_pAnimater->GetMainAABB()->GetAABB();
+		BoundingBox.Transform(BoundingBox, GetWorldMtx());
+		DEBUGER->RegistAABB(BoundingBox);
+	}
 }
 
 //void CGameObject::SetRenderContainer(CRenderContainerSeller * pSeller) {

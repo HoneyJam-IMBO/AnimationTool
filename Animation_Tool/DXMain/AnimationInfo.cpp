@@ -33,7 +33,7 @@ void TW_CALL CreateSelectOBBCallback(void * clientData) {
 	char* barName = "Active Joint";
 	int TempOBBCnt{ 0 };
 	for(int j = 0; j<pAnimationInfo->GetAnimationInfos().size(); ++j){
-		for (int i = 0; i < pAnimationInfo->GetJoints().size(); ++i) {
+		for (int i = 0; i < pAnimationInfo->GetJoints(j).size(); ++i) {
 			if (pAnimationInfo->GetTempOBB()[TempOBBCnt++].GetActive()) {
 				CBoundingBox* pBoundingBox = new CBoundingBox();
 				pBoundingBox->Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
@@ -98,9 +98,10 @@ bool CAnimationInfo::Begin(UINT AniamationIndex){
 
 		for (int j = 0; j < nJoint; ++j) {
 			XMMATRIX FrameTransform;
-			m_mMeshIndexJoints[0].push_back(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointDatas()[j]);
+			m_mMeshIndexJoints[MeshIndex].push_back(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointDatas()[j]);
 			CBoundingBox boundingBox;
 			boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
+			boundingBox.SetActive(false);
 			m_vTempBoundingBox.push_back(boundingBox);
 		}
 	}
@@ -187,7 +188,7 @@ void CAnimationInfo::SelectAnimationProc(){
 	int JointIndex{ 0 };
 	for (int i = 0; i < m_mMeshIndexJoints.size(); ++i) {//모든 메쉬의
 		char groupName[64];
-		sprintf(groupName, "%s%d %s", "Mesh", m_AnimationIndex, "info");
+		sprintf(groupName, "%s%d %s", "Mesh", i, "info");
 
 		TWBARMGR->AddSeparator(barName, groupName, nullptr);
 		for (int j = 0; j < m_mMeshIndexJoints[i].size(); ++j) {//모든 joint

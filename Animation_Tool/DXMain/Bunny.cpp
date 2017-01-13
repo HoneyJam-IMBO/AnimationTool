@@ -1,18 +1,18 @@
 #include "stdafx.h"
 #include "Bunny.h"
 
-void TW_CALL AnimationSelectCallback(void * clientData) {
-	CAnimationInfo* pAnimInfo = reinterpret_cast<CAnimationInfo*>(clientData);
-	pAnimInfo->SelectAnimationProc();
-}
-void TW_CALL JointSelectButtonCallback(void * clientData) {
-	CBoundingBox* pOBB = reinterpret_cast<CBoundingBox*>(clientData);
-	if(pOBB->GetActive())
-		pOBB->SetActive(false);
-	else
-		pOBB->SetActive(true);
-	
-}
+//void TW_CALL AnimationSelectCallback(void * clientData) {
+//	CAnimationInfo* pAnimInfo = reinterpret_cast<CAnimationInfo*>(clientData);
+//	pAnimInfo->SelectAnimationProc();
+//}
+//void TW_CALL JointSelectButtonCallback(void * clientData) {
+//	CBoundingBox* pOBB = reinterpret_cast<CBoundingBox*>(clientData);
+//	if(pOBB->GetActive())
+//		pOBB->SetActive(false);
+//	else
+//		pOBB->SetActive(true);
+//	
+//}
 bool CBunny::Begin() {
 	//object_id set
 	m_objectID = object_id::OBJECT_FBX_BUNNY;
@@ -67,7 +67,7 @@ void CBunny::PickingProc() {
 	for (size_t i = 0; i < m_pAnimater->GetAnimationCnt(); ++i) {
 		string manuNameStr = m_pAnimater->GetAnimationInfo(i)->GetAnimationName();
 		const char* menuName = manuNameStr.c_str();
-		TWBARMGR->AddButtonCB("PickingBar", "Animation Select", menuName, AnimationSelectCallback, m_pAnimater->GetAnimationInfo(i));
+		//TWBARMGR->AddButtonCB("PickingBar", "Animation Select", menuName, AnimationSelectCallback, m_pAnimater->GetAnimationInfo(i));
 	}
 	
 }

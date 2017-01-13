@@ -17,7 +17,7 @@ bool CAnimater::End(){
 }
 
 void CAnimater::SetShaderState(UINT MeshIndex){
-	if (m_vpAnimationInfos.empty() || m_vpAnimationInfos.size() < MeshIndex) {
+	if (m_vpAnimationInfos.empty() || m_vpAnimationInfos[m_CurAnimationIndex]->GetAnimationInfos().size() < MeshIndex) {
 
 		return;
 	}

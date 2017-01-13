@@ -9,6 +9,7 @@ public:
 	bool Begin();
 	virtual bool End();
 	//----------------------------dxobject-----------------------------
+	virtual void Animate(float fTimeElapsed);
 
 	virtual void SetPosition(XMVECTOR pos);
 	virtual void PickingProc();

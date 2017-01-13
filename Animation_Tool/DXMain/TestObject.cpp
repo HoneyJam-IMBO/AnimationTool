@@ -1,6 +1,20 @@
 #include "stdafx.h"
 #include "TestObject.h"
 
+
+void TW_CALL AnimationSelectCallback(void * clientData) {
+	CAnimationInfo* pAnimInfo = reinterpret_cast<CAnimationInfo*>(clientData);
+	pAnimInfo->SelectAnimationProc();
+}
+void TW_CALL JointSelectButtonCallback(void * clientData) {
+	CBoundingBox* pOBB = reinterpret_cast<CBoundingBox*>(clientData);
+	if (pOBB->GetActive())
+		pOBB->SetActive(false);
+	else
+		pOBB->SetActive(true);
+
+}
+
 bool CTestObject::Begin() {
 	//object_id set
 	m_objectID = object_id::OBJECT_FBX_ELF;
@@ -30,28 +44,31 @@ void CTestObject::SetPosition(XMVECTOR pos) {
 	if( m_pTerrainContainer ) m_xmf4x4World._42 = GetTerrainHeight();
 	
 }
+void CTestObject::Animate(float fTimeElapsed) {
+	if (m_pAnimater)m_pAnimater->Update(fTimeElapsed);
+	//for (int i = 0; i < m_pRenderContainer->GetvMesh().size(); ++i) {
+	//	m_pRenderContainer->GetMesh(i).get()->Update(fTimeElapsed);
+	//}
 
-void CTestObject::PickingProc() {
+}void CTestObject::PickingProc() {
 	//1. 모든 mesh의 목록 
 	CGameObject::PickingProc();
 
-	//for (int i = 0; i < m_pRenderContainer->GetvMesh().size(); ++i) {
-	//	char groupName[64];
-	//	sprintf(groupName, "%s%d", "Mesh", i);
-	//	CFBXAnimationMesh* pMesh = dynamic_cast<CFBXAnimationMesh* >(m_pRenderContainer->GetMesh(i).get());
-	//	for (int j = 0; j < pMesh->GetAnimationInfo()->GetJoints().size(); ++j) {
-	//		//add obb position bar
-	//		char positionMenuName[64];
-	//		sprintf(positionMenuName, "%s%s", pMesh->GetAnimationInfo()->GetJoints()[j].GetJointName().c_str(), " Position");
-	//		TWBARMGR->AddPositionBar("PickingBar", pMesh->GetAnimationInfo()->GetJoints()[j].GetJointName().c_str(), positionMenuName, &pMesh->GetOBBObject(j),
-	//			-100.f, 100.f, 0.1f);
-	//		//add obb scale bar
-	//		char scaleMenuName[64];
-	//		sprintf(scaleMenuName, "%s%s", pMesh->GetAnimationInfo()->GetJoints()[j].GetJointName().c_str(), " Scale");
-	//		TWBARMGR->AddScaleBar("PickingBar", pMesh->GetAnimationInfo()->GetJoints()[j].GetJointName().c_str(), scaleMenuName, &pMesh->GetOBBObject(j),
-	//			0.1f, 100.f, 0.1f);
-	//	}
+	//animation ui
+	//이러면 pMesh에 한해서 이렇게 한거잖아? 여러 메쉬면? 모든 애니메이션 목록은!
+	//모든 joint 목록은!!! 
+
+	CFBXAnimationMesh* pMesh = dynamic_cast<CFBXAnimationMesh*>(m_pRenderContainer->GetMesh(0).get());
+
+	//for(모든 애니메이션에 대해서){
+	//TWBARMGR->AddButtonCB("PickingBar", "Animation Select", "Animation name", AnimationSelectCallback, 애니메이션 정보);
 	//}
+	for (size_t i = 0; i < m_pAnimater->GetAnimationCnt(); ++i) {
+		string manuNameStr = m_pAnimater->GetAnimationInfo(i)->GetAnimationName();
+		const char* menuName = manuNameStr.c_str();
+		TWBARMGR->AddButtonCB("PickingBar", "Animation Select", menuName, AnimationSelectCallback, m_pAnimater->GetAnimationInfo(i));
+	}
+
 }
 CTestObject::CTestObject() : CGameObject("testobject", tag::TAG_DYNAMIC_OBJECT) {
 

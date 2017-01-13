@@ -442,7 +442,7 @@ void CResourceManager::CreateMesh(){
 #endif
 	
 	//CreateMultiMesh("../../Assets/Model/fbx/Bless_Elf.fbx");
-	//CreateMultiMesh("../../Assets/Model/fbx/ATK1_45.fbx");
+	CreateMultiMesh("../../Assets/Model/fbx/1-1/ATK1_45.fbx");
 	//CreateMultiMesh("../../Assets/Model/fbx/1-2/Die_85.fbx");
 	//CreateMultiMesh("../../Assets/Model/fbx/2-1/ATK1_45.fbx");
 
@@ -473,9 +473,13 @@ void CResourceManager::CreateMultiMesh(string path){
 	//multi mesh data load
 	FBXIMPORTER->Begin(path);
 	char pName[20];
-
+	
 //	int i = FBXIMPORTER->GetMeshCnt();
 	if (FBXIMPORTER->GetHasAnimation()) {
+		shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>(m_pd3dDevice, m_pd3dDeviceContext);
+		pAnimater->Begin();
+		CAnimationInfo* pAnimationInfo;
+
 		shared_ptr<CFBXAnimationMesh> pAnimMesh;
 		for (UINT i = 0; i < FBXIMPORTER->GetMeshCnt(); ++i) {
 			sprintf(pName, "FBX_%d", i);
@@ -483,8 +487,13 @@ void CResourceManager::CreateMultiMesh(string path){
 			pAnimMesh->Begin(i);
 			pAnimMesh->AddMeshTexture(m_mTexture[pName]);
 			m_mMesh.insert(pairMesh(pName, pAnimMesh));
+
+			
 		}
-		
+		pAnimationInfo = new CAnimationInfo(m_pd3dDevice, m_pd3dDeviceContext);
+		pAnimationInfo->Begin(0);
+		pAnimater->AddAnimationInfo(pAnimationInfo);
+		m_mAnimater.insert(pairAnimater("ELF", pAnimater));
 	}
 	else {
 		shared_ptr<CUseFBXMesh> pFBXMesh;

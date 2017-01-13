@@ -94,7 +94,7 @@ void CRenderContainer::RenderExcute() {
 	UINT MeshIndex{ 0 };
 
 	for (auto p : m_vpMesh) {
-		if (m_pAnimater)m_pAnimater->SetShaderState(MeshIndex);
+		if (m_pAnimater)m_pAnimater->SetShaderState(MeshIndex++);
 		p->UpdateShaderState();
 		p->SetShaderState();
 		p->RenderExcute(m_nInstance);

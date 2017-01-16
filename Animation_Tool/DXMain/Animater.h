@@ -25,6 +25,8 @@ public:
 
 	CBoundingBox* GetMainAABB() { return m_pMainBoundingBox;}
 
+	//helper func
+	UINT GetAnimaterJointCnt();
 private:
 	vector<CAnimationInfo*> m_vpAnimationInfos;
 	UINT m_CurAnimationIndex{ 0 };

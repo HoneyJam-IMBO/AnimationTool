@@ -43,6 +43,7 @@ bool CFbxImporter::Begin(string path){
 
 bool CFbxImporter::End(){
 	
+	m_AnimStackData.End();
 	m_vAnimationData.clear();
 	//mesh data
 	m_MeshScale = 1;

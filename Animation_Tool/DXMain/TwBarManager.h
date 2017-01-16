@@ -54,7 +54,7 @@ public:
 	void AddScaleBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj,
 		float min = 0.0f, float max = 1.0f, float step = 0.01f);
 	//bounding box active bar
-	void AddBoundingBoxActiveBar(const char* barName, const char* groupName, const char* menuName, CFbxJointData* pJoint);
+	//void AddBoundingBoxActiveBar(const char* barName, const char* groupName, const char* menuName, CFbxJointData* pJoint);
 	//custom func
 
 	void DeleteBar(const char* barName);
@@ -104,5 +104,5 @@ void TW_CALL SetScaleZToTwBar(const void *value, void * clientData);
 void TW_CALL GetScaleZToTwBar(void *value, void * clientData);
 
 //bounding box active bar
-void TW_CALL SetBoundingBoxActiveToTwBar(const void *value, void * clientData);
+//void TW_CALL SetBoundingBoxActiveToTwBar(const void *value, void * clientData);
 void TW_CALL GetBoundingBoxActiveToTwBar(void *value, void * clientData);

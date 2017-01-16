@@ -229,9 +229,9 @@ void CTwBarManager::AddScaleBar(const char * barName, const char * groupName, co
 	AddMinMaxBarCB(barName, groupName, subMenuNameZ, SetScaleZToTwBar, GetScaleZToTwBar, pObj, min, max, step);
 }
 
-void CTwBarManager::AddBoundingBoxActiveBar(const char * barName, const char * groupName, const char * menuName, CFbxJointData* pJoint){
-	AddBoolBarCB(barName, groupName, menuName, SetBoundingBoxActiveToTwBar, GetBoundingBoxActiveToTwBar, pJoint);
-}
+//void CTwBarManager::AddBoundingBoxActiveBar(const char * barName, const char * groupName, const char * menuName, CFbxJointData* pJoint){
+//	AddBoolBarCB(barName, groupName, menuName, SetBoundingBoxActiveToTwBar, GetBoundingBoxActiveToTwBar, pJoint);
+//}
 
 void CTwBarManager::DeleteBar(const char * barName){
 	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;//없으면 return;
@@ -394,18 +394,18 @@ void TW_CALL GetScaleZToTwBar(void * value, void * clientData) {
 	*static_cast<float *>(value) = pObj->m_xmf4Scale.z;
 }
 
-void TW_CALL SetBoundingBoxActiveToTwBar(const void * value, void * clientData){
-	if (nullptr == clientData) return;
-	CFbxJointData* pObj = reinterpret_cast<CFbxJointData*>(clientData);
-	pObj->SetActive((*static_cast<const bool *>(value)));
-	if ((*static_cast<const bool *>(value))) {
-		//들어온 값이 true면 off 중에 on을 누른것 이다.
-		pObj->ProcOn(pObj->GetCurFrame());
-	}
-	else {
-		pObj->ProcOff(pObj->GetCurFrame());
-	}
-}
+//void TW_CALL SetBoundingBoxActiveToTwBar(const void * value, void * clientData){
+//	if (nullptr == clientData) return;
+//	CFbxJointData* pObj = reinterpret_cast<CFbxJointData*>(clientData);
+//	pObj->SetActive((*static_cast<const bool *>(value)));
+//	if ((*static_cast<const bool *>(value))) {
+//		//들어온 값이 true면 off 중에 on을 누른것 이다.
+//		pObj->ProcOn(pObj->GetCurFrame());
+//	}
+//	else {
+//		pObj->ProcOff(pObj->GetCurFrame());
+//	}
+//}
 
 void TW_CALL GetBoundingBoxActiveToTwBar(void * value, void * clientData){
 	if (nullptr == clientData) return;

@@ -5,6 +5,8 @@
 
 class CFbxAnimStackData : public CObject {
 public:
+	virtual bool End();
+
 	void SetpAnimStack(FbxAnimStack* pStack) { m_pAnimStack = pStack; }
 	void SetBoneCnt(UINT cnt) { m_BoneCnt = cnt; }
 	void SetAnimationName(string name) { m_sName = name; }

@@ -60,6 +60,7 @@ public:
 	void CreateRenderShader();
 	void CreateMesh();
 	void CreateMultiMesh(string path);
+	void CreateAnimater(string path);
 	void CreateBuffer();
 	void CreateGlobalBuffer();
 	void CreateMaterial();

@@ -204,6 +204,37 @@ void CAnimationInfo::Update(float fTimeElapsed){
 	}
 }
 
+void CAnimationInfo::ChangeJointData(CAnimationInfo * pAnimationInfo){
+	//인자로 들어온 animationinfo의 joint데이터를 가지고
+	//자신의 joint데이터를 갱신한다 .
+
+	//1. 새로운 벡터를 제작한다.
+	vector<CFbxJointData> vTempJoints;
+	vector<CFbxJointData> ::iterator iter;
+	for (auto joint : pAnimationInfo->GetJoints()) {
+		//2. 인자로 들어온 animationinfo의 joint벡터만큼 루프를 돈다.
+		iter = find_if(m_vJoints.begin(), m_vJoints.end(), [&joint](CFbxJointData& my) {
+			return (my.GetJointName() == joint.GetJointName());
+		});
+		//3. 각 joint의 이름을 가지고 기존의 joint의 이름과 비교하여 있으면 넣고
+		if (vTempJoints.end() != iter) {
+			vTempJoints.push_back(*iter);
+		}
+		//아니면 새로운 joint에게 offsetmtx만 넣고 frame mtx등 필요없는 데이터는 Identity를 넣는다.
+		else {
+			CFbxJointData data;
+			data.SetMyIndex(joint.GetMyIndex());
+			data.SetJointName(joint.GetJointName());
+			data.SetOffsetMtx(joint.GetOffsetMtx());
+			data.SetParentIndex(joint.GetParentIndex());
+			vTempJoints.push_back(data);
+		}
+	}
+	//4. 기존의 vector를 날리고 새로운 vector를 저장한다.
+	m_vJoints.clear();
+	m_vJoints = vTempJoints;
+}
+
 void CAnimationInfo::SelectAnimationProc(){
 	const char* barName = m_AnimationName.c_str();
 	TWBARMGR->AddMinMaxBarRW(barName, "Animation Info", "Animation Spd", &m_fAnimationSpd, 1.0f, 1000.f, 0.1f);

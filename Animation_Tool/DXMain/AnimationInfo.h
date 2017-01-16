@@ -22,6 +22,8 @@ public:
 	string GetAnimationName() { return m_AnimationName; }
 	UINT GetAnimationIndex() { return m_AnimationIndex; }
 
+	//joint data 수정 함수
+	void ChangeJointData(CAnimationInfo* pAnimationInfo);
 
 	XMMATRIX GetCurFrameMtx(UINT JointIndex, UINT meshIndex = 0) { return m_vJoints[JointIndex].GetKeyFrames()[m_CurFrame].GetKeyFrameTransformMtx(); };
 	vector<CFbxJointData>& GetJoints(UINT meshIndex = 0) { return m_vJoints; }

@@ -36,13 +36,27 @@ void CAnimater::CleanShaderState(){
 
 void CAnimater::Update(float fTimeElapsed){
 	if (m_vpAnimationInfos.empty()) {
-
 		return;
 	}
 	m_vpAnimationInfos[m_CurAnimationIndex]->Update(fTimeElapsed);
 }
 
 void CAnimater::AddAnimationInfo(CAnimationInfo * pAnimationInfo){
+	if (false == m_vpAnimationInfos.empty() || //empty가 아니라면
+		pAnimationInfo->GetJoints().size() != GetAnimaterJointCnt()) {
+		if (GetAnimaterJointCnt() < pAnimationInfo->GetJoints().size()) {
+			//기존의 joint수 보다 새로 들어온 joint수가 더 많다면 
+			//기존의 AnimationInfo들에게 JointTree 수정을 요청
+			for (auto data : m_vpAnimationInfos) {
+				data->ChangeJointData(pAnimationInfo);
+			}
+		}
+		else {
+			//기존의 joinnt수가 새로 들어온 joint수 보다 많다면
+			//새로 들어온 AnimationInfo에게 JointTree 수정을 요청
+			pAnimationInfo->ChangeJointData(m_vpAnimationInfos[0]);
+		}
+	}
 	m_vpAnimationInfos.push_back(pAnimationInfo);
 }
 
@@ -52,6 +66,16 @@ void CAnimater::DeleteAnimationInfo(UINT AnimationIndex){
 		if ((*iter)->GetAnimationIndex() == m_CurAnimationIndex) break;
 	}
 	if (iter != m_vpAnimationInfos.end()) m_vpAnimationInfos.erase(iter);
+}
+
+UINT CAnimater::GetAnimaterJointCnt(){
+	UINT JointCnt{ 0 };
+
+	if (false == m_vpAnimationInfos.empty()) {
+		JointCnt = m_vpAnimationInfos[0]->GetJoints().size();
+	}
+
+	return JointCnt;
 }
 
 CAnimater::CAnimater(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext) : DXObject("animater", pd3dDevice, pd3dDeviceContext) {

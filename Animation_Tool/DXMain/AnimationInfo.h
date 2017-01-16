@@ -5,10 +5,11 @@
 #include "StaticBuffer.h"
 #include "BoundingBox.h"
 
+class CAnimater;
 
 class CAnimationInfo :public DXObject {
 public:
-	bool Begin(UINT AniamationIndex);
+	bool Begin(shared_ptr<CAnimater> pAnimater);
 	virtual bool End();
 	virtual void SetShaderState();
 	virtual void CleanShaderState();
@@ -21,6 +22,9 @@ public:
 	float& GetAnimationSpd() { return m_fAnimationSpd; }
 	string GetAnimationName() { return m_AnimationName; }
 	UINT GetAnimationIndex() { return m_AnimationIndex; }
+
+	//utill 
+	void Reset();
 
 	//joint data 수정 함수
 	void ChangeJointData(CAnimationInfo* pAnimationInfo);
@@ -35,6 +39,7 @@ public:
 	vector<CBoundingBox>& GetTempOBB() { return m_vTempBoundingBox; }
 	list<CBoundingBox*>& GetActiveOBB() { return m_lActiveBoundingBox; }
 private:
+	shared_ptr<CAnimater> m_pAnimater{ nullptr };
 	//animation 
 	FbxLongLong m_AnimationLength;
 	std::string m_AnimationName;

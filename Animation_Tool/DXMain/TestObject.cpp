@@ -64,8 +64,9 @@ void CTestObject::Animate(float fTimeElapsed) {
 	//TWBARMGR->AddButtonCB("PickingBar", "Animation Select", "Animation name", AnimationSelectCallback, 애니메이션 정보);
 	//}
 	for (size_t i = 0; i < m_pAnimater->GetAnimationCnt(); ++i) {
-		string manuNameStr = m_pAnimater->GetAnimationInfo(i)->GetAnimationName();
-		const char* menuName = manuNameStr.c_str();
+		//string manuNameStr = m_pAnimater->GetAnimationInfo(i)->GetAnimationName();
+		char menuName[64];
+		sprintf(menuName, "%s %d", "Animation", i);
 		TWBARMGR->AddButtonCB("PickingBar", "Animation Select", menuName, AnimationSelectCallback, m_pAnimater->GetAnimationInfo(i));
 	}
 

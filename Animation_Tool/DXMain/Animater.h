@@ -15,7 +15,7 @@ public:
 	void AddAnimationInfo(CAnimationInfo* pAnimationInfo);
 	void DeleteAnimationInfo(UINT AnimationIndex);
 
-	void SetCurAnimationIndex(UINT AnimationIndex) { m_CurAnimationIndex = AnimationIndex; }
+	void SetCurAnimationIndex(UINT AnimationIndex);
 	UINT GetCurAnimationIndex() { return m_CurAnimationIndex; }
 
 	CAnimationInfo* GetCurAnimationInfo() { return m_vpAnimationInfos[m_CurAnimationIndex]; }
@@ -24,6 +24,8 @@ public:
 	size_t GetAnimationCnt() { return m_vpAnimationInfos.size(); }
 
 	CBoundingBox* GetMainAABB() { return m_pMainBoundingBox;}
+	//util
+	void ResetAnimationInfos();
 
 	//helper func
 	UINT GetAnimaterJointCnt();

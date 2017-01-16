@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AnimationInfo.h"
+#include "Animater.h"
 
 void TW_CALL AnimationOnOffButtonCallback(void * clientData) {
 	bool* pBool = reinterpret_cast<bool*>(clientData);
@@ -80,8 +81,11 @@ void TW_CALL CreateSelectOBBCallback(void * clientData) {
 	//}
 
 }
-bool CAnimationInfo::Begin(UINT AniamationIndex){
-	m_AnimationIndex = AniamationIndex;
+bool CAnimationInfo::Begin(shared_ptr<CAnimater> pAnimater){
+	m_AnimationIndex = pAnimater->GetAnimationCnt();
+	m_pAnimater = pAnimater;
+
+
 	m_FrameCnt = static_cast<int>(FBXIMPORTER->GetAnimStackData().GetAnimationLength());
 	m_AnimationName = FBXIMPORTER->GetAnimStackData().GetAnimationName();
 	int nJoint{ 0 };
@@ -114,6 +118,8 @@ bool CAnimationInfo::Begin(UINT AniamationIndex){
 
 	m_pAnimBuffer = new CStaticBuffer(m_pd3dDevice, m_pd3dDeviceContext);
 	m_pAnimBuffer->Begin(256, sizeof(XMMATRIX), nullptr, 10, BIND_VS);
+
+	m_pAnimater->AddAnimationInfo(this);
 	return true;
 }
 
@@ -204,6 +210,10 @@ void CAnimationInfo::Update(float fTimeElapsed){
 	}
 }
 
+void CAnimationInfo::Reset(){
+	m_CurFrame = 0;
+}
+
 void CAnimationInfo::ChangeJointData(CAnimationInfo * pAnimationInfo){
 	//인자로 들어온 animationinfo의 joint데이터를 가지고
 	//자신의 joint데이터를 갱신한다 .
@@ -217,7 +227,7 @@ void CAnimationInfo::ChangeJointData(CAnimationInfo * pAnimationInfo){
 			return (my.GetJointName() == joint.GetJointName());
 		});
 		//3. 각 joint의 이름을 가지고 기존의 joint의 이름과 비교하여 있으면 넣고
-		if (vTempJoints.end() != iter) {
+		if (m_vJoints.end() != iter) {
 			vTempJoints.push_back(*iter);
 		}
 		//아니면 새로운 joint에게 offsetmtx만 넣고 frame mtx등 필요없는 데이터는 Identity를 넣는다.
@@ -228,15 +238,30 @@ void CAnimationInfo::ChangeJointData(CAnimationInfo * pAnimationInfo){
 			data.SetOffsetMtx(joint.GetOffsetMtx());
 			data.SetParentIndex(joint.GetParentIndex());
 			vTempJoints.push_back(data);
+			
 		}
 	}
 	//4. 기존의 vector를 날리고 새로운 vector를 저장한다.
 	m_vJoints.clear();
-	m_vJoints = vTempJoints;
+	m_vTempBoundingBox.clear();
+
+	for (auto data : vTempJoints) {
+		m_vJoints.push_back(data);
+		//bounding box 추가
+		CBoundingBox boundingBox;
+		boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
+		boundingBox.SetActive(false);
+		m_vTempBoundingBox.push_back(boundingBox);
+	}
 }
 
 void CAnimationInfo::SelectAnimationProc(){
-	const char* barName = m_AnimationName.c_str();
+	char barName[64];
+	m_pAnimater->SetCurAnimationIndex(m_AnimationIndex);
+	//m_AnimationName.c_str();
+	sprintf(barName, "%s", "Animation Info");
+	TWBARMGR->DeleteBar(barName);
+
 	TWBARMGR->AddMinMaxBarRW(barName, "Animation Info", "Animation Spd", &m_fAnimationSpd, 1.0f, 1000.f, 0.1f);
 	TWBARMGR->AddMinMaxBarRW(barName, "Animation Info", "Animation Frame", &m_CurFrame, 0.f, m_FrameCnt - 1, 1.0f);
 	TWBARMGR->AddButtonCB(barName, "Animation Info", "Animation On/Off", AnimationOnOffButtonCallback, &m_bAnimation);

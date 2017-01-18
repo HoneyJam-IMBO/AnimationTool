@@ -8,6 +8,11 @@
 #include "Animater.h"
 
 
+void TW_CALL SetMeshTextureButtonCallback(void * clientData) {
+	CMesh* pMesh = reinterpret_cast<CMesh*>(clientData);
+
+}
+
 bool CGameObject::Begin() {
 
 	XMStoreFloat4x4(&m_xmf4x4World, XMMatrixIdentity());
@@ -321,13 +326,51 @@ bool CGameObject::CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvR
 }
 
 void CGameObject::PickingProc(){
-	TWBARMGR->AddRotationMinMaxBar("PickingBar", "Rotation World", "Rotate", this);
-	TWBARMGR->AddPositionBar("PickingBar", "Position", "Position", this, 0.f, SPACE_SIZE - 1.0f, 1.0f);
-	TWBARMGR->AddScaleBar("PickingBar", "Scale", "Scale", this, 0.1f, 100.f, 0.1f);
+	CreateObjectUI();
+
+	CreateMeshUI();
 
 	if (m_pAnimater) {
 		m_pAnimater->CreateAnimationUI();
+	}
+}
 
+void CGameObject::CreateObjectUI(){
+	const char* barName = "PickingBar";
+	TWBARMGR->DeleteBar(barName);
+	TWBARMGR->AddBar(barName);
+	//set param
+	TWBARMGR->SetBarSize(barName, 200, 200);
+	TWBARMGR->SetBarPosition(barName, 0, 0);
+	TWBARMGR->SetBarColor(barName, 255, 0, 0);
+	TWBARMGR->SetBarContained(barName, true);
+	TWBARMGR->SetBarMovable(barName, false);
+	TWBARMGR->SetBarResizable(barName, false);
+	//set param
+	TWBARMGR->AddRotationMinMaxBar(barName, "Rotation World", "Rotate", this);
+	TWBARMGR->AddPositionBar(barName, "Position", "Position", this, 0.f, SPACE_SIZE - 1.0f, 1.0f);
+	TWBARMGR->AddScaleBar(barName, "Scale", "Scale", this, 0.1f, 100.f, 0.1f);
+
+}
+
+void CGameObject::CreateMeshUI(){
+	const char* barName = "MeshInfo";
+	TWBARMGR->DeleteBar(barName);
+	TWBARMGR->AddBar(barName);
+	//set param
+	TWBARMGR->SetBarSize(barName, 300, 200);
+	TWBARMGR->SetBarPosition(barName, 700, 0);
+	TWBARMGR->SetBarColor(barName, 255, 0, 255);
+	TWBARMGR->SetBarContained(barName, true);
+	TWBARMGR->SetBarMovable(barName, false);
+	TWBARMGR->SetBarResizable(barName, false);
+	//set param
+
+	char menuName[64];
+	int i{ 0 };
+	for (auto pMesh : m_pRenderContainer->GetvMesh()) {
+		sprintf(menuName, "Mesh%d", i);
+		TWBARMGR->AddButtonCB(barName, "SetTextureButton", menuName, SetMeshTextureButtonCallback, m_pRenderContainer->GetMesh(i).get());
 	}
 }
 

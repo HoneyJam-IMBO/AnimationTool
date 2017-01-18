@@ -20,6 +20,9 @@ void TW_CALL AnimationDeleteButtonCallback(void * clientData) {
 	//나중에 수정해야 한다.
 	CAnimationInfo* pAnimationInfo = reinterpret_cast<CAnimationInfo*>(clientData);
 	pAnimationInfo->GetAnimater()->DeleteAnimationInfo(pAnimationInfo->GetAnimationIndex());
+
+	TWBARMGR->DeleteBar("AnimationInfo");
+	TWBARMGR->DeleteBar("ActiveJoint");
 }
 void TW_CALL DeleteOBBButtonCallback(void * clientData) {
 	
@@ -224,19 +227,62 @@ void CAnimationInfo::SelectAnimationProc(){
 }
 
 void CAnimationInfo::DeleteActiveJointProc(){
-	//기존 유아이 다 지움
 	CreateActiveOBBUI();
 }
 
 void CAnimationInfo::CreateSelectOBBUI(){
 	float max = GetFrameCnt();
-	char* barName = "Active Joint";
+	char* barName = "ActiveJoint";
 	int TempOBBCnt{ 0 };
 	
 	TWBARMGR->DeleteBar(barName);
+	TWBARMGR->AddBar(barName);
+	//set param
+	TWBARMGR->SetBarSize(barName, 300, 700);
+	TWBARMGR->SetBarPosition(barName, 700, 200);
+	TWBARMGR->SetBarColor(barName, 200, 200, 0);
+	TWBARMGR->SetBarContained(barName, true);
+	TWBARMGR->SetBarMovable(barName, false);
+	TWBARMGR->SetBarResizable(barName, false);
+	//set param
+	for (auto ActiveOBB : m_lActiveBoundingBox) {
+		ActiveOBB->SetMyIndex(TempOBBCnt++);
+		//add obb position bar
+		char GroupName[64];
+		//sprintf(positionGroupName, "%s%d", "OBB", pBoundingBox->GetMyIndex());
+		sprintf(GroupName, "%s%d", GetJoints()[ActiveOBB->GetMyJointIndex()].GetJointName().c_str(), ActiveOBB->GetMyIndex());
+		char positionMenuName[64];
+		sprintf(positionMenuName, "%s %s", GroupName, "Position");
+		TWBARMGR->AddSeparator(barName, GroupName, nullptr);
+		TWBARMGR->AddPositionBar(barName, GroupName, positionMenuName, ActiveOBB,
+			-100.f, 100.f, 0.1f);
+		//add obb scale bar
+		char scaleMenuName[64];
+		sprintf(scaleMenuName, "%s %s", GroupName, "Scale");
+		TWBARMGR->AddSeparator(barName, GroupName, nullptr);
+		TWBARMGR->AddScaleBar(barName, GroupName, scaleMenuName, ActiveOBB,
+			0.1f, 100.f, 0.1f);
+
+		//add min max bar
+		TWBARMGR->AddSeparator(barName, GroupName, nullptr);
+
+		char minmaxMenuName[64];
+		sprintf(minmaxMenuName, "%s%s", GroupName, " Min");
+		TWBARMGR->AddMinMaxBarRW(barName, GroupName, minmaxMenuName, &ActiveOBB->GetMin(),
+			0.1f, GetFrameCnt(), 0.1f);
+		sprintf(minmaxMenuName, "%s%s", GroupName, " Max");
+		TWBARMGR->AddMinMaxBarRW(barName, GroupName, minmaxMenuName, &ActiveOBB->GetMax(),
+			0.1f, GetFrameCnt(), 0.1f);
+
+		//add obb delete button
+		char deleteMenuName[64];
+		sprintf(deleteMenuName, "%s %s", GroupName, "Delete");
+		TWBARMGR->AddSeparator(barName, GroupName, nullptr);
+		TWBARMGR->AddButtonCB(barName, GroupName, deleteMenuName, DeleteOBBButtonCallback, ActiveOBB);
+	}
 
 	for (int i = 0; i < GetJoints().size(); ++i) {
-		if (GetTempOBB()[TempOBBCnt++].GetActive()) {
+		if (GetTempOBB()[i].GetActive()) {
 			CBoundingBox* pBoundingBox = new CBoundingBox();
 			pBoundingBox->Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
 			//pBoundingBox->SetMyMeshIndex(j);
@@ -283,9 +329,18 @@ void CAnimationInfo::CreateSelectOBBUI(){
 
 void CAnimationInfo::CreateActiveOBBUI(){
 	float max = GetFrameCnt();
-	char* barName = "Active Joint";
+	char* barName = "ActiveJoint";
 	
 	TWBARMGR->DeleteBar(barName);
+	TWBARMGR->AddBar(barName);
+	//set param
+	TWBARMGR->SetBarSize(barName, 300, 700);
+	TWBARMGR->SetBarPosition(barName, 700, 200);
+	TWBARMGR->SetBarColor(barName, 200, 200, 0);
+	TWBARMGR->SetBarContained(barName, true);
+	TWBARMGR->SetBarMovable(barName, false);
+	TWBARMGR->SetBarResizable(barName, false);
+	//set param
 	int TempOBBCnt{ 0 };
 	for (auto ActiveOBB : m_lActiveBoundingBox) {
 		ActiveOBB->SetMyIndex(TempOBBCnt++);
@@ -328,8 +383,18 @@ void CAnimationInfo::CreateAnimationInfoUI(){
 	char barName[64];
 	m_pAnimater->SetCurAnimationIndex(m_AnimationIndex);
 	//m_AnimationName.c_str();
-	sprintf(barName, "%s", "Animation Info");
+	sprintf(barName, "%s", "AnimationInfo");
 	TWBARMGR->DeleteBar(barName);
+
+	TWBARMGR->AddBar(barName);
+	//set param
+	TWBARMGR->SetBarSize(barName, 200, 300);
+	TWBARMGR->SetBarPosition(barName, 0, 400);
+	TWBARMGR->SetBarColor(barName, 200, 200, 0);
+	TWBARMGR->SetBarContained(barName, true);
+	TWBARMGR->SetBarMovable(barName, false);
+	TWBARMGR->SetBarResizable(barName, false);
+	//set param
 
 	TWBARMGR->AddMinMaxBarRW(barName, "Animation Info", "Animation Spd", &m_fAnimationSpd, 1.0f, 1000.f, 0.1f);
 	TWBARMGR->AddMinMaxBarRW(barName, "Animation Info", "Animation Frame", &m_CurFrame, 0.f, m_FrameCnt - 1, 1.0f);

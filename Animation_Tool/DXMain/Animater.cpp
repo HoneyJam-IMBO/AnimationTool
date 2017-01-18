@@ -114,9 +114,11 @@ void CAnimater::DeleteAnimationInfo(UINT AnimationIndex){
 	if (iter != m_vpAnimationInfos.end()) {
 		delete (*iter);
 		m_vpAnimationInfos.erase(iter);
-		TWBARMGR->DeleteBar("Animation Info");
-		TWBARMGR->DeleteBar("Active Joint");
 		m_CurAnimationIndex = 0;
+		UINT index{ 0 };
+		for (auto pAnimationInfo : m_vpAnimationInfos) {
+			pAnimationInfo->SetAnimationIndex(index);
+		}
 		CreateAnimationUI();
 	}
 }
@@ -138,8 +140,20 @@ void CAnimater::CreateAnimationUI(){
 	//이러면 pMesh에 한해서 이렇게 한거잖아? 여러 메쉬면? 모든 애니메이션 목록은!
 	//모든 joint 목록은!!! 
 
-	char* barName = "Animater Info";
+	char* barName = "AnimaterInfo";
 	TWBARMGR->DeleteBar(barName);
+	
+	TWBARMGR->AddBar(barName);
+	//set param
+	TWBARMGR->SetBarSize(barName, 200, 200);
+	TWBARMGR->SetBarPosition(barName, 0, 200);
+	TWBARMGR->SetBarColor(barName, 200, 200, 0);
+	TWBARMGR->SetBarContained(barName, true);
+	TWBARMGR->SetBarMovable(barName, false);
+	TWBARMGR->SetBarResizable(barName, false);
+	//set param
+
+
 	TWBARMGR->AddPositionBar(barName, "MainAABB", "MainAABB Position", GetMainAABB(), 0.f, SPACE_SIZE - 1.0f, 1.0f);
 	TWBARMGR->AddScaleBar(barName, "MainAABB", "MainAABB Scale", GetMainAABB(), 0.1f, 100.f, 0.1f);
 

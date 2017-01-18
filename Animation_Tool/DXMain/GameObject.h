@@ -98,6 +98,8 @@ public:
 	//ray picking 
 	bool CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance);
 	virtual void PickingProc();
+	void CreateObjectUI();
+	void CreateMeshUI();
 
 	//world
 	XMFLOAT4X4 m_xmf4x4World;

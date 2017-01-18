@@ -40,6 +40,16 @@ public:
 	//saperator ui 그냥 나누는 선
 	void AddSeparator(const char* barName, const char* groupName, const char* menuName);
 
+	//set param func
+	void SetBarSize(const char* barName, int x, int y);
+	void SetBarColor(const char* barName, int r, int g, int b);
+	void SetBarPosition(const char* barName, int x, int y);
+	void SetBarRefresh(const char* barName, float refreshTime);
+	void SetBarVisible(const char* barName, bool b);
+	void SetBarResizable(const char* barName, bool b);
+	void SetBarContained(const char* barName, bool b);
+	void SetBarMovable(const char* barName, bool b);
+
 	//custom func
 	//rotation float3 bar!
 	void AddDirBar(const char* barName, const char* groupName, const char* menuName, CGameObject* pObj);

@@ -14,7 +14,8 @@ bool CTwBarManager::Begin(ID3D11Device * pd3dDevice, ID3D11DeviceContext * pd3dD
 	}
 
 	TwDefine(def); // Message added to the help bar.
-	
+//	SetBarContained("GLOBAL", true);
+//	SetBarResizable("GLOBAL", false);
 	return true;
 }
 
@@ -139,6 +140,102 @@ void CTwBarManager::AddSeparator(const char * barName, const char * groupName, c
 
 	TwAddSeparator(m_mTwBar[barName], menuName, buff);
 }
+
+//set param func
+void CTwBarManager::SetBarSize(const char * barName, int x, int y){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;
+	char buff[256];
+	sprintf(buff, "%s size='%d %d'", barName, x, y);
+
+	TwDefine(buff);
+}
+
+void CTwBarManager::SetBarColor(const char * barName, int r, int g, int b){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;
+	if (r < 0 || g < 0 || b < 0 || 256 < r || 256 < g || 256 < b) return;
+	char buff[256];
+	sprintf(buff, "%s color='%d %d %d'", barName, r, g, b);
+
+	TwDefine(buff);
+}
+
+void CTwBarManager::SetBarPosition(const char * barName, int x, int y){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;
+	char buff[256];
+	sprintf(buff, "%s position='%d %d'", barName, x, y);
+
+	TwDefine(buff);
+}
+
+void CTwBarManager::SetBarRefresh(const char * barName, float refreshTime){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;
+	char buff[256];
+	sprintf(buff, "%s refresh=%f", barName, refreshTime);
+
+	TwDefine(buff);
+	//TwDefine(" mybar refresh=1.5 "); // refresh the bar every 1.5 seconds
+}
+
+void CTwBarManager::SetBarVisible(const char * barName, bool b){
+	// mybar is hidden
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;
+	char buff[256];
+
+	if (b) {
+		sprintf(buff, "%s visible=true", barName);
+	}
+	else {
+		sprintf(buff, "%s visible=false", barName);
+	}
+
+	TwDefine(buff);
+	//TwDefine(" mybar visible=false ");  
+}
+
+void CTwBarManager::SetBarResizable(const char * barName, bool b){
+	// mybar cannot be resized
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;
+	char buff[256];
+
+	if (b) {
+		sprintf(buff, "%s resizable=true", barName);
+	}
+	else {
+		sprintf(buff, "%s resizable=false", barName);
+	}
+
+	TwDefine(buff);
+}
+
+void CTwBarManager::SetBarContained(const char * barName, bool b){
+	//GLOBAL contained=true bars cannot move outside of the window
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;
+	char buff[256];
+
+	if (b) {
+		sprintf(buff, "%s contained=true", barName);
+	}
+	else {
+		sprintf(buff, "%s contained=false", barName);
+	}
+
+	TwDefine(buff);
+}
+void CTwBarManager::SetBarMovable(const char * barName, bool b){
+	//TwDefine(" mybar movable=false "); // mybar cannot be moved
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) return;
+	char buff[256];
+
+	if (b) {
+		sprintf(buff, "%s movable=true", barName);
+	}
+	else {
+		sprintf(buff, "%s movable=false", barName);
+	}
+
+	TwDefine(buff);
+}
+//set param func
 
 void CTwBarManager::AddDirBar(const char * barName, const char * groupName, const char * menuName, CGameObject* pObj){
 	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);

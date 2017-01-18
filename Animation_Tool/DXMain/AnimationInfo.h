@@ -22,6 +22,7 @@ public:
 	float& GetAnimationSpd() { return m_fAnimationSpd; }
 	string GetAnimationName() { return m_AnimationName; }
 	UINT GetAnimationIndex() { return m_AnimationIndex; }
+	void SetAnimationIndex(UINT index) { m_AnimationIndex = index; }
 
 	//utill 
 	void Reset();

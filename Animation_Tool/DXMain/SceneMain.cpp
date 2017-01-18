@@ -223,8 +223,6 @@ void CSceneMain::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wPa
 		POINT p = INPUTMGR->GetMousePoint();
 		m_pPickingObject = PickObjectPointedByCursor(p.x, p.y);
 		if (m_pPickingObject) {
-			TWBARMGR->DeleteBar("PickingBar");
-			TWBARMGR->AddBar("PickingBar");
 			m_pPickingObject->PickingProc();
 		}
 		break;

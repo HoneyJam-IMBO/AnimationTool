@@ -156,8 +156,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	//	//ui
-	if (TWBARMGR->OnProcessingWindowMessage(hWnd, message, wParam, lParam)) return 0;
+	framework.OnProcessingWindowMessage(hWnd, message, wParam, lParam);
 
     switch (message)
     {
@@ -199,7 +198,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 	case WM_KEYDOWN:
 	case WM_KEYUP:
-		framework.OnProcessingWindowMessage(hWnd, message, wParam, lParam);
 		break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

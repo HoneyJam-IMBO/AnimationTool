@@ -16,8 +16,8 @@ public:
 	virtual void Animate(float fTimeElapsed);
 
 	virtual void SetPosition(XMVECTOR pos);
-	virtual void PickingProc();
-	void SelectAnimationProc();
+	//virtual void PickingProc();
+	//void SelectAnimationProc();
 private:
 	bool test;
 

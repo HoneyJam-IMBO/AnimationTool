@@ -27,7 +27,7 @@ public:
 	void Reset();
 
 	//joint data 수정 함수
-	void ChangeJointData(CAnimationInfo* pAnimationInfo);
+	//void ChangeJointData(vector<string>& vJointName);
 
 	XMMATRIX GetCurFrameMtx(UINT JointIndex, UINT meshIndex = 0) { return m_vJoints[JointIndex].GetKeyFrames()[m_CurFrame].GetKeyFrameTransformMtx(); };
 	vector<CFbxJointData>& GetJoints(UINT meshIndex = 0) { return m_vJoints; }
@@ -36,8 +36,14 @@ public:
 	void SelectAnimationProc();
 	void DeleteActiveJointProc();
 
+	void CreateSelectOBBUI();
+	void CreateActiveOBBUI();
+	void CreateAnimationInfoUI();
+
 	vector<CBoundingBox>& GetTempOBB() { return m_vTempBoundingBox; }
 	list<CBoundingBox*>& GetActiveOBB() { return m_lActiveBoundingBox; }
+
+	shared_ptr<CAnimater> GetAnimater() { return m_pAnimater; }
 private:
 	shared_ptr<CAnimater> m_pAnimater{ nullptr };
 	//animation 
@@ -58,6 +64,7 @@ private:
 	bool m_bAnimation{ true };
 	float m_fAnimationSpd{ 1.0f };
 	
+	//map<int, int> m_mChangeIndex;
 public:
 	CAnimationInfo(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext);
 	~CAnimationInfo();

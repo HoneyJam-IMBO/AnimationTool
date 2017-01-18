@@ -7,6 +7,7 @@
 #include "Layer.h"
 #include "Animater.h"
 
+
 bool CGameObject::Begin() {
 
 	XMStoreFloat4x4(&m_xmf4x4World, XMMatrixIdentity());
@@ -272,18 +273,9 @@ void CGameObject::RegistToContainer() {
 }
 
 void CGameObject::RegistToDebuger(){
-	if (nullptr == m_pAnimater) {
-		BoundingBox BoundingBox;
-		BoundingBox = m_OriBoundingBox;
-		BoundingBox.Transform(BoundingBox, GetWorldMtx());
-		DEBUGER->RegistAABB(BoundingBox);
-	}
-	else {
-		BoundingBox BoundingBox;
-		BoundingBox = m_pAnimater->GetMainAABB()->GetAABB();
-		BoundingBox.Transform(BoundingBox, GetWorldMtx());
-		DEBUGER->RegistAABB(BoundingBox);
-	}
+	BoundingBox BoundingBox;
+	GetMainBoundingBox(BoundingBox);
+	DEBUGER->RegistAABB(BoundingBox);
 }
 
 //void CGameObject::SetRenderContainer(CRenderContainerSeller * pSeller) {
@@ -307,17 +299,24 @@ bool CGameObject::IsVisible(shared_ptr<CCamera> pCamera){
 
 	m_bIsVisible = (m_bActive) ? true : false;
 	if (m_bActive){
-		BoundingBox = m_OriBoundingBox;
-		BoundingBox.Transform(BoundingBox, GetWorldMtx());
+		GetMainBoundingBox(BoundingBox);
 		if (pCamera) m_bIsVisible = pCamera->IsInFrustum(BoundingBox);
 	}
 	return(m_bIsVisible);
 }
 
+void CGameObject::GetMainBoundingBox(BoundingBox& out){
+	out = m_OriBoundingBox;
+	if (m_pAnimater) {
+		out = m_pAnimater->GetMainAABB()->GetAABB();
+	}
+
+	out.Transform(out, GetWorldMtx());
+}
+
 bool CGameObject::CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float & distance){
 	BoundingBox BoundingBox;
-	BoundingBox = m_OriBoundingBox;
-	BoundingBox.Transform(BoundingBox, GetWorldMtx());
+	GetMainBoundingBox(BoundingBox);
 	return BoundingBox.Intersects(xmvWorldCameraStartPos, xmvRayDir, distance);
 }
 
@@ -325,6 +324,11 @@ void CGameObject::PickingProc(){
 	TWBARMGR->AddRotationMinMaxBar("PickingBar", "Rotation World", "Rotate", this);
 	TWBARMGR->AddPositionBar("PickingBar", "Position", "Position", this, 0.f, SPACE_SIZE - 1.0f, 1.0f);
 	TWBARMGR->AddScaleBar("PickingBar", "Scale", "Scale", this, 0.1f, 100.f, 0.1f);
+
+	if (m_pAnimater) {
+		m_pAnimater->CreateAnimationUI();
+
+	}
 }
 
 

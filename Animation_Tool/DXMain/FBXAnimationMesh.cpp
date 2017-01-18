@@ -34,17 +34,18 @@ bool CFBXAnimationMesh::Begin(UINT index){
 	//create weight buffer data
 
 	//create buffer
-	m_pd3dBoneIndexBuffer = CreateBuffer(sizeof(XMFLOAT4), m_nVertices, pxmf4BoneIndex, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
 	m_pd3dWeightBuffer = CreateBuffer(sizeof(XMFLOAT3), m_nVertices, pxmf3Weight, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
+	ID3D11Buffer* pd3dBoneIndexBuffer = CreateBuffer(sizeof(XMFLOAT4), m_nVertices, pxmf4BoneIndex, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
 	//create buffer
 	
 	//-----------------------------------버퍼 조립-----------------------------------
-	ID3D11Buffer *pd3dBuffers[2] = { m_pd3dBoneIndexBuffer, m_pd3dWeightBuffer };
-	UINT pnBufferStrides[2] = { sizeof(XMFLOAT4), sizeof(XMFLOAT3) };
+	ID3D11Buffer *pd3dBuffers[2] = { m_pd3dWeightBuffer , pd3dBoneIndexBuffer };
+	UINT pnBufferStrides[2] = { sizeof(XMFLOAT3), sizeof(XMFLOAT4) };
 	UINT pnBufferOffsets[2] = { 0, 0 };
 	AssembleToVertexBuffer(2, pd3dBuffers, pnBufferStrides, pnBufferOffsets);
 	//-----------------------------------버퍼 조립-----------------------------------
-	
+	m_pd3dBoneIndexBuffer = CreateBuffer(sizeof(XMFLOAT4), m_nVertices, pxmf4BoneIndex, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
+	ExchangeVertexBuffer(m_nVertexBuffers - 1, m_pd3dBoneIndexBuffer, sizeof(XMFLOAT4), 0);
 	//m_pAnimationInfo = new CAnimationInfo(m_pd3dDevice, m_pd3dDeviceContext);
 	//m_pAnimationInfo->Begin(0);
 

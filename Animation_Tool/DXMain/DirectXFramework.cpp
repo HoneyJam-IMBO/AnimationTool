@@ -635,7 +635,11 @@ void CDirectXFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPA
 			INPUTMGR->SetWheel(WHEEL_DOWN) :
 			INPUTMGR->SetWheel(WHEEL_UP);
 		break;
-
+		//for drag&drop
+	case WM_DROPFILES:
+		INPUTMGR->ProcDropFile(wParam);
+		
+		break;
 	default:
 		break;
 	}
@@ -659,6 +663,8 @@ void CDirectXFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, 
 
 LRESULT CALLBACK CDirectXFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
+	//	//ui
+	if (TWBARMGR->OnProcessingWindowMessage(hWnd, nMessageID, wParam, lParam)) return 0;
 
 	switch (nMessageID)
 	{
@@ -695,6 +701,10 @@ LRESULT CALLBACK CDirectXFramework::OnProcessingWindowMessage(HWND hWnd, UINT nM
 	case WM_KEYDOWN:
 	case WM_KEYUP:
 		OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+		break;
+	case WM_DROPFILES:
+		INPUTMGR->ProcDropFile(wParam);
+
 		break;
 	}
 	return(0);

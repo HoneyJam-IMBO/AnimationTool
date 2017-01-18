@@ -2,6 +2,10 @@
 
 #include "SingleTon.h"
 
+//for drag&drop
+#include <shellapi.h>
+#define DROP_FILE_NAME_BUFF_SIZE 100
+
 //방향
 #define DIR_FORWARD			0x01
 #define DIR_BACKWARD		0x02
@@ -109,6 +113,12 @@ public:
 	bool GetDebugMode() { return m_bDebug; }
 	//Mode 나중에 전여 singleton으로 빼자
 	bool m_bDebug{ false };
+
+	//drag & drop
+	void ProcDropFile(WPARAM wParam);
+	const char* GetDropFileName();
+	const bool GetUsedDropFileName() { return m_bCanUseDropFileName; }
+
 private:
 	HWND m_hWnd;
 	bool							m_bKeyBoardPressCheck{ false };
@@ -127,6 +137,11 @@ private:
 	POINT							m_ptOldCursorPos;
 	float m_cxDelta{ 0.f }, m_cyDelta{ 0.f };
 
+	//for drag&drop
+	HDROP m_hDropInfo{ NULL };
+	UINT m_DropFileBuffSize{ DROP_FILE_NAME_BUFF_SIZE };
+	char m_DropFileNameBuf[DROP_FILE_NAME_BUFF_SIZE];
+	bool m_bCanUseDropFileName{ false };
 public:
 	CInputManager();
 	virtual ~CInputManager();

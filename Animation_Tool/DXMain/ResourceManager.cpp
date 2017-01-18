@@ -205,8 +205,8 @@ void CResourceManager::CreateRenderShader(){
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },//model
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },//color
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 2, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },//uv
-		{ "BONE_INDEX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },//bone index
-		{ "BONE_WEIGHT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 4, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },//bone weight
+		{ "BONE_WEIGHT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 3, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },//bone weight
+		{ "BONE_INDEX", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 4, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },//bone index
 	};
 	pShader->CreateVS(TEXT("VSAnimationObject.cso"), AnimationvertexDesc, 5);
 	pShader->CreatePS(TEXT("PSAnimationObject.cso"));
@@ -440,10 +440,11 @@ void CResourceManager::CreateMesh(){
 #else
 	shared_ptr<CUseFBXMesh> pTestFBXMesh = make_shared<CUseFBXMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #endif
-	
+	//ddd
+	//CreateMultiMesh("../../Assets/Model/fbx/1-2/Die_85.fbx");
+	//CreateAnimater("../../Assets/Model/fbx/1-1/ATK1_45.fbx");
+
 	//CreateMultiMesh("../../Assets/Model/fbx/Bless_Elf.fbx");
-	CreateMultiMesh("../../Assets/Model/fbx/2-1/ATK1_45.fbx");
-	CreateAnimater("../../Assets/Model/fbx/1-1/ATK1_45.fbx");
 	//CreateMultiMesh("../../Assets/Model/fbx/2-1/ATK1_45.fbx");
 
 

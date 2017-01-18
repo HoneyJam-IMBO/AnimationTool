@@ -28,18 +28,18 @@ bool CSceneMain::Begin() {
 	m_pSpaceContainer->AddObject(m_pRotationTestObject);
 
 	////fbx mesh
-	CTestObject* pObject = nullptr;
-	pObject = new CTestObject();
-	pObject->Begin();
-	//pObject->SetTerrainContainer(m_pTerrainContainer);
-	pObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
-	m_pSpaceContainer->AddObject(pObject);
+	//CTestObject* pObject = nullptr;
+	//pObject = new CTestObject();
+	//pObject->Begin();
+	////pObject->SetTerrainContainer(m_pTerrainContainer);
+	//pObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
+	//m_pSpaceContainer->AddObject(pObject);
 
-	//CBunny* pBunny = new CBunny();
-	//pBunny->Begin();
-	////pBunny->SetTerrainContainer(m_pTerrainContainer);
-	//pBunny->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
-	//m_pSpaceContainer->AddObject(pBunny);
+	CBunny* pBunny = new CBunny();
+	pBunny->Begin();
+	//pBunny->SetTerrainContainer(m_pTerrainContainer);
+	pBunny->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
+	m_pSpaceContainer->AddObject(pBunny);
 	//fbx mesh
 
 	//int space_size = static_cast<int>(SPACE_SIZE);
@@ -163,7 +163,11 @@ bool CSceneMain::End() {
 
 void CSceneMain::Animate(float fTimeElapsed) {
 	//DEBUGER->AddText(100, 100, 100, YT_Color(255, 0, 0), L"TEST");
-
+	const char* test{ nullptr };
+	test = INPUTMGR->GetDropFileName();
+	if (test) {
+		DEBUGER->AddText(10, 500, 500, YT_Color(), L"%s", test);
+	}
 	//-----------------------------------space------------------------------
 	m_pSpaceContainer->Animate(fTimeElapsed);
 	//-----------------------------------space------------------------------

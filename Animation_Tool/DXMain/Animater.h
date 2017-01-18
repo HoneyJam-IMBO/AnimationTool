@@ -13,6 +13,8 @@ public:
 	void Update(float fTimeElapsed);
 
 	void AddAnimationInfo(CAnimationInfo* pAnimationInfo);
+	//void CreateJointTree();
+	//void ChangeAllAnimationInfoJointData();
 	void DeleteAnimationInfo(UINT AnimationIndex);
 
 	void SetCurAnimationIndex(UINT AnimationIndex);
@@ -24,8 +26,10 @@ public:
 	size_t GetAnimationCnt() { return m_vpAnimationInfos.size(); }
 
 	CBoundingBox* GetMainAABB() { return m_pMainBoundingBox;}
+	
 	//util
 	void ResetAnimationInfos();
+	void CreateAnimationUI();
 
 	//helper func
 	UINT GetAnimaterJointCnt();
@@ -34,6 +38,12 @@ private:
 	UINT m_CurAnimationIndex{ 0 };
 
 	CBoundingBox* m_pMainBoundingBox{ nullptr };
+//	//joint tree Á¤º¸
+//	vector<string> m_vJointName;
+
+	//buffer
+	CStaticBuffer* m_pAnimBuffer{ nullptr };
+
 public:
 	CAnimater(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext);
 	~CAnimater();

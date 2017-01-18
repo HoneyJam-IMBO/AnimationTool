@@ -2,19 +2,6 @@
 #include "TestObject.h"
 
 
-void TW_CALL AnimationSelectCallback(void * clientData) {
-	CAnimationInfo* pAnimInfo = reinterpret_cast<CAnimationInfo*>(clientData);
-	pAnimInfo->SelectAnimationProc();
-}
-void TW_CALL JointSelectButtonCallback(void * clientData) {
-	CBoundingBox* pOBB = reinterpret_cast<CBoundingBox*>(clientData);
-	if (pOBB->GetActive())
-		pOBB->SetActive(false);
-	else
-		pOBB->SetActive(true);
-
-}
-
 bool CTestObject::Begin() {
 	//object_id set
 	m_objectID = object_id::OBJECT_FBX_ELF;
@@ -49,27 +36,6 @@ void CTestObject::Animate(float fTimeElapsed) {
 	//for (int i = 0; i < m_pRenderContainer->GetvMesh().size(); ++i) {
 	//	m_pRenderContainer->GetMesh(i).get()->Update(fTimeElapsed);
 	//}
-
-}void CTestObject::PickingProc() {
-	//1. 모든 mesh의 목록 
-	CGameObject::PickingProc();
-
-	//animation ui
-	//이러면 pMesh에 한해서 이렇게 한거잖아? 여러 메쉬면? 모든 애니메이션 목록은!
-	//모든 joint 목록은!!! 
-	TWBARMGR->AddPositionBar("PickingBar", "MainAABB", "MainAABB Position", m_pAnimater->GetMainAABB(), 0.f, SPACE_SIZE - 1.0f, 1.0f);
-	TWBARMGR->AddScaleBar("PickingBar", "MainAABB", "MainAABB Scale", m_pAnimater->GetMainAABB(), 0.1f, 100.f, 0.1f);
-	
-	//for(모든 애니메이션에 대해서){
-	//TWBARMGR->AddButtonCB("PickingBar", "Animation Select", "Animation name", AnimationSelectCallback, 애니메이션 정보);
-	//}
-	for (size_t i = 0; i < m_pAnimater->GetAnimationCnt(); ++i) {
-		//string manuNameStr = m_pAnimater->GetAnimationInfo(i)->GetAnimationName();
-		char menuName[64];
-		sprintf(menuName, "%s %d", "Animation", i);
-		TWBARMGR->AddButtonCB("PickingBar", "Animation Select", menuName, AnimationSelectCallback, m_pAnimater->GetAnimationInfo(i));
-	}
-
 }
 CTestObject::CTestObject() : CGameObject("testobject", tag::TAG_DYNAMIC_OBJECT) {
 

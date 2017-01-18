@@ -1,11 +1,28 @@
 #include "stdafx.h""
 #include "Animater.h"
 
+void TW_CALL AnimationSelectCallback(void * clientData) {
+	CAnimationInfo* pAnimInfo = reinterpret_cast<CAnimationInfo*>(clientData);
+	pAnimInfo->SelectAnimationProc();
+}
+void TW_CALL JointSelectButtonCallback(void * clientData) {
+	CBoundingBox* pOBB = reinterpret_cast<CBoundingBox*>(clientData);
+	if (pOBB->GetActive())
+		pOBB->SetActive(false);
+	else
+		pOBB->SetActive(true);
+}
+
+
 bool CAnimater::Begin(){
 	m_vpAnimationInfos.clear();
 
 	m_pMainBoundingBox = new CBoundingBox();
 	m_pMainBoundingBox->Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(5.f, 5.f, 5.f, 1.f));
+
+	m_pAnimBuffer = new CStaticBuffer(m_pd3dDevice, m_pd3dDeviceContext);
+	m_pAnimBuffer->Begin(256, sizeof(XMMATRIX), nullptr, 10, BIND_VS);
+
 	return true;
 }
 
@@ -15,12 +32,16 @@ bool CAnimater::End(){
 	}
 	m_vpAnimationInfos.clear();
 
+	if (m_pMainBoundingBox) {
+		m_pMainBoundingBox->End();
+		delete m_pMainBoundingBox;
+	}
 	return true;
 }
 
 void CAnimater::SetShaderState(){
 	if (m_vpAnimationInfos.empty()) {
-
+		m_pAnimBuffer->SetShaderState();
 		return;
 	}
 	m_vpAnimationInfos[m_CurAnimationIndex]->SetShaderState();
@@ -36,41 +57,68 @@ void CAnimater::CleanShaderState(){
 
 void CAnimater::Update(float fTimeElapsed){
 	if (m_vpAnimationInfos.empty()) {
+		void* pData = m_pAnimBuffer->Map();
+		XMMATRIX* pAnimationData = static_cast<XMMATRIX*>(pData);
+
+		for (int j = 0; j < 256; ++j) {
+			pAnimationData[j] = XMMatrixIdentity();
+		}
+		m_pAnimBuffer->Unmap();
 		return;
 	}
 	m_vpAnimationInfos[m_CurAnimationIndex]->Update(fTimeElapsed);
 }
 
 void CAnimater::AddAnimationInfo(CAnimationInfo * pAnimationInfo){
-
-	if (m_vpAnimationInfos.empty() || //empty가 아니라면
-		pAnimationInfo->GetJoints().size() == GetAnimaterJointCnt()) {
-		m_vpAnimationInfos.push_back(pAnimationInfo);
-		return;
-	}
-	
-	if (GetAnimaterJointCnt() < pAnimationInfo->GetJoints().size()) {
-		//기존의 joint수 보다 새로 들어온 joint수가 더 많다면 
-		//기존의 AnimationInfo들에게 JointTree 수정을 요청
-		for (auto data : m_vpAnimationInfos) {
-			data->ChangeJointData(pAnimationInfo);
-		}
-	}
-	else {
-		//기존의 joinnt수가 새로 들어온 joint수 보다 많다면
-		//새로 들어온 AnimationInfo에게 JointTree 수정을 요청
-		pAnimationInfo->ChangeJointData(m_vpAnimationInfos[0]);
-	}
-	
+	//1. 넣고
 	m_vpAnimationInfos.push_back(pAnimationInfo);
+	
+//	//2. 모든 anim info를 가지고. 전체적인 Joint tree를 제작한다.
+//	CreateJointTree();
+//
+//	//3. 모든 anim info에게 새로운 joint tree를 가지고 자신의 joint를 재정렬 할 것을 요청
+//	ChangeAllAnimationInfoJointData();
 }
+
+//void CAnimater::CreateJointTree() {
+//	//모든? x 처음과 끝
+//	m_vJointName.clear();
+//	int Lastindex = m_vpAnimationInfos.size() - 1;
+//	vector<CFbxJointData>::iterator iter;
+//	//기준은 항상 처음 메쉬
+//	for (auto FJoint : m_vpAnimationInfos[0]->GetJoints()) {
+//		m_vJointName.push_back(FJoint.GetJointName());
+//	}
+//	for (auto LJoint : m_vpAnimationInfos[Lastindex]->GetJoints()) {
+//		iter = find_if(m_vpAnimationInfos[0]->GetJoints().begin(), m_vpAnimationInfos[0]->GetJoints().end(), [&LJoint](CFbxJointData& my) {
+//			return (my.GetJointName() == LJoint.GetJointName());
+//		});
+//		if (iter == m_vpAnimationInfos[0]->GetJoints().end()) {
+//			//없으면
+//			m_vJointName.push_back(LJoint.GetJointName());
+//		}
+//	}
+//}
+//
+//void CAnimater::ChangeAllAnimationInfoJointData(){
+//	for (auto pAnimationInfo : m_vpAnimationInfos) {
+//		pAnimationInfo->ChangeJointData(m_vJointName);
+//	}
+//}
 
 void CAnimater::DeleteAnimationInfo(UINT AnimationIndex){
 	vector<CAnimationInfo*>::iterator iter;
 	for (iter = m_vpAnimationInfos.begin(); iter != m_vpAnimationInfos.end(); ++iter) {
-		if ((*iter)->GetAnimationIndex() == m_CurAnimationIndex) break;
+		if ((*iter)->GetAnimationIndex() == AnimationIndex) break;
 	}
-	if (iter != m_vpAnimationInfos.end()) m_vpAnimationInfos.erase(iter);
+	if (iter != m_vpAnimationInfos.end()) {
+		delete (*iter);
+		m_vpAnimationInfos.erase(iter);
+		TWBARMGR->DeleteBar("Animation Info");
+		TWBARMGR->DeleteBar("Active Joint");
+		m_CurAnimationIndex = 0;
+		CreateAnimationUI();
+	}
 }
 
 void CAnimater::SetCurAnimationIndex(UINT AnimationIndex) { 
@@ -82,6 +130,27 @@ void CAnimater::SetCurAnimationIndex(UINT AnimationIndex) {
 void CAnimater::ResetAnimationInfos(){
 	for (auto pAnimationInfo : m_vpAnimationInfos) {
 		pAnimationInfo->Reset();
+	}
+}
+
+void CAnimater::CreateAnimationUI(){
+	//animation ui
+	//이러면 pMesh에 한해서 이렇게 한거잖아? 여러 메쉬면? 모든 애니메이션 목록은!
+	//모든 joint 목록은!!! 
+
+	char* barName = "Animater Info";
+	TWBARMGR->DeleteBar(barName);
+	TWBARMGR->AddPositionBar(barName, "MainAABB", "MainAABB Position", GetMainAABB(), 0.f, SPACE_SIZE - 1.0f, 1.0f);
+	TWBARMGR->AddScaleBar(barName, "MainAABB", "MainAABB Scale", GetMainAABB(), 0.1f, 100.f, 0.1f);
+
+	//for(모든 애니메이션에 대해서){
+	//TWBARMGR->AddButtonCB("PickingBar", "Animation Select", "Animation name", AnimationSelectCallback, 애니메이션 정보);
+	//}
+	for (size_t i = 0; i < GetAnimationCnt(); ++i) {
+		//string manuNameStr = m_pAnimater->GetAnimationInfo(i)->GetAnimationName();
+		char menuName[64];
+		sprintf(menuName, "%s %d", "Animation", i);
+		TWBARMGR->AddButtonCB(barName, "Animation Select", menuName, AnimationSelectCallback, GetAnimationInfo(i));
 	}
 }
 

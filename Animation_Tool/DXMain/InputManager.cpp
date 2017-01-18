@@ -20,6 +20,9 @@ bool CInputManager::Begin(HWND hWnd) {
 	memset(&m_pKeyBuffers, 0, sizeof(m_pKeyBuffers));
 	memset(&m_bDownCheck, 0, sizeof(m_bDownCheck));
 
+	//drag&drop
+	DragAcceptFiles(hWnd, TRUE);
+
 	return true;
 }
 
@@ -179,6 +182,23 @@ void CInputManager::SetbCapture(bool b){
 	else ReleaseCapture();
 
 	m_bCapture = b;
+}
+
+void CInputManager::ProcDropFile(WPARAM wParam){
+	m_hDropInfo = (HDROP)wParam;
+	DragQueryFileA(m_hDropInfo, 0, m_DropFileNameBuf, m_DropFileBuffSize);
+	m_bCanUseDropFileName = true;
+}
+
+const char* CInputManager::GetDropFileName() {
+
+	char* returnVal{ nullptr };
+
+	if (m_bCanUseDropFileName) {
+		returnVal = m_DropFileNameBuf;
+	}
+
+	return returnVal; 
 }
 
 void CInputManager::SetMousePoint(POINT _pt){

@@ -31,6 +31,8 @@ public:
 	//test
 	float& GetMin() { return m_fMin; }
 	float& GetMax() { return m_fMax; }
+	void SetMin(float t) { m_fMin = t; }
+	void SetMax(float t) { m_fMax = t; }
 	void SetMyJointIndex(int index) { m_nMyJointIndex = index; }
 	int GetMyJointIndex() { return m_nMyJointIndex; }
 	void SetMyIndex(int index) { m_nMyIndex = index; }

@@ -96,6 +96,21 @@ void CMesh::AssembleToVertexBuffer(int nBuffers, ID3D11Buffer **ppd3dBuffers, UI
 	m_pnVertexOffsets = pnNewVertexOffsets;
 }
 
+void CMesh::ExchangeVertexBuffer(int index, ID3D11Buffer * pd3dBuffer, UINT nBufferStride, UINT nBufferOffset){
+	if (m_nVertexBuffers > 0){
+		for (int i = 0; i < m_nVertexBuffers; i++){
+			if (i == index) {//해당 index이면
+				m_ppd3dVertexBuffers[i]->Release();//release
+				//새로 넣고
+				m_ppd3dVertexBuffers[i] = pd3dBuffer;
+				m_pnVertexStrides[i] = nBufferStride;
+				m_pnVertexOffsets[i] = nBufferOffset;
+				break;
+			}
+		}
+	}
+}
+
 void CMesh::CreateTBFromPoints(XMFLOAT3 * pPositions, XMFLOAT2 * pUVs, XMFLOAT3 & outT, XMFLOAT3 & outB){
 	XMVECTOR xmvPos[3];
 	XMVECTOR xmvUV[3];

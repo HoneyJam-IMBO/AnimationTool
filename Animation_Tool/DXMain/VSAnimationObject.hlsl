@@ -18,8 +18,8 @@ struct VS_INPUT
 	float3 position : POSITION;
 	float3 normal : NORMAL;
 	float2 uv : TEXCOORD;
-	float4 boneIndex : BONE_INDEX;
 	float3 boneWeight : BONE_WEIGHT;
+	float4 boneIndex : BONE_INDEX;
 };
 
 // 픽셀 셰이더를 통과한 픽셀당 색 데이터입니다.

@@ -45,6 +45,7 @@ public:
 	void CMesh::SetAverageVertexNormal(XMVECTOR* pxmvNormals, int nPrimitives, int nOffset, bool bStrip);
 
 	void AssembleToVertexBuffer(int nBuffers, ID3D11Buffer** ppd3dBuffers, UINT* pnBufferStrides, UINT* pnBufferOffsets);
+	void ExchangeVertexBuffer(int index, ID3D11Buffer* pd3dBuffer, UINT nBufferStride, UINT nBufferOffset);
 	//tbn을 구하는데 들어오는 점을 가지고 만든다. 실제로 이용하는 것은 점 3개이다.
 	void CreateTBFromPoints(XMFLOAT3* pPositions, XMFLOAT2* pUVs, XMFLOAT3& outT, XMFLOAT3& outB);
 	//---------------------------mesh----------------------------------

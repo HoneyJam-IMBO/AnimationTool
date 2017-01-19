@@ -2,6 +2,8 @@
 
 #include "DXObject.h"
 #include "Texture.h"
+#include "Material.h"
+
 #include "BoundingBox.h"
 
 // 꼭짓점별 데이터를 꼭짓점 셰이더로 보내는 데 사용됩니다.
@@ -77,6 +79,8 @@ public:
 
 	void AddMeshTexture(shared_ptr<CTexture>);
 	//setter
+	//animater mesh 선택을 표시하기 위한 함수
+	void SetMeshMaterial(shared_ptr<CMaterial> pMaterial);
 protected:
 	//CBoundingBox m_tmpBOUNDINGBOX;
 	//aabb
@@ -85,7 +89,7 @@ protected:
 	vector<CBoundingBox> m_vOBB;
 
 	vector<shared_ptr<CTexture>> m_vMeshTexture;
-
+	shared_ptr<CMaterial> m_pMeshMaterial{ nullptr };
 	//topology
 	D3D11_PRIMITIVE_TOPOLOGY m_d3dPrimitiveTopology{ D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST };
 

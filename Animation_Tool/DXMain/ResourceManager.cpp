@@ -10,8 +10,8 @@ bool CResourceManager::Begin(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 	CreateRenderShader();
 	CreateBuffer();
 	CreateGlobalBuffer();
-	CreateMesh();
 	CreateMaterial();
+	CreateMesh();
 	CreateAnimater();
 
 	return true;
@@ -22,8 +22,8 @@ bool CResourceManager::End(){
 	ReleaseRenderShader();
 	ReleaseBuffer();
 	ReleaseGlobalBuffer();
-	ReleaseMesh();
 	ReleaseMaterial();
+	ReleaseMesh();
 	ReleaseAnimater();
 
 	return true;
@@ -441,8 +441,8 @@ void CResourceManager::CreateMesh(){
 	shared_ptr<CUseFBXMesh> pTestFBXMesh = make_shared<CUseFBXMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #endif
 	//ddd
-	//CreateMultiMesh("../../Assets/Model/fbx/1-2/Die_85.fbx");
-	//CreateAnimater("../../Assets/Model/fbx/1-1/ATK1_45.fbx");
+	CreateMultiMesh("../../Assets/Model/fbx/1-2/Die_85.fbx");
+	CreateAnimater("../../Assets/Model/fbx/1-1/ATK1_45.fbx");
 
 	//CreateMultiMesh("../../Assets/Model/fbx/Bless_Elf.fbx");
 	//CreateMultiMesh("../../Assets/Model/fbx/2-1/ATK1_45.fbx");
@@ -698,6 +698,14 @@ void CResourceManager::CreateMaterial(){
 	shared_ptr<CMaterial> pMaterial;
 	//material
 	pMaterial = make_shared<CMaterial>(m_pd3dDevice, m_pd3dDeviceContext);
+	pMaterial->Begin(XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f), 1.0f, 1.0f);
+	m_mMaterial.insert(pairMaterial("DEFAULT", pMaterial));
+
+	pMaterial = make_shared<CMaterial>(m_pd3dDevice, m_pd3dDeviceContext);
+	pMaterial->Begin(XMFLOAT4(1.f, 0.f, 0.f, 1.0f), 1.0f, 1.0f);
+	m_mMaterial.insert(pairMaterial("RED", pMaterial));
+
+	pMaterial = make_shared<CMaterial>(m_pd3dDevice, m_pd3dDeviceContext);
 	pMaterial->Begin(XMFLOAT4(0.5f, 0.1f, 0.1f, 1.0f), 4.0f, 1.0f);
 	m_mMaterial.insert(pairMaterial("Core", pMaterial));
 
@@ -737,6 +745,7 @@ void CResourceManager::CreateMaterial(){
 	pMaterial = make_shared<CMaterial>(m_pd3dDevice, m_pd3dDeviceContext);
 	pMaterial->Begin(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1.f, 1.f);
 	m_mMaterial.insert(pairMaterial("SkyBox", pMaterial));
+
 }
 
 void CResourceManager::CreateAnimater(){

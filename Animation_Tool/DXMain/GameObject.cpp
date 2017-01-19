@@ -7,10 +7,32 @@
 #include "Layer.h"
 #include "Animater.h"
 
+//SetSelectMeshCallback
+void TW_CALL SetSelectMeshCallback(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	float index = *static_cast<const float*>(value);
+	pObj->SetSelectMeshIndex(index);
+	
+	for (int i = 0; i < pObj->GetRenderContainer()->GetvMesh().size(); ++i) {
+		if (i == pObj->GetSelectMeshIndex()) {
+			pObj->GetRenderContainer()->GetMesh(i)->SetMeshMaterial(RESOURCEMGR->GetMaterial("RED"));
+			continue;
+		}
+		pObj->GetRenderContainer()->GetMesh(i)->SetMeshMaterial(RESOURCEMGR->GetMaterial("DEFAULT"));
+	}
+}
+void TW_CALL GetSelectMeshCallback(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<float *>(value) = pObj->GetSelectMeshIndex();
+	float x = *static_cast<float *>(value);
+}
 
 void TW_CALL SetMeshTextureButtonCallback(void * clientData) {
-	CMesh* pMesh = reinterpret_cast<CMesh*>(clientData);
-
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	//make texture/ set texture
+	//pObj->GetRenderContainer()->GetMesh(pObj->GetSelectMeshIndex());
 }
 
 bool CGameObject::Begin() {
@@ -366,12 +388,16 @@ void CGameObject::CreateMeshUI(){
 	TWBARMGR->SetBarResizable(barName, false);
 	//set param
 
-	char menuName[64];
-	int i{ 0 };
-	for (auto pMesh : m_pRenderContainer->GetvMesh()) {
-		sprintf(menuName, "Mesh%d", i);
-		TWBARMGR->AddButtonCB(barName, "SetTextureButton", menuName, SetMeshTextureButtonCallback, m_pRenderContainer->GetMesh(i).get());
-	}
+	TWBARMGR->AddMinMaxBarCB(barName, "SelectMesh", "SelectMeshIndex",
+		SetSelectMeshCallback, GetSelectMeshCallback, this, 0.f, m_pRenderContainer->GetvMesh().size(), 1.f);
+
+	TWBARMGR->AddButtonCB(barName, "SetSelect", "MeshTexture", SetMeshTextureButtonCallback, this);
+	//char menuName[64];
+	//int i{ 0 };
+	//for (auto pMesh : m_pRenderContainer->GetvMesh()) {
+	//	sprintf(menuName, "Mesh%d", i);
+	//	TWBARMGR->AddButtonCB(barName, "SetTextureButton", menuName, SetMeshTextureButtonCallback, m_pRenderContainer->GetMesh(i++).get());
+	//}
 }
 
 

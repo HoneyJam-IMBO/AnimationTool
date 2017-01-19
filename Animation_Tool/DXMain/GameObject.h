@@ -107,8 +107,15 @@ public:
 	XMFLOAT4 m_xmf4Quaternion;
 	XMFLOAT4 m_xmf4Scale{ 1.f, 1.f, 1.f, 1.f };
 	XMFLOAT3 m_xmf3Rotate{ 0.f,0.f, 0.f };
+
+	//texture select ui를 위한 함수
+	int& GetSelectMeshIndex() { return m_indexSelectMesh; }
+	void SetSelectMeshIndex(float& index) { 
+		m_indexSelectMesh = index; 
+	}
 protected:
-	
+	int m_indexSelectMesh{ 0 };
+
 	BoundingBox m_OriBoundingBox;
 
 	bool m_bIsVisible{ true }; 

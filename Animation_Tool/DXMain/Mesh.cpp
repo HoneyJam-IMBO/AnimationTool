@@ -33,6 +33,8 @@ void CMesh::SetShaderState() {
 	for (auto pTexture : m_vMeshTexture) {
 		pTexture->SetShaderState();
 	}
+	if (m_pMeshMaterial) m_pMeshMaterial->SetShaderState();
+
 	//¸Þ½¬
 	m_pd3dDeviceContext->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
 
@@ -141,6 +143,9 @@ void CMesh::CreateTBFromPoints(XMFLOAT3 * pPositions, XMFLOAT2 * pUVs, XMFLOAT3 
 void CMesh::AddMeshTexture(shared_ptr<CTexture> pTexture){
 	m_vMeshTexture.emplace_back(pTexture);
 }
+void CMesh::SetMeshMaterial(shared_ptr<CMaterial> pMaterial){
+	m_pMeshMaterial = pMaterial;
+}
 XMVECTOR CMesh::CalculateTriAngleNormal(UINT nIndex0, UINT nIndex1, UINT nIndex2)
 {
 	XMVECTOR xmvNormal = XMVectorSet(0.0f, 0.0f, 0.0f, 0.f);
@@ -214,8 +219,7 @@ void CMesh::CalculateVertexNormal(XMVECTOR *pxmvNormals)
 }
 
 CMesh::CMesh(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext) : DXObject("mesh", pd3dDevice, pd3dDeviceContext) {
-	
-
+	m_pMeshMaterial = RESOURCEMGR->GetMaterial("DEFAULT");
 }
 CMesh::~CMesh() {
 

@@ -27,19 +27,19 @@ bool CSceneMain::Begin() {
 	m_pRotationTestObject->SetPosition(XMLoadFloat3(&XMFLOAT3(0, 0, 0)));
 	m_pSpaceContainer->AddObject(m_pRotationTestObject);
 
-	////fbx mesh
-	//CTestObject* pObject = nullptr;
-	//pObject = new CTestObject();
-	//pObject->Begin();
-	////pObject->SetTerrainContainer(m_pTerrainContainer);
-	//pObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
-	//m_pSpaceContainer->AddObject(pObject);
+	//fbx mesh
+	CTestObject* pObject = nullptr;
+	pObject = new CTestObject();
+	pObject->Begin();
+	//pObject->SetTerrainContainer(m_pTerrainContainer);
+	pObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
+	m_pSpaceContainer->AddObject(pObject);
 
-	CBunny* pBunny = new CBunny();
-	pBunny->Begin();
-	//pBunny->SetTerrainContainer(m_pTerrainContainer);
-	pBunny->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
-	m_pSpaceContainer->AddObject(pBunny);
+	//CBunny* pBunny = new CBunny();
+	//pBunny->Begin();
+	////pBunny->SetTerrainContainer(m_pTerrainContainer);
+	//pBunny->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
+	//m_pSpaceContainer->AddObject(pBunny);
 	//fbx mesh
 
 	//int space_size = static_cast<int>(SPACE_SIZE);

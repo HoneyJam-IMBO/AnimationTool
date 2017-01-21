@@ -212,12 +212,14 @@ CRenderContainer* CRenderContainerSeller::GetRenderContainer(object_id objectid)
 	case object_id::OBJECT_FBX_ELF:
 		m_mRenderContainer[objectid] = new CRenderContainer(m_pd3dDevice, m_pd3dDeviceContext);
 
-		//mesh set
-		char pName[20];
-		for (int i = 0; i < 10; ++i) {
-			sprintf(pName, "FBX_%d", i);
-			m_mRenderContainer[objectid]->AddMesh(RESOURCEMGR->GetMesh(pName));
-		}
+		m_mRenderContainer[objectid]->AddMesh(RESOURCEMGR->GetMesh("Rect1"));
+
+		////mesh set
+		//char pName[20];
+		//for (int i = 0; i < 10; ++i) {
+		//	sprintf(pName, "FBX_%d", i);
+		//	m_mRenderContainer[objectid]->AddMesh(RESOURCEMGR->GetMesh(pName));
+		//}
 		//mesh set
 		//m_mRenderContainer[objectid]->SetMesh(m_pTestMultiMesh);
 
@@ -229,9 +231,9 @@ CRenderContainer* CRenderContainerSeller::GetRenderContainer(object_id objectid)
 		m_mRenderContainer[objectid]->SetShader(RESOURCEMGR->GetRenderShader("Core"));
 #endif
 		m_mRenderContainer[objectid]->AddBuffer(RESOURCEMGR->GetBuffer("FBX"));
-		m_mRenderContainer[objectid]->AddTexture(RESOURCEMGR->GetTexture("FBX"));
 		m_mRenderContainer[objectid]->AddMaterial(RESOURCEMGR->GetMaterial("FBX"));
-		m_mRenderContainer[objectid]->SetAnimater(RESOURCEMGR->GetAnimater("ELF"));
+		//m_mRenderContainer[objectid]->AddTexture(RESOURCEMGR->GetTexture("FBX"));
+		//m_mRenderContainer[objectid]->SetAnimater(RESOURCEMGR->GetAnimater("ELF"));
 
 		m_mRenderContainer[objectid]->Begin();
 		break;
@@ -255,29 +257,29 @@ CRenderContainer* CRenderContainerSeller::GetRenderContainer(object_id objectid)
 
 	return m_mRenderContainer[objectid];
 }
-
-void CRenderContainerSeller::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam){
-	static UINT currMesh = 0;
-	static char name[20];
-	switch (nMessageID)
-	{
-	case WM_KEYDOWN:
-
-		switch (wParam)
-		{
-		case VK_F5:
-			sprintf(name, "FBX_%d", ++currMesh);
-			m_mRenderContainer[OBJECT_FBX_ELF]->SetMesh(RESOURCEMGR->GetMesh(name));
-			break;
-		case VK_F6:
-			sprintf(name, "FBX_%d", --currMesh);
-			m_mRenderContainer[OBJECT_FBX_ELF]->SetMesh(RESOURCEMGR->GetMesh(name));
-			break;
-		default:
-			break;
-		}
-		break;
-	default:
-		break;
-	}
-}
+//
+//void CRenderContainerSeller::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam){
+//	static UINT currMesh = 0;
+//	static char name[20];
+//	switch (nMessageID)
+//	{
+//	case WM_KEYDOWN:
+//
+//		switch (wParam)
+//		{
+//		case VK_F5:
+//			sprintf(name, "FBX_%d", ++currMesh);
+//			m_mRenderContainer[OBJECT_FBX_ELF]->SetMesh(RESOURCEMGR->GetMesh(name));
+//			break;
+//		case VK_F6:
+//			sprintf(name, "FBX_%d", --currMesh);
+//			m_mRenderContainer[OBJECT_FBX_ELF]->SetMesh(RESOURCEMGR->GetMesh(name));
+//			break;
+//		default:
+//			break;
+//		}
+//		break;
+//	default:
+//		break;
+//	}
+//}

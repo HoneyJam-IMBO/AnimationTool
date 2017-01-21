@@ -76,6 +76,12 @@ void CSpaceContainer::AddObject(CGameObject * pObject){
 	pObject->SetSpaceIndex(current_index);
 }
 
+void CSpaceContainer::RevomeObject(CGameObject * pObject){
+	for (int i = 0; i < m_nSpace; ++i) {
+		m_ppSpace[i]->RemoveObject(pObject);
+	}
+}
+
 void CSpaceContainer::ClearBlockObjectList() {
 	m_lpBlockObject.clear();
 }

@@ -95,8 +95,6 @@ void CRenderContainer::RenderExcute() {
 	for (auto p : m_vpMesh) {
 		p->Render(m_nInstance);
 	}
-	
-	
 }
 void CRenderContainer::RenderExcuteWithOutObject(){
 	for (auto p : m_vpMesh) {
@@ -149,6 +147,10 @@ void CRenderContainer::RenderWithOutObject(shared_ptr<CCamera> pCamera){
 	RenderExcuteWithOutObject();
 
 	CleanShaderState();
+}
+
+void CRenderContainer::ClearMesh(){
+	m_vpMesh.clear();
 }
 
 void CRenderContainer::AddMesh(shared_ptr<CMesh> pMesh){

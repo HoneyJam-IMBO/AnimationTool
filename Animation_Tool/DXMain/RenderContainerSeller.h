@@ -12,7 +12,7 @@ public:
 
 	CRenderContainer* GetRenderContainer(object_id objectid);
 
-	void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
+	//void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 private:
 	//이게 진짜 rendercontainer
 	mapRenderContainer m_mRenderContainer;

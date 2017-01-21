@@ -116,9 +116,11 @@ void CAnimater::DeleteAnimationInfo(UINT AnimationIndex){
 		m_vpAnimationInfos.erase(iter);
 		m_CurAnimationIndex = 0;
 		UINT index{ 0 };
+		//animation info 재정렬
 		for (auto pAnimationInfo : m_vpAnimationInfos) {
-			pAnimationInfo->SetAnimationIndex(index);
+			pAnimationInfo->SetAnimationIndex(index++);
 		}
+		//animation info 재정렬
 		CreateAnimationUI();
 	}
 }

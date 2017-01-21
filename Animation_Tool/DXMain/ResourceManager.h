@@ -59,8 +59,8 @@ public:
 	void CreateTexture();
 	void CreateRenderShader();
 	void CreateMesh();
-	void CreateMultiMesh(string path);
-	void CreateAnimater(string path);
+	int CreateMultiMesh(string path, string name);
+	void CreateAnimater(string path, string animaterName);
 	void CreateBuffer();
 	void CreateGlobalBuffer();
 	void CreateMaterial();

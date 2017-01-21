@@ -49,6 +49,9 @@ public:
 
 
 	CGameObject* PickObjectPointedByCursor(int xClient, int yClient);
+
+	//animation tool을 위한 함수
+	void CreateFBXObject(string path);
 private:
 	//framework
 	CDirectXFramework* m_pFrameWork{ nullptr };
@@ -83,6 +86,8 @@ private:
 	CPlayer* m_pPlayer{ nullptr };
 	//player
 	
+	//fbx object
+	CTestObject* m_pFBXObject{ nullptr };
 	//---------------------------d3ddevice & hWnd------------------------
 	ID3D11Device* m_pd3dDevice{ nullptr };
 	ID3D11DeviceContext* m_pd3dDeviceContext{ nullptr };

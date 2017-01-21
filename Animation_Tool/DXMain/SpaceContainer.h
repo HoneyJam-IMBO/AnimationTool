@@ -16,6 +16,7 @@ public:
 	//animate하다가 해당 공간을 벗어난 객체 임시 저장소
 	void AddBlockObjectList(CGameObject* pObject);
 	void AddObject(CGameObject* pObject);
+	void RevomeObject(CGameObject* pObject);
 	void ClearBlockObjectList();
 	int SearchSpace(XMVECTOR xmvPos);
 	void AddSpace(UINT index, CSpace* pSpace);

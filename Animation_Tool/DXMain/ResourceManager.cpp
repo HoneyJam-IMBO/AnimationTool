@@ -51,7 +51,6 @@ void CResourceManager::CreateTexture(){
 	pTexture->Begin(pd3dSRV, pSampler, Slot, BindFlag);
 	m_mTexture.insert(pairTexture("SkyBox", pTexture));
 
-	//elf
 	pSampler = make_shared<CSampler>(m_pd3dDevice, m_pd3dDeviceContext);
 	pSampler->Begin(PS_TEXTURE_SAMPLER, BIND_PS);
 	m_mSampler.insert(pairSampler("DEFAULT", pSampler));
@@ -61,59 +60,60 @@ void CResourceManager::CreateTexture(){
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
 	pTexture->Begin(pd3dSRV, pSampler, DefaultSlot, DefaultFlag);
 	m_mTexture.insert(pairTexture("DEFAULT", pTexture));
-	//0 Çã¸®¶ì
-	UINT ElfSlot = { PS_TEXTURE };
-	UINT ElfBindFlag = { BIND_PS };
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Belt_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
-	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
-	m_mTexture.insert(pairTexture("FBX_0", pTexture));
-	//1 ½Å¹ß
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Boots_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
-	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
-	m_mTexture.insert(pairTexture("FBX_1", pTexture));
-	//2 Àå°©
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Glove_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
-	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
-	m_mTexture.insert(pairTexture("FBX_2", pTexture));
-	//3 ¸Ó¸®Àå½Ä
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Helmet_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
-	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
-	m_mTexture.insert(pairTexture("FBX_3", pTexture));
-	//4 ÇÏÀÇ
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Lower_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
-	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
-	m_mTexture.insert(pairTexture("FBX_4", pTexture));
-	//5 »óÀÇ
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Upper_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
-	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
-	m_mTexture.insert(pairTexture("FBX_5", pTexture));
-	//6 ¾î±ú Àå½Ä?
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Helmet02_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
-	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
-	m_mTexture.insert(pairTexture("FBX_6", pTexture));
-	//7 ¾ó±¼
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_Face01_001_SP_BJH.jpg"), NULL, NULL, &pd3dSRV, NULL);
-	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
-	m_mTexture.insert(pairTexture("FBX_7", pTexture));
-	//8 ±Í
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_Face01_001_SP_BJH.jpg"), NULL, NULL, &pd3dSRV, NULL);
-	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
-	m_mTexture.insert(pairTexture("FBX_8", pTexture));
-	//9 ¸Ó¸®Ä«¶ô
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_Refer_Hair104_D_KDE.jpg"), NULL, NULL, &pd3dSRV, NULL);
-	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
-	m_mTexture.insert(pairTexture("FBX_9", pTexture));
-	//elf
+	////elf
+	////0 Çã¸®¶ì
+	//UINT ElfSlot = { PS_TEXTURE };
+	//UINT ElfBindFlag = { BIND_PS };
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Belt_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
+	//m_mTexture.insert(pairTexture("FBX_0", pTexture));
+	////1 ½Å¹ß
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Boots_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
+	//m_mTexture.insert(pairTexture("FBX_1", pTexture));
+	////2 Àå°©
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Glove_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
+	//m_mTexture.insert(pairTexture("FBX_2", pTexture));
+	////3 ¸Ó¸®Àå½Ä
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Helmet_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
+	//m_mTexture.insert(pairTexture("FBX_3", pTexture));
+	////4 ÇÏÀÇ
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Lower_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
+	//m_mTexture.insert(pairTexture("FBX_4", pTexture));
+	////5 »óÀÇ
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Upper_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
+	//m_mTexture.insert(pairTexture("FBX_5", pTexture));
+	////6 ¾î±ú Àå½Ä?
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Helmet02_D_HEY.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
+	//m_mTexture.insert(pairTexture("FBX_6", pTexture));
+	////7 ¾ó±¼
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_Face01_001_SP_BJH.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
+	//m_mTexture.insert(pairTexture("FBX_7", pTexture));
+	////8 ±Í
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_Face01_001_SP_BJH.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
+	//m_mTexture.insert(pairTexture("FBX_8", pTexture));
+	////9 ¸Ó¸®Ä«¶ô
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_Refer_Hair104_D_KDE.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pTexture->Begin(pd3dSRV, pSampler, ElfSlot, ElfBindFlag);
+	//m_mTexture.insert(pairTexture("FBX_9", pTexture));
+	////elf
 
 	//terrain heightmap
 	//make sampler
@@ -441,8 +441,8 @@ void CResourceManager::CreateMesh(){
 	shared_ptr<CUseFBXMesh> pTestFBXMesh = make_shared<CUseFBXMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #endif
 	//ddd
-	CreateMultiMesh("../../Assets/Model/fbx/1-2/Die_85.fbx");
-	CreateAnimater("../../Assets/Model/fbx/1-1/ATK1_45.fbx");
+	//CreateMultiMesh("../../Assets/Model/fbx/1-2/Die_85.fbx", "Test");
+	//CreateAnimater("../../Assets/Model/fbx/1-1/ATK1_45.fbx");
 
 	//CreateMultiMesh("../../Assets/Model/fbx/Bless_Elf.fbx");
 	//CreateMultiMesh("../../Assets/Model/fbx/2-1/ATK1_45.fbx");
@@ -454,51 +454,52 @@ void CResourceManager::CreateMesh(){
 	//pTestFBXMesh->Begin("../../Assets/Model/Test/assback3_11_attack.fbx");
 	//pTestFBXMesh->Begin("../../Assets/Model/Test/character1_move_r.fbx");
 	//pTestFBXMesh->Begin("../../Assets/Model/Test/humanoid.fbx");
-	FBXIMPORTER->Begin("../../Assets/Model/Test/03_Monster/Zombunny_running.fbx");
-	pTestFBXMesh->Begin();
-	shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>(m_pd3dDevice, m_pd3dDeviceContext);
-	pAnimater->Begin();
-	CAnimationInfo* pAnimationInfo = new CAnimationInfo(m_pd3dDevice, m_pd3dDeviceContext);
-	pAnimationInfo->Begin(pAnimater);
-	m_mAnimater.insert(pairAnimater("BUNNY", pAnimater));
-	FBXIMPORTER->End();
-
-	m_mMesh.insert(pairMesh("BUNNY", pTestFBXMesh));
+	//FBXIMPORTER->Begin("../../Assets/Model/Test/03_Monster/Zombunny_running.fbx");
+	//pTestFBXMesh->Begin();
+	//shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>(m_pd3dDevice, m_pd3dDeviceContext);
+	//pAnimater->Begin();
+	//CAnimationInfo* pAnimationInfo = new CAnimationInfo(m_pd3dDevice, m_pd3dDeviceContext);
+	//pAnimationInfo->Begin(pAnimater);
+	//m_mAnimater.insert(pairAnimater("BUNNY", pAnimater));
+	//FBXIMPORTER->End();
+	//
+	//m_mMesh.insert(pairMesh("BUNNY", pTestFBXMesh));
 
 
 	//mesh
 }
 
-void CResourceManager::CreateMultiMesh(string path){
+int CResourceManager::CreateMultiMesh(string path, string name){
 	//multi mesh data load
 	FBXIMPORTER->Begin(path);
 	char pName[20];
 	
 //	int i = FBXIMPORTER->GetMeshCnt();
 	if (FBXIMPORTER->GetHasAnimation()) {
-		shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>(m_pd3dDevice, m_pd3dDeviceContext);
-		pAnimater->Begin();
-		CAnimationInfo* pAnimationInfo;
-
+		
 		shared_ptr<CFBXAnimationMesh> pAnimMesh;
 		for (UINT i = 0; i < FBXIMPORTER->GetMeshCnt(); ++i) {
-			sprintf(pName, "FBX_%d", i);
+			sprintf(pName, "%s%d", name.c_str(), i);
 			pAnimMesh = make_shared<CFBXAnimationMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 			pAnimMesh->Begin(i);
-			pAnimMesh->AddMeshTexture(m_mTexture[pName]);
+			pAnimMesh->AddMeshTexture(m_mTexture["DEFAULT"]);
 			m_mMesh.insert(pairMesh(pName, pAnimMesh));
-
-			
 		}
+		
+		sprintf(pName, "%s", name.c_str());
+		shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>(m_pd3dDevice, m_pd3dDeviceContext);
+		pAnimater->Begin();
+		m_mAnimater.insert(pairAnimater(pName, pAnimater));
+
+		CAnimationInfo* pAnimationInfo;
 		pAnimationInfo = new CAnimationInfo(m_pd3dDevice, m_pd3dDeviceContext);
 		pAnimationInfo->Begin(pAnimater);
-		m_mAnimater.insert(pairAnimater("ELF", pAnimater));
 	}
 	else {
 		shared_ptr<CUseFBXMesh> pFBXMesh;
 		
 		for (UINT j = 0; j < FBXIMPORTER->GetMeshCnt(); ++j) {
-			sprintf(pName, "FBX_%d", j);
+			sprintf(pName, "%s%d",name.c_str(), j);
 			pFBXMesh = make_shared<CUseFBXMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 			pFBXMesh->Begin(j);
 			m_mMesh.insert(pairMesh(pName, pFBXMesh));
@@ -506,14 +507,13 @@ void CResourceManager::CreateMultiMesh(string path){
 	}
 	
 
-
+	int meshCnt = FBXIMPORTER->GetMeshCnt();
 	FBXIMPORTER->End();
-
+	return meshCnt;
 }
 
-void CResourceManager::CreateAnimater(string path){
+void CResourceManager::CreateAnimater(string path, string animaterName){
 	FBXIMPORTER->Begin(path);
-	char pName[20];
 
 	//	int i = FBXIMPORTER->GetMeshCnt();
 	if (FBXIMPORTER->GetHasAnimation()) {
@@ -522,7 +522,7 @@ void CResourceManager::CreateAnimater(string path){
 		CAnimationInfo* pAnimationInfo;
 
 		pAnimationInfo = new CAnimationInfo(m_pd3dDevice, m_pd3dDeviceContext);
-		pAnimationInfo->Begin(m_mAnimater["ELF"]);
+		pAnimationInfo->Begin(m_mAnimater[animaterName]);
 
 		//pAnimater->AddAnimationInfo(pAnimationInfo);
 		//m_mAnimater.insert(pairAnimater("ELF2", pAnimater));

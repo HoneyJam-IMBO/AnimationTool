@@ -196,6 +196,7 @@ const char* CInputManager::GetDropFileName() {
 
 	if (m_bCanUseDropFileName) {
 		returnVal = m_DropFileNameBuf;
+		m_bCanUseDropFileName = false;
 	}
 
 	return returnVal; 

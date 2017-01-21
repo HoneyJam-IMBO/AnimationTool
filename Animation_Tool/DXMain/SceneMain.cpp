@@ -28,13 +28,8 @@ bool CSceneMain::Begin() {
 	m_pSpaceContainer->AddObject(m_pRotationTestObject);
 
 	//fbx mesh
-	CTestObject* pObject = nullptr;
-	pObject = new CTestObject();
-	pObject->Begin();
-	//pObject->SetTerrainContainer(m_pTerrainContainer);
-	pObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
-	m_pSpaceContainer->AddObject(pObject);
-
+	//CTestObject* pObject = nullptr;
+	
 	//CBunny* pBunny = new CBunny();
 	//pBunny->Begin();
 	////pBunny->SetTerrainContainer(m_pTerrainContainer);
@@ -166,7 +161,13 @@ void CSceneMain::Animate(float fTimeElapsed) {
 	const char* test{ nullptr };
 	test = INPUTMGR->GetDropFileName();
 	if (test) {
-		DEBUGER->AddText(10, 500, 500, YT_Color(), L"%s", test);
+		if (nullptr == m_pFBXObject) {//만약 없다면 
+			CreateFBXObject("../../Assets/Model/fbx/1-2/Die_85.fbx");
+		}
+		else {
+			RESOURCEMGR->CreateAnimater("../../Assets/Model/fbx/1-1/ATK1_45.fbx", "Test");
+			m_pFBXObject->PickingProc();
+		}
 	}
 	//-----------------------------------space------------------------------
 	m_pSpaceContainer->Animate(fTimeElapsed);
@@ -238,7 +239,7 @@ void CSceneMain::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wPa
 }
 void CSceneMain::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 	
-	RCSELLER->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+	//RCSELLER->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 	switch (nMessageID)
 	{
 	case WM_KEYUP:
@@ -302,6 +303,40 @@ CGameObject* CSceneMain::PickObjectPointedByCursor(int xClient, int yClient)
 		}
 	}
 	return(pNearestObject);
+}
+std::string replaceString(std::string subject, const std::string &search, const std::string &replace) 
+{ 
+	size_t pos = 0;
+	while ((pos = subject.find(search, pos)) != std::string::npos)
+	{ 
+		subject.replace(pos, search.length(), replace); 
+		pos += replace.length(); 
+	} 
+	return subject; 
+}
+
+
+void CSceneMain::CreateFBXObject(string path){
+	path = replaceString(path, "\\", "/");
+//resource 제작	
+	int meshCnt = RESOURCEMGR->CreateMultiMesh(path, "Test");
+	RCSELLER->GetRenderContainer(object_id::OBJECT_FBX_ELF)->ClearMesh();
+	char pName[20];
+	for (int i = 0; i < meshCnt; ++i) {
+		sprintf(pName, "%s%d", "Test", i);
+		RCSELLER->GetRenderContainer(object_id::OBJECT_FBX_ELF)->AddMesh(RESOURCEMGR->GetMesh(pName));
+	}
+	RCSELLER->GetRenderContainer(object_id::OBJECT_FBX_ELF)->SetAnimater(RESOURCEMGR->GetAnimater("Test"));
+//resource 제작	
+
+
+//객체 제작
+	m_pFBXObject = new CTestObject();
+	m_pFBXObject->Begin();
+	//pObject->SetTerrainContainer(m_pTerrainContainer);
+	m_pFBXObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
+	m_pSpaceContainer->AddObject(m_pFBXObject);
+//객체 제작
 }
 
 CSceneMain::CSceneMain(CDirectXFramework* pFrameWork) : CScene("Main") {

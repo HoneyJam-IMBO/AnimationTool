@@ -153,6 +153,10 @@ void CRenderContainer::ClearMesh(){
 	m_vpMesh.clear();
 }
 
+void CRenderContainer::ClearAnimater(){
+	//animater를 지울일이 없음.. 사용하는거지 내가 관리할 녀석ㅇ ㅣ아니거든..
+}
+
 void CRenderContainer::AddMesh(shared_ptr<CMesh> pMesh){
 	if (!pMesh) return;
 

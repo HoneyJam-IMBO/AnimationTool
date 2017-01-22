@@ -1,7 +1,65 @@
 #include "stdafx.h"
 #include "SceneMain.h"
 
+void TW_CALL LoadFileCallback(void * clientData) {
+	LoadFileStruct* pLFS = reinterpret_cast<LoadFileStruct*>(clientData);
+	string s = pLFS->Filename;
+	string path{ "../inputdata/" };
+
+	pLFS->m_pScene->CreateFBXObject(path+s);
+	const char* barName{ "LoadFile" };
+	TWBARMGR->DeleteBar(barName);
+	//string s = pLFS;
+}
+void TW_CALL LoadFileButtonCallback(void * clientData) {
+	CSceneMain* pScene = reinterpret_cast<CSceneMain*>(clientData);
+	pScene->CreateLoadFileUI();
+}
+void TW_CALL AddInfoCallback(void * clientData) {
+	LoadFileStruct* pLFS = reinterpret_cast<LoadFileStruct*>(clientData);
+	string s = pLFS->Filename;
+	string path{ "../inputdata/" };
+
+	pLFS->m_pScene->AddFBXAnimationInfo(path + s);
+	
+	const char* barName{ "AddInfo" };
+	TWBARMGR->DeleteBar(barName);
+	//string s = pLFS;
+}
+void TW_CALL AddInfoButtonCallback(void * clientData) {
+	CSceneMain* pScene = reinterpret_cast<CSceneMain*>(clientData);
+	pScene->CreateAddInfoUI();
+}
+void TW_CALL ClearAllButtonCallback(void * clientData) {
+	CSceneMain* pScene = reinterpret_cast<CSceneMain*>(clientData);
+	pScene->ClearAllFBXObject();
+}
+void TW_CALL WriteNowButtonCallback(void * clientData) {
+	CSceneMain* pScene = reinterpret_cast<CSceneMain*>(clientData);
+	//make texture/ set texture
+	//pObj->GetRenderContainer()->GetMesh(pObj->GetSelectMeshIndex());
+}
 bool CSceneMain::Begin() {
+
+	//main button ui추가 
+	//추가될 버튼
+	//fbx mesh 변경 버튼 -> 기존 객체 mesh animation 정보 전부 삭제
+	//fbx animation 정보 추가 -> 기존 객체 mesh의 animater에 정보 추가
+	//
+	const char* barName{ "MainControll" };
+	TWBARMGR->AddBar(barName);
+	//set param
+	TWBARMGR->SetBarSize(barName, 500, 200);
+	TWBARMGR->SetBarPosition(barName, 200, 550);
+	TWBARMGR->SetBarColor(barName, 255, 0, 255);
+	TWBARMGR->SetBarContained(barName, true);
+	TWBARMGR->SetBarMovable(barName, false);
+	TWBARMGR->SetBarResizable(barName, false);
+	//set param
+	TWBARMGR->AddButtonCB(barName, "load", "load file button", LoadFileButtonCallback, this);
+	TWBARMGR->AddButtonCB(barName, "add", "add info button", AddInfoButtonCallback, this);
+	TWBARMGR->AddButtonCB(barName, "clear", "clear all button", ClearAllButtonCallback, this);
+	TWBARMGR->AddButtonCB(barName, "write", "write now button", WriteNowButtonCallback, this);
 
 	//m_pPlayer = new CPlayer;
 	//m_pPlayer->Begin();
@@ -21,11 +79,11 @@ bool CSceneMain::Begin() {
 	//--------------------------------객체 제작------------------------
 	int nMaxObjects = 1;
 
-	m_pRotationTestObject = new CTestCube();
-	m_pRotationTestObject->Begin();
-	//m_pRotationTestObject->SetTerrainContainer(m_pTerrainContainer);
-	m_pRotationTestObject->SetPosition(XMLoadFloat3(&XMFLOAT3(0, 0, 0)));
-	m_pSpaceContainer->AddObject(m_pRotationTestObject);
+	//m_pRotationTestObject = new CTestCube();
+	//m_pRotationTestObject->Begin();
+	////m_pRotationTestObject->SetTerrainContainer(m_pTerrainContainer);
+	//m_pRotationTestObject->SetPosition(XMLoadFloat3(&XMFLOAT3(0, 0, 0)));
+	//m_pSpaceContainer->AddObject(m_pRotationTestObject);
 
 	//fbx mesh
 	//CTestObject* pObject = nullptr;
@@ -157,6 +215,7 @@ bool CSceneMain::End() {
 }
 
 void CSceneMain::Animate(float fTimeElapsed) {
+	m_LoadFileStruct;
 	//DEBUGER->AddText(100, 100, 100, YT_Color(255, 0, 0), L"TEST");
 	const char* test{ nullptr };
 	test = INPUTMGR->GetDropFileName();
@@ -304,25 +363,14 @@ CGameObject* CSceneMain::PickObjectPointedByCursor(int xClient, int yClient)
 	}
 	return(pNearestObject);
 }
-std::string replaceString(std::string subject, const std::string &search, const std::string &replace) 
-{ 
-	size_t pos = 0;
-	while ((pos = subject.find(search, pos)) != std::string::npos)
-	{ 
-		subject.replace(pos, search.length(), replace); 
-		pos += replace.length(); 
-	} 
-	return subject; 
-}
-
 
 void CSceneMain::CreateFBXObject(string path){
-	path = replaceString(path, "\\", "/");
+	//path = DIRECTORYFINDER->ReplaceString(path, L"\\", L"/");
 //resource 제작	
-	int meshCnt = RESOURCEMGR->CreateMultiMesh(path, "Test");
+	m_MeshCnt = RESOURCEMGR->CreateMultiMesh(path, "Test");
 	RCSELLER->GetRenderContainer(object_id::OBJECT_FBX_ELF)->ClearMesh();
 	char pName[20];
-	for (int i = 0; i < meshCnt; ++i) {
+	for (int i = 0; i < m_MeshCnt; ++i) {
 		sprintf(pName, "%s%d", "Test", i);
 		RCSELLER->GetRenderContainer(object_id::OBJECT_FBX_ELF)->AddMesh(RESOURCEMGR->GetMesh(pName));
 	}
@@ -337,6 +385,111 @@ void CSceneMain::CreateFBXObject(string path){
 	m_pFBXObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
 	m_pSpaceContainer->AddObject(m_pFBXObject);
 //객체 제작
+	//ui pop up!
+	m_pFBXObject->PickingProc();
+}
+
+void CSceneMain::CreateLoadFileUI(){
+
+	const char* barName{ "LoadFile" };
+	TWBARMGR->AddBar(barName);
+
+	vector<wstring> vFile;
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".fbx");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".FBX");
+
+	const char* groupName = "File";
+	char menuName[64];
+	int cnt{ 0 };
+	m_LoadFileStruct.resize(vFile.size());
+	for (auto data : vFile) {
+		string s{ "" };
+		s.assign(data.cbegin(), data.cend());
+		m_LoadFileStruct[cnt] = LoadFileStruct{ this, s };
+		sprintf(menuName, "%s", s.c_str());
+		TWBARMGR->AddButtonCB(barName, groupName, menuName, LoadFileCallback, &m_LoadFileStruct[cnt]);
+		cnt++;
+	}
+	//make texture/ set texture
+	//pObj->GetRenderContainer()->GetMesh(pObj->GetSelectMeshIndex());
+}
+
+void CSceneMain::AddFBXAnimationInfo(string path){
+	if (nullptr == m_pFBXObject) {
+		CreateFBXObject(path);
+		return;
+	}
+	RESOURCEMGR->CreateAnimater(path, "Test");
+	m_pFBXObject->PickingProc();
+}
+
+void CSceneMain::CreateAddInfoUI(){
+	const char* barName{ "AddInfo" };
+	TWBARMGR->AddBar(barName);
+
+	if (m_LoadFileStruct.empty()) {
+		vector<wstring> vFile;
+		DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".fbx");
+		DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".FBX");
+
+		const char* groupName = "File";
+		char menuName[64];
+		int cnt{ 0 };
+		m_LoadFileStruct.resize(vFile.size());
+		for (auto data : vFile) {
+			string s{ "" };
+			s.assign(data.cbegin(), data.cend());
+			m_LoadFileStruct[cnt] = LoadFileStruct{ this, s };
+			sprintf(menuName, "%s", s.c_str());
+			TWBARMGR->AddButtonCB(barName, groupName, menuName, AddInfoCallback, &m_LoadFileStruct[cnt]);
+			cnt++;
+		}
+	}
+	else {
+		const char* groupName = "File";
+		char menuName[64];
+		int cnt{ 0 };
+		for (auto data : m_LoadFileStruct) {
+			sprintf(menuName, "%s", m_LoadFileStruct[cnt].Filename.c_str());
+			TWBARMGR->AddButtonCB(barName, groupName, menuName, AddInfoCallback, &m_LoadFileStruct[cnt]);
+			cnt++;
+		}
+	}
+}
+
+void CSceneMain::ClearAllFBXObject(){
+	if (m_pFBXObject) {
+		m_pSpaceContainer->RevomeObject(m_pFBXObject);
+		m_pFBXObject->GetRenderContainer()->ClearMesh();
+		m_pFBXObject->GetRenderContainer()->ClearAnimater();
+		m_pFBXObject->End();
+		delete m_pFBXObject;
+		m_pFBXObject = nullptr;
+
+		//pObject->SetTerrainContainer(m_pTerrainContainer);
+		char MeshName[64];
+		const char* name = "Test";
+		for (int i = 0; i < m_MeshCnt; ++i) {
+			sprintf(MeshName, "%s%d", name, i);
+			RESOURCEMGR->ReleaseMesh(MeshName);
+		}
+		RESOURCEMGR->ReleaseAnimater(name);
+		m_MeshCnt = 0;
+
+	}
+	ClearAllFBXUI();
+}
+
+void CSceneMain::ClearAllFBXUI(){
+	TWBARMGR->DeleteBar("AnimaterInfo");
+	TWBARMGR->DeleteBar("AddInfo");
+	TWBARMGR->DeleteBar("LoadFile");
+
+	TWBARMGR->DeleteBar("AnimationInfo");
+	TWBARMGR->DeleteBar("ActiveJoint");
+
+	TWBARMGR->DeleteBar("MeshInfo");
+	TWBARMGR->DeleteBar("PickingBar");
 }
 
 CSceneMain::CSceneMain(CDirectXFramework* pFrameWork) : CScene("Main") {

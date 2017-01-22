@@ -203,4 +203,7 @@ enum shader_value_num {
 #define			INPUTMGR		CInputManager::GetInstance()
 #include "TwBarManager.h"
 #define			TWBARMGR		CTwBarManager::GetInstance()
+#include "DirectoryFinder.h"
+#define			DIRECTORYFINDER	CDirectoryFinder::GetInstance()
+
 #define USE_ANIM

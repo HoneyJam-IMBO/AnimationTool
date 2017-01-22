@@ -776,6 +776,16 @@ void CResourceManager::ReleaseMesh(){
 	m_mMesh.clear();
 }
 
+void CResourceManager::ReleaseMesh(string name){
+	map<string, shared_ptr<CMesh>> ::iterator iter = m_mMesh.find(name);
+	m_mMesh.erase(iter);
+}
+
+void CResourceManager::ReleaseAnimater(string name){
+	map<string, shared_ptr<CAnimater>> ::iterator iter = m_mAnimater.find(name);
+	m_mAnimater.erase(iter);
+}
+
 void CResourceManager::ReleaseBuffer(){
 	for (auto data : m_mBuffer) {
 		if (data.second)data.second->End();

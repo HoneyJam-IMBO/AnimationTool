@@ -41,6 +41,7 @@ public:
 	vector<shared_ptr<CMesh>>& GetvMesh() { return m_vpMesh; }
 	//set이 아니라이제 add다.
 	void ClearMesh();
+	void ClearAnimater();
 	void AddMesh(shared_ptr<CMesh> pMesh);
 	void SetMesh(shared_ptr<CMesh> pMesh);
 	void SetShader(shared_ptr<CRenderShader> pShader);

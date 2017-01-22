@@ -360,6 +360,9 @@
     <Filter Include="소스 파일\33.DXObject\99. Animater\AnimationInfo">
       <UniqueIdentifier>{79e5a01b-e1af-4969-896f-daee357c502d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\SingleTon\DirectoryFinder">
+      <UniqueIdentifier>{86d41232-0e91-413f-9889-3fff7595638b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -656,6 +659,9 @@
     <ClInclude Include="Animater.h">
       <Filter>소스 파일\33.DXObject\99. Animater</Filter>
     </ClInclude>
+    <ClInclude Include="DirectoryFinder.h">
+      <Filter>소스 파일\SingleTon\DirectoryFinder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -939,6 +945,9 @@
     </ClCompile>
     <ClCompile Include="Animater.cpp">
       <Filter>소스 파일\33.DXObject\99. Animater</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectoryFinder.cpp">
+      <Filter>소스 파일\SingleTon\DirectoryFinder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -70,6 +70,8 @@ public:
 	void ReleaseTexture();
 	void ReleaseRenderShader();
 	void ReleaseMesh();
+	void ReleaseMesh(string name);
+	void ReleaseAnimater(string name);
 	void ReleaseBuffer();
 	void ReleaseGlobalBuffer();
 	void ReleaseMaterial();

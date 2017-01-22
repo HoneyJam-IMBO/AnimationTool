@@ -30,6 +30,12 @@
 
 static XMFLOAT4 xmf4DirectionalLightColor;
 
+class CSceneMain;
+struct LoadFileStruct {
+	CSceneMain* m_pScene;
+	string Filename;
+};
+
 class CSceneMain :public CScene{
 
 public:
@@ -52,7 +58,18 @@ public:
 
 	//animation tool을 위한 함수
 	void CreateFBXObject(string path);
+	void CreateLoadFileUI();
+	void AddFBXAnimationInfo(string path);
+	void CreateAddInfoUI();
+	void ClearAllFBXObject();
+
+	void ClearAllFBXUI();
+	//변수
+	vector<LoadFileStruct> m_LoadFileStruct;
+	//fbx object
+	CTestObject* m_pFBXObject{ nullptr };
 private:
+	int m_MeshCnt{ 0 };
 	//framework
 	CDirectXFramework* m_pFrameWork{ nullptr };
 
@@ -85,9 +102,7 @@ private:
 	//player
 	CPlayer* m_pPlayer{ nullptr };
 	//player
-	
-	//fbx object
-	CTestObject* m_pFBXObject{ nullptr };
+
 	//---------------------------d3ddevice & hWnd------------------------
 	ID3D11Device* m_pd3dDevice{ nullptr };
 	ID3D11DeviceContext* m_pd3dDeviceContext{ nullptr };

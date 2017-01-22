@@ -193,6 +193,7 @@
     <ClInclude Include="DebugTextureMesh.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="DirectionalLightMesh.h" />
+    <ClInclude Include="DirectoryFinder.h" />
     <ClInclude Include="DownScaleFirstPass.h" />
     <ClInclude Include="DownScaleSecondPass.h" />
     <ClInclude Include="DXMain.h" />
@@ -292,6 +293,7 @@
     <ClCompile Include="DebugTextureMesh.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DirectionalLightMesh.cpp" />
+    <ClCompile Include="DirectoryFinder.cpp" />
     <ClCompile Include="DownScaleFirstPass.cpp" />
     <ClCompile Include="DownScaleSecondPass.cpp" />
     <ClCompile Include="DXObject.cpp" />

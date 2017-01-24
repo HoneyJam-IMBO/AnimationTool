@@ -261,21 +261,6 @@
     <Filter Include="소스 파일\SingleTon\FbxImporter\ModelData\FbxMeshData\VertexData">
       <UniqueIdentifier>{d5117aa5-19db-4ecf-9985-2976ca4a522a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\SingleTon\FbxImporter\AnimationData">
-      <UniqueIdentifier>{c6928fef-a950-4928-bd87-b90ec04de7e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\SingleTon\FbxImporter\AnimationData\FbxJointData">
-      <UniqueIdentifier>{40c428ad-1842-4316-9c9c-ff5d4bb7cdf3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\SingleTon\FbxImporter\AnimationData\FbxJointData\KeyFrame">
-      <UniqueIdentifier>{1045aa0f-1b9b-4515-9d38-c95481a678e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\SingleTon\FbxImporter\AnimationData\FbxAnimStackData">
-      <UniqueIdentifier>{bc2600d6-e021-4eb2-aa1a-259bc41ee285}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\33.DXObject\22.Mesh\MultiMesh">
-      <UniqueIdentifier>{a6d8c9b5-50f2-4b69-89bb-43c9438b88ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\SingleTon\ResourceManager">
       <UniqueIdentifier>{a92f21aa-1268-45f4-bc7e-50e5ad32ce7f}</UniqueIdentifier>
     </Filter>
@@ -362,6 +347,21 @@
     </Filter>
     <Filter Include="소스 파일\SingleTon\DirectoryFinder">
       <UniqueIdentifier>{86d41232-0e91-413f-9889-3fff7595638b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\FbxImporter\FbxAnimStackData">
+      <UniqueIdentifier>{bc2600d6-e021-4eb2-aa1a-259bc41ee285}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\FbxImporter\FbxAnimStackData\AnimationData">
+      <UniqueIdentifier>{c6928fef-a950-4928-bd87-b90ec04de7e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\FbxImporter\FbxAnimStackData\AnimationData\KeyFrame">
+      <UniqueIdentifier>{1045aa0f-1b9b-4515-9d38-c95481a678e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\FbxImporter\FbxAnimStackData\SkeletonData">
+      <UniqueIdentifier>{1e5343ad-bb5b-49c7-a02a-dc95f37d19e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\FbxImporter\FbxAnimStackData\SkeletonData\FbxJointData">
+      <UniqueIdentifier>{40c428ad-1842-4316-9c9c-ff5d4bb7cdf3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -603,19 +603,13 @@
       <Filter>소스 파일\SingleTon\FbxImporter\ModelData\FbxMeshData\VertexData</Filter>
     </ClInclude>
     <ClInclude Include="KeyFrame.h">
-      <Filter>소스 파일\SingleTon\FbxImporter\AnimationData\FbxJointData\KeyFrame</Filter>
+      <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData\AnimationData\KeyFrame</Filter>
     </ClInclude>
     <ClInclude Include="FbxJointData.h">
-      <Filter>소스 파일\SingleTon\FbxImporter\AnimationData\FbxJointData</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxAnimationData.h">
-      <Filter>소스 파일\SingleTon\FbxImporter\AnimationData</Filter>
+      <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData\SkeletonData\FbxJointData</Filter>
     </ClInclude>
     <ClInclude Include="FbxAnimStackData.h">
-      <Filter>소스 파일\SingleTon\FbxImporter\AnimationData\FbxAnimStackData</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiMesh.h">
-      <Filter>소스 파일\33.DXObject\22.Mesh\MultiMesh</Filter>
+      <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>소스 파일\SingleTon\ResourceManager</Filter>
@@ -661,6 +655,12 @@
     </ClInclude>
     <ClInclude Include="DirectoryFinder.h">
       <Filter>소스 파일\SingleTon\DirectoryFinder</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonData.h">
+      <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData\SkeletonData</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationData.h">
+      <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData\AnimationData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -890,19 +890,13 @@
       <Filter>소스 파일\SingleTon\FbxImporter\ModelData\FbxMeshData\VertexData</Filter>
     </ClCompile>
     <ClCompile Include="KeyFrame.cpp">
-      <Filter>소스 파일\SingleTon\FbxImporter\AnimationData\FbxJointData\KeyFrame</Filter>
+      <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData\AnimationData\KeyFrame</Filter>
     </ClCompile>
     <ClCompile Include="FbxJointData.cpp">
-      <Filter>소스 파일\SingleTon\FbxImporter\AnimationData\FbxJointData</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxAnimationData.cpp">
-      <Filter>소스 파일\SingleTon\FbxImporter\AnimationData</Filter>
+      <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData\SkeletonData\FbxJointData</Filter>
     </ClCompile>
     <ClCompile Include="FbxAnimStackData.cpp">
-      <Filter>소스 파일\SingleTon\FbxImporter\AnimationData\FbxAnimStackData</Filter>
-    </ClCompile>
-    <ClCompile Include="MultiMesh.cpp">
-      <Filter>소스 파일\33.DXObject\22.Mesh\MultiMesh</Filter>
+      <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>소스 파일\SingleTon\ResourceManager</Filter>
@@ -948,6 +942,12 @@
     </ClCompile>
     <ClCompile Include="DirectoryFinder.cpp">
       <Filter>소스 파일\SingleTon\DirectoryFinder</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonData.cpp">
+      <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData\SkeletonData</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationData.cpp">
+      <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData\AnimationData</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

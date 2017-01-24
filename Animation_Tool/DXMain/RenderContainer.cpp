@@ -154,6 +154,7 @@ void CRenderContainer::ClearMesh(){
 }
 
 void CRenderContainer::ClearAnimater(){
+	m_pAnimater = nullptr;
 	//animater를 지울일이 없음.. 사용하는거지 내가 관리할 녀석ㅇ ㅣ아니거든..
 }
 

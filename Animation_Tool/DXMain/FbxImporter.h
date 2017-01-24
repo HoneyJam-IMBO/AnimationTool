@@ -3,7 +3,7 @@
 #include "SingleTon.h"
 #include "FbxMeshData.h"
 #include "FbxAnimStackData.h"
-#include "FbxAnimationData.h"
+#include "AnimationData.h"
 
 #define ANIMATION_NUM 1
 
@@ -23,9 +23,9 @@ public:
 	vector<CFbxMeshData>& GetMeshDatas() { return m_vMeshData; }
 	//anim
 	CFbxAnimStackData& GetAnimStackData() { return m_AnimStackData; }
-	UINT GetAnimationCnt() { return static_cast<UINT>(m_vAnimationData.size()); }
-	UINT GetTotalJointCnt();
-	vector<CFbxAnimationData>& GetAnimationDatas() { return m_vAnimationData; }
+	//UINT GetAnimationCnt() { return static_cast<UINT>(m_vAnimationData.size()); }
+	//UINT GetTotalJointCnt();
+	//vector<CFbxAnimationData>& GetAnimationDatas() { return m_vAnimationData; }
 
 	bool GetHasAnimation() { return m_bHasAnimationData; }
 	//get setter
@@ -52,14 +52,13 @@ public:
 	bool ReformBlendWeightPairInfo();
 
 	UINT FindJointIndexUsingName(const string& JointName);
-	UINT GetCurrMeshJointIndexOffset();
+	//UINT GetCurrMeshJointIndexOffset();
 	FbxAMatrix GetGeometryTransformation(FbxMesh* pMesh);
 	//helper func
 private:
 	//fbx data
 	string m_FileName;
 	FbxManager *m_pManager;
-	FbxIOSettings *m_pIoSettings;
 
 	FbxImporter *m_pImporter{ nullptr };
 	FbxScene *m_pScene{ nullptr };
@@ -70,7 +69,7 @@ private:
 	//animation data
 	int m_nTestIndex = 5;
 	CFbxAnimStackData				 m_AnimStackData;
-	vector<CFbxAnimationData>		 m_vAnimationData;
+	//vector<CFbxAnimationData>		 m_vAnimationData;
 	//mesh data
 	UINT m_MeshScale{ 1 };
 	vector<CFbxMeshData>			 m_vMeshData;

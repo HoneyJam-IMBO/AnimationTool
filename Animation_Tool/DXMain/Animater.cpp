@@ -23,11 +23,15 @@ bool CAnimater::Begin(){
 	m_pAnimBuffer = new CStaticBuffer(m_pd3dDevice, m_pd3dDeviceContext);
 	m_pAnimBuffer->Begin(256, sizeof(XMMATRIX), nullptr, 10, BIND_VS);
 
+	m_pSkeletonData = new CSkeletonData;
+	*m_pSkeletonData = FBXIMPORTER->GetAnimStackData().GetSkeletonData();
+
 	return true;
 }
 
 bool CAnimater::End(){
 	for (auto data : m_vpAnimationInfos) {
+		data->End();
 		delete data;
 	}
 	m_vpAnimationInfos.clear();
@@ -36,6 +40,12 @@ bool CAnimater::End(){
 		m_pMainBoundingBox->End();
 		delete m_pMainBoundingBox;
 	}
+	m_pSkeletonData->End();
+	delete m_pSkeletonData;
+
+	m_pAnimBuffer->End();
+	delete m_pAnimBuffer;
+
 	return true;
 }
 
@@ -147,7 +157,7 @@ void CAnimater::CreateAnimationUI(){
 	
 	TWBARMGR->AddBar(barName);
 	//set param
-	TWBARMGR->SetBarSize(barName, 200, 200);
+	TWBARMGR->SetBarSize(barName, 250, 200);
 	TWBARMGR->SetBarPosition(barName, 0, 200);
 	TWBARMGR->SetBarColor(barName, 200, 200, 0);
 	TWBARMGR->SetBarContained(barName, true);
@@ -174,7 +184,7 @@ UINT CAnimater::GetAnimaterJointCnt(){
 	UINT JointCnt{ 0 };
 
 	if (false == m_vpAnimationInfos.empty()) {
-		JointCnt = m_vpAnimationInfos[0]->GetJoints().size();
+		JointCnt = m_pSkeletonData->GetJointCnt();
 	}
 
 	return JointCnt;

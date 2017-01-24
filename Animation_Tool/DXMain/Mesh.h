@@ -78,6 +78,7 @@ public:
 	//---------------------------------index buffer-------------------------
 
 	void AddMeshTexture(shared_ptr<CTexture>);
+	void SetMeshTexture(UINT index, shared_ptr<CTexture>);
 	//setter
 	//animater mesh 선택을 표시하기 위한 함수
 	void SetMeshMaterial(shared_ptr<CMaterial> pMaterial);

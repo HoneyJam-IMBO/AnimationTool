@@ -15,7 +15,8 @@ bool CUseFBXMesh::Begin(UINT index) {
 }
 
 bool CUseFBXMesh::End() {
-
+	delete[] m_pNormals;
+	delete[] m_pUVs;
 	return CMesh::End();
 }
 

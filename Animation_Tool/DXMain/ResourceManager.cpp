@@ -6,30 +6,30 @@ bool CResourceManager::Begin(ID3D11Device * pDevice, ID3D11DeviceContext * pCont
 	m_pd3dDevice = pDevice;
 	m_pd3dDeviceContext = pContext;
 
-	CreateTexture();
-	CreateRenderShader();
-	CreateBuffer();
-	CreateGlobalBuffer();
-	CreateMaterial();
-	CreateMesh();
-	CreateAnimater();
+	CreateTextures();
+	CreateRenderShaders();
+	CreateBuffers();
+	CreateGlobalBuffers();
+	CreateMaterials();
+	CreateMeshs();
+	CreateAnimaters();
 
 	return true;
 }
 
 bool CResourceManager::End(){
-	ReleaseTexture();
-	ReleaseRenderShader();
-	ReleaseBuffer();
-	ReleaseGlobalBuffer();
-	ReleaseMaterial();
-	ReleaseMesh();
-	ReleaseAnimater();
+	ReleaseTextures();
+	ReleaseRenderShaders();
+	ReleaseBuffers();
+	ReleaseGlobalBuffers();
+	ReleaseMaterials();
+	ReleaseMeshs();
+	ReleaseAnimaters();
 
 	return true;
 }
 
-void CResourceManager::CreateTexture(){
+void CResourceManager::CreateTextures(){
 	//
 	//texture
 	shared_ptr<CTexture> pTexture;
@@ -170,7 +170,32 @@ void CResourceManager::CreateTexture(){
 
 }
 
-void CResourceManager::CreateRenderShader(){
+shared_ptr<CSampler> CResourceManager::CreateSampler(UINT Slot, UINT BindFlag, D3D11_TEXTURE_ADDRESS_MODE Mode, D3D11_FILTER Filter, D3D11_COMPARISON_FUNC ComparisionFunc, float MinLOD, float MaxLOD)
+{
+	shared_ptr<CSampler> pSampler;
+	pSampler = make_shared<CSampler>(m_pd3dDevice, m_pd3dDeviceContext);
+	pSampler->Begin(Slot, BindFlag, Mode, Filter, ComparisionFunc, MinLOD, MaxLOD);
+
+	return pSampler;
+}
+
+shared_ptr<CTexture> CResourceManager::CreateTexture(string name, const TCHAR* pstrTextureNames, shared_ptr<CSampler> pSampler, UINT Slot, UINT BindFlag){
+	//UINT Slot = { PS_SLOT_SKYBOX };
+	//UINT BindFlag = { BIND_PS };
+	//_TCHAR pstrTextureNames[128];
+	shared_ptr<CTexture> pTexture;
+	ID3D11ShaderResourceView *pd3dSRV = NULL;
+	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, pstrTextureNames, NULL, NULL, &pd3dSRV, NULL);
+
+	//make sampler
+	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	pTexture->Begin(pd3dSRV, pSampler, Slot, BindFlag);
+	m_mTexture.insert(pairTexture(name, pTexture));
+	return pTexture;
+
+}
+
+void CResourceManager::CreateRenderShaders(){
 	//core render shader
 	
 	shared_ptr<CRenderShader> pShader = make_shared<CRenderShader>(m_pd3dDevice, m_pd3dDeviceContext);
@@ -362,7 +387,7 @@ void CResourceManager::CreateRenderShader(){
 	//core render shader
 }
 
-void CResourceManager::CreateMesh(){
+void CResourceManager::CreateMeshs(){
 	//mesh
 	shared_ptr<CMesh> pMesh;
 
@@ -531,7 +556,7 @@ void CResourceManager::CreateAnimater(string path, string animaterName){
 	FBXIMPORTER->End();
 }
 
-void CResourceManager::CreateBuffer(){
+void CResourceManager::CreateBuffers(){
 	//instance buffer
 	shared_ptr<CInstanceBuffer> pInstanceBuffer;
 	shared_ptr<CConstantBuffer> pConstantBuffer;
@@ -680,7 +705,7 @@ void CResourceManager::CreateBuffer(){
 	m_mBuffer.insert(pairBuffer("CapsuleLightCB2", pConstantBuffer));
 }
 
-void CResourceManager::CreateGlobalBuffer()
+void CResourceManager::CreateGlobalBuffers()
 {
 	shared_ptr<CGlobalBuffer> pGlobalBuffer;
 	//global buffer
@@ -693,7 +718,7 @@ void CResourceManager::CreateGlobalBuffer()
 
 }
 
-void CResourceManager::CreateMaterial(){
+void CResourceManager::CreateMaterials(){
 
 	shared_ptr<CMaterial> pMaterial;
 	//material
@@ -748,11 +773,11 @@ void CResourceManager::CreateMaterial(){
 
 }
 
-void CResourceManager::CreateAnimater(){
+void CResourceManager::CreateAnimaters(){
 
 }
 
-void CResourceManager::ReleaseTexture(){
+void CResourceManager::ReleaseTextures(){
 	for (auto data : m_mSampler) {
 		if(data.second)data.second->End();
 	}
@@ -762,14 +787,14 @@ void CResourceManager::ReleaseTexture(){
 	m_mTexture.clear();
 }
 
-void CResourceManager::ReleaseRenderShader(){
+void CResourceManager::ReleaseRenderShaders(){
 	for (auto data : m_mRenderShader) {
 		if (data.second)data.second->End();
 	}
 	m_mRenderShader.clear();
 }
 
-void CResourceManager::ReleaseMesh(){
+void CResourceManager::ReleaseMeshs(){
 	for (auto data : m_mMesh) {
 		if (data.second)data.second->End();
 	}
@@ -778,36 +803,38 @@ void CResourceManager::ReleaseMesh(){
 
 void CResourceManager::ReleaseMesh(string name){
 	map<string, shared_ptr<CMesh>> ::iterator iter = m_mMesh.find(name);
+	(iter->second)->End();
 	m_mMesh.erase(iter);
 }
 
 void CResourceManager::ReleaseAnimater(string name){
 	map<string, shared_ptr<CAnimater>> ::iterator iter = m_mAnimater.find(name);
+	(iter->second)->End();
 	m_mAnimater.erase(iter);
 }
 
-void CResourceManager::ReleaseBuffer(){
+void CResourceManager::ReleaseBuffers(){
 	for (auto data : m_mBuffer) {
 		if (data.second)data.second->End();
 	}
 	m_mBuffer.clear();
 }
 
-void CResourceManager::ReleaseGlobalBuffer(){
+void CResourceManager::ReleaseGlobalBuffers(){
 	for (auto data : m_mGlobalBuffer) {
 		if (data.second)data.second->End();
 	}
 	m_mGlobalBuffer.clear();
 }
 
-void CResourceManager::ReleaseMaterial(){
+void CResourceManager::ReleaseMaterials(){
 	for (auto data : m_mMaterial) {
 		if (data.second)data.second->End();
 	}
 	m_mMaterial.clear();
 }
 
-void CResourceManager::ReleaseAnimater(){
+void CResourceManager::ReleaseAnimaters(){
 	for (auto data : m_mAnimater) {
 		if (data.second)data.second->End();
 	}

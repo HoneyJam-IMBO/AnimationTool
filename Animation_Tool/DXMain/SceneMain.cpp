@@ -50,7 +50,7 @@ bool CSceneMain::Begin() {
 	TWBARMGR->AddBar(barName);
 	//set param
 	TWBARMGR->SetBarSize(barName, 500, 200);
-	TWBARMGR->SetBarPosition(barName, 200, 550);
+	TWBARMGR->SetBarPosition(barName, 250, 550);
 	TWBARMGR->SetBarColor(barName, 255, 0, 255);
 	TWBARMGR->SetBarContained(barName, true);
 	TWBARMGR->SetBarMovable(barName, false);
@@ -490,6 +490,7 @@ void CSceneMain::ClearAllFBXUI(){
 
 	TWBARMGR->DeleteBar("MeshInfo");
 	TWBARMGR->DeleteBar("PickingBar");
+	TWBARMGR->DeleteBar("LoadTextureFile");
 }
 
 CSceneMain::CSceneMain(CDirectXFramework* pFrameWork) : CScene("Main") {

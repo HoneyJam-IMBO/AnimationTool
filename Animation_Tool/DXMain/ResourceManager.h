@@ -56,28 +56,31 @@ public:
 	bool End();
 
 	//begin func
-	void CreateTexture();
-	void CreateRenderShader();
-	void CreateMesh();
+	void CreateTextures();
+	shared_ptr<CSampler> CreateSampler(UINT Slot = 0, UINT BindFlags = BIND_PS, D3D11_TEXTURE_ADDRESS_MODE Mode = D3D11_TEXTURE_ADDRESS_WRAP, D3D11_FILTER Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_COMPARISON_FUNC ComparisionFunc = D3D11_COMPARISON_NEVER, float MinLOD = 0, float MaxLOD = 0);
+	shared_ptr<CTexture> CreateTexture(string name, const TCHAR* pstrTextureNames, shared_ptr<CSampler> pSampler, UINT Slot = 0, UINT BindFlag = BIND_PS);
+	void CreateRenderShaders();
+	void CreateMeshs();
 	int CreateMultiMesh(string path, string name);
 	void CreateAnimater(string path, string animaterName);
-	void CreateBuffer();
-	void CreateGlobalBuffer();
-	void CreateMaterial();
-	void CreateAnimater();
+	void CreateBuffers();
+	void CreateGlobalBuffers();
+	void CreateMaterials();
+	void CreateAnimaters();
 
 	//end func
-	void ReleaseTexture();
-	void ReleaseRenderShader();
-	void ReleaseMesh();
+	void ReleaseTextures();
+	void ReleaseRenderShaders();
+	void ReleaseMeshs();
 	void ReleaseMesh(string name);
 	void ReleaseAnimater(string name);
-	void ReleaseBuffer();
-	void ReleaseGlobalBuffer();
-	void ReleaseMaterial();
-	void ReleaseAnimater();
+	void ReleaseBuffers();
+	void ReleaseGlobalBuffers();
+	void ReleaseMaterials();
+	void ReleaseAnimaters();
 
 	shared_ptr<CTexture> GetTexture(string name) { return m_mTexture[name]; }
+	shared_ptr<CSampler> GetSampler(string name) { return m_mSampler[name]; }
 	shared_ptr<CRenderShader> GetRenderShader(string name) { return m_mRenderShader[name]; }
 	shared_ptr<CMesh> GetMesh(string name) { return m_mMesh[name]; }
 	shared_ptr<CBuffer> GetBuffer(string name) { return m_mBuffer[name]; }

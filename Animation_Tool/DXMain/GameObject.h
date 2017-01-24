@@ -18,7 +18,11 @@ typedef std::map<component_id, CComponent*> mapComponent;
 struct VS_VB_INSTANCE {
 	XMMATRIX m_xmmtxWorld;
 };
-
+class CMesh;
+struct StructLoadTextureFile {
+	shared_ptr<CMesh> m_pMesh;
+	wstring m_sName;
+};
 
 class CGameObject : public CObject {
 public:
@@ -100,6 +104,7 @@ public:
 	virtual void PickingProc();
 	void CreateObjectUI();
 	void CreateMeshUI();
+	void CreateMenuMeshTextureUI();
 
 	//world
 	XMFLOAT4X4 m_xmf4x4World;
@@ -135,6 +140,9 @@ protected:
 	int m_spaceIndex{ 0 };
 	//animater
 	shared_ptr<CAnimater> m_pAnimater{ nullptr };
+
+	//texture ui를 위한 변수
+	vector<StructLoadTextureFile> m_vStructLoadTextureFile;
 public:
 	CGameObject(string name, tag t = tag::TAG_DEFAULT);
 	virtual ~CGameObject();

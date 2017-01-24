@@ -1,16 +1,15 @@
 #pragma once
 #include "Object.h"
-#include "FbxBlendWeightPair.h"
-#include "FbxJointData.h"
+#include "SkeletonData.h"
+#include "AnimationData.h"
 
 class CFbxAnimStackData : public CObject {
 public:
+	bool Begin();
 	virtual bool End();
 
 	void SetpAnimStack(FbxAnimStack* pStack) { m_pAnimStack = pStack; }
-	void SetBoneCnt(UINT cnt) { m_BoneCnt = cnt; }
 	void SetAnimationName(string name) { m_sName = name; }
-	void SetAnimationLength(FbxLongLong length) { m_tAnimLength = length; }
 	void SetTimeMode(FbxTime::EMode& timeMode) { m_TimeMode = timeMode; }
 	void SetTimeStart(FbxTime& time) { m_tStart = time; }
 	void SetTimeEnd(FbxTime& time) { m_tEnd = time; }
@@ -20,22 +19,21 @@ public:
 	FbxLongLong GetTimeStart() { return m_tStart.GetFrameCount(FbxTime::eFrames30); }
 	FbxLongLong GetTimeEnd() { return m_tEnd.GetFrameCount(FbxTime::eFrames30); }
 	string GetAnimationName() { return m_sName; }
-	FbxLongLong GetAnimationLength() { return m_tAnimLength; }
 
-	UINT GetJointCnt() { return m_JointDatas.size(); }
-	vector<CFbxJointData>& GetJointDatas() { return m_JointDatas; }
+	CAnimationData& GetAnimationData() { return m_AnimationData; }
+	CSkeletonData& GetSkeletonData() { return m_SkeletonData; }
 private:
-	UINT m_BoneCnt{ 0 };
-	string m_sName;
-	FbxAnimStack* m_pAnimStack;
+	string m_sName;//¾²·¹±â
 
+	FbxAnimStack* m_pAnimStack;
 	FbxTime::EMode m_TimeMode;
 	FbxTime m_tStart;
 	FbxTime m_tEnd;
-	FbxLongLong m_tAnimLength;
 
-	vector<CFbxJointData> m_JointDatas;
+	CAnimationData m_AnimationData;
+	CSkeletonData m_SkeletonData;
+
 public:
-	CFbxAnimStackData() : CObject("fbxskinneddata") {}
+	CFbxAnimStackData() : CObject("fbxanimstackdata") {}
 	~CFbxAnimStackData() {}
 };

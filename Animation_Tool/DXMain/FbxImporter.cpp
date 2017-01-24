@@ -5,9 +5,10 @@ bool CFbxImporter::Begin(string path){
 	m_FileName = path;
 	//scene importer는 재사용 불가 
 	m_pScene = FbxScene::Create(m_pManager, "tempName");
+	FbxIOSettings* ios = FbxIOSettings::Create(m_pManager, IOSROOT);//2.
 
 	m_pImporter = FbxImporter::Create(m_pManager, "");
-	if (!m_pImporter->Initialize(path.c_str(), -1, m_pIoSettings)){
+	if (!m_pImporter->Initialize(path.c_str(), -1, ios)){
 		//DEBUGER->DebugMessageBox("Begin()", "FBX Import Error");
 		return false;
 	}
@@ -18,6 +19,7 @@ bool CFbxImporter::Begin(string path){
 	m_pImporter->Destroy();
 	m_pImporter = nullptr;
 
+	
 	//DirectX방식의 축으로 변환
 	//FbxAxisSystem OurAxisSystem = FbxAxisSystem::DirectX;
 	//
@@ -35,6 +37,7 @@ bool CFbxImporter::Begin(string path){
 	GeomConverter.Triangulate(m_pScene, true);
 
 	//SetModelScale(modelScale);
+	m_AnimStackData.Begin();
 
 	LoadFile();
 
@@ -42,9 +45,8 @@ bool CFbxImporter::Begin(string path){
 }
 
 bool CFbxImporter::End(){
-	
 	m_AnimStackData.End();
-	m_vAnimationData.clear();
+	//m_vAnimationData.clear();
 	//mesh data
 	m_MeshScale = 1;
 	m_vMeshData.clear();
@@ -52,39 +54,36 @@ bool CFbxImporter::End(){
 	m_bHasAnimationData = false;
 	m_iMeshCount = 0 ;
 
-
-	if (m_pImporter){
-		m_pImporter->Destroy();
-		m_pImporter = nullptr;
-	}
-
-	//if (m_pScene){
-	//	m_pScene->Destroy();
+	if (m_pScene) {
+		m_pScene->Destroy();
 	//	m_pScene = nullptr;
+	}
+	//if (m_pManager) {
+	//	m_pManager->Destroy();
+	//	//m_pManager = nullptr;
 	//}
-
 	return true;
 }
 
-UINT CFbxImporter::GetTotalJointCnt(){
-	int nJoint = 0;
-	if(false == m_bHasAnimationData)
-		return nJoint;
-	
-	for (auto AnimData : m_vAnimationData) {
-		nJoint += AnimData.GetJointCnt();
-	}
-
-	return nJoint;
-}
+//UINT CFbxImporter::GetTotalJointCnt(){
+//	int nJoint = 0;
+//	if(false == m_bHasAnimationData)
+//		return nJoint;
+//	
+//	for (auto AnimData : m_vAnimationData) {
+//		nJoint += AnimData.GetJointCnt();
+//	}
+//
+//	return nJoint;
+//}
 
 void CFbxImporter::LoadFile(){
 	//animation name. 얻어오기. 지금은 안씀
 	SetAnimationNameArray();
-
 	//skeleton 트리 정보 얻기
 	LoadSkeleton(m_pScene->GetRootNode());
 
+	m_AnimStackData.GetAnimationData().SetJointCnt(m_AnimStackData.GetSkeletonData().GetJointCnt());
 	//fbx 정보 읽기
 	LoadNodeRecursive(m_pScene->GetRootNode());
 
@@ -106,7 +105,7 @@ void CFbxImporter::LoadAnimStack(){
 	m_AnimStackData.SetTimeMode(timeMode);
 	m_AnimStackData.SetTimeStart(start);
 	m_AnimStackData.SetTimeEnd(end);
-	m_AnimStackData.SetAnimationLength(end.GetFrameCount(timeMode) - start.GetFrameCount(timeMode) + 1);
+	m_AnimStackData.GetAnimationData().SetAnimationLength(end.GetFrameCount(timeMode) - start.GetFrameCount(timeMode) + 1);
 
 	m_AnimStackData.SetpAnimStack(currAnimStack);
 
@@ -135,10 +134,10 @@ void CFbxImporter::ProcessSkeletonHierarchyRecursively(FbxNode * inNode, int myI
 		currJoint.SetParentIndex(inParentIndex);
 		currJoint.SetJointName(inNode->GetName());
 		currJoint.SetMyIndex(myIndex);
-		m_AnimStackData.GetJointDatas().push_back(currJoint);
+		m_AnimStackData.GetSkeletonData().GetJointDatas().push_back(currJoint);
 	}
 	for (int i = 0; i < inNode->GetChildCount(); i++) {
-		ProcessSkeletonHierarchyRecursively(inNode->GetChild(i), m_AnimStackData.GetJointDatas().size(), myIndex);
+		ProcessSkeletonHierarchyRecursively(inNode->GetChild(i), m_AnimStackData.GetSkeletonData().GetJointDatas().size(), myIndex);
 	}
 }
 
@@ -170,7 +169,7 @@ bool CFbxImporter::ExportMeshData(FbxMesh* pMesh)
 
 	//name set
 	//const char* pName = pMesh->GetName();
- 	MeshData.SetMeshName(pMesh->GetName());
+ //	MeshData.SetMeshName(pMesh->GetName());
 
 	FbxGeometryElementNormal* vertexNormal = nullptr;
 	FbxGeometryElementUV* vertexUV = nullptr;
@@ -217,13 +216,15 @@ bool CFbxImporter::ExportMeshData(FbxMesh* pMesh)
 	MeshData.GetVertexDatas().reserve(polygonVertexCount);
 	MeshData.GetIndexs().resize(polygonCount * 3);
 
+
+
 	if (false == MeshData.GetByControlPoint()){
 		//1. 모든 controlpoint를 얻는다.
 		GetControlPointData(pMesh, MeshData);
 
 		//2. INDEX정보 set
 		GetIndexData(pMesh, MeshData);
-		
+
 		//3. NORMAL정보 set
 		GetNormalData(pMesh, vertexNormal, MeshData);
 		
@@ -235,7 +236,7 @@ bool CFbxImporter::ExportMeshData(FbxMesh* pMesh)
 		m_vMeshData.push_back(MeshData);	
 	}
 
-	
+
 	const bool lHasSkin = pMesh->GetDeformerCount(FbxDeformer::eSkin) > 0;
 	const bool lHasDeformation = lHasSkin;
 	
@@ -246,12 +247,11 @@ bool CFbxImporter::ExportMeshData(FbxMesh* pMesh)
 		if (m_iMeshCount == 0)//animation Stack 정보 얻기
 			LoadAnimStack();
 
+		
 		if (false == (ExportAnimationData(pMesh) && ReformBlendWeightPairInfo()))
 			DEBUGER->DebugGMessageBox(L"ExportAnimationData()\n ReformBlendWeightPairInfo()", L"FAIL");
 
 	}
-	
-	
 	m_iMeshCount++;
 	return true;
 }
@@ -348,11 +348,9 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 
 	FbxMesh* currMesh = pMesh;
 	unsigned int numOfDeformers = currMesh->GetDeformerCount();
-	CFbxAnimationData AnimationData;
-	AnimationData.SetGeometryTransform(GetGeometryTransformation(pMesh));
+	FbxAMatrix curGeometryMtx = GetGeometryTransformation(pMesh);
 
 	//deformer 1개당 animation정보 1개씩
-	//DEBUGER->DebugGMessageBox(L"ExportAnimationData()", L"numOfDeformers : %d", numOfDeformers);
 	for (unsigned int deformerIndex = 0; deformerIndex < numOfDeformers; ++deformerIndex)
 	{
 		FbxSkin* currSkin = reinterpret_cast<FbxSkin*>(currMesh->GetDeformer(deformerIndex, FbxDeformer::eSkin));
@@ -362,7 +360,7 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 
 		unsigned int numOfClusters = currSkin->GetClusterCount();
 		//DEBUGER->DebugGMessageBox(L"ExportAnimationData()", L"numOfClusters : %d", numOfClusters);
-		int test = m_AnimStackData.GetJointCnt();
+		int test = m_AnimStackData.GetSkeletonData().GetJointCnt();
 
 		//AnimationData.GetJointDatas().resize(m_AnimStackData.GetJointCnt());
 		//for (unsigned int clusterIndex = 0; clusterIndex < numOfClusters; ++clusterIndex)
@@ -372,18 +370,16 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 			std::string currJointName = currCluster->GetLink()->GetName();
 			unsigned int currJointIndex = FindJointIndexUsingName(currJointName);
 
-			//if (m_AnimStackData.GetJointDatas()[currJointIndex].GetKeyFrames().size() >= m_AnimStackData.GetAnimationLength()) continue;
 			FbxAMatrix transformMatrix;
 			FbxAMatrix transformLinkMatrix;
 			FbxAMatrix globalBindposeInverseMatrix;
 
 			currCluster->GetTransformMatrix(transformMatrix);	// The transformation of the mesh at binding time
 			currCluster->GetTransformLinkMatrix(transformLinkMatrix);	// The transformation of the cluster(joint) at binding time from joint space to world space
-			globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix * AnimationData.GetGeometryTransform();
+			globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix * curGeometryMtx;
 
 			// 현재 Joint의 Offset 행렬 구하기 
-			m_AnimStackData.GetJointDatas()[currJointIndex].SetOffsetMtx(ConvertFbxMtxToXMMATRIX(globalBindposeInverseMatrix));
-
+			m_AnimStackData.GetSkeletonData().GetJointDatas()[currJointIndex].SetOffsetMtx(ConvertFbxMtxToXMMATRIX(globalBindposeInverseMatrix));
 		
 			// 현재 Joint의 모든 영향을 받는 점들에 대해
 			//BlendWeightPair를 저장
@@ -397,11 +393,11 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 			for (FbxLongLong i = m_AnimStackData.GetTimeStart(); i <= m_AnimStackData.GetTimeEnd(); ++i) {
 				FbxTime currTime;
 				currTime.SetFrame(i, m_AnimStackData.GetTimeMode());
-				FbxAMatrix currentTransformOffset = pMesh->GetNode()->EvaluateGlobalTransform(currTime) * AnimationData.GetGeometryTransform();
+				FbxAMatrix currentTransformOffset = pMesh->GetNode()->EvaluateGlobalTransform(currTime) * curGeometryMtx;
 				FbxAMatrix mGlobalTransform = currentTransformOffset.Inverse() * currCluster->GetLink()->EvaluateGlobalTransform(currTime);
 
 				CKeyFrame KeyFrame{ (double)i, ConvertFbxMtxToXMMATRIX(mGlobalTransform) };
-				m_AnimStackData.GetJointDatas()[currJointIndex].GetKeyFrames().push_back(KeyFrame);
+				m_AnimStackData.GetAnimationData().GetKeyFrames(currJointIndex).push_back(KeyFrame);
 			}
 		}
 	}
@@ -452,21 +448,21 @@ bool CFbxImporter::ReformBlendWeightPairInfo() {
 
 
 UINT CFbxImporter::FindJointIndexUsingName(const std::string& inJointName) {
-	for (unsigned int i = 0; i < m_AnimStackData.GetJointDatas().size(); ++i) {
-		if (m_AnimStackData.GetJointDatas()[i].GetJointName() == inJointName) {
+	for (unsigned int i = 0; i < m_AnimStackData.GetSkeletonData().GetJointDatas().size(); ++i) {
+		if (m_AnimStackData.GetSkeletonData().GetJointDatas()[i].GetJointName() == inJointName) {
 			return i;
 		}
 	}
 
 	throw std::exception("Skeleton information in FBX file is corrupted.");
 }
-UINT CFbxImporter::GetCurrMeshJointIndexOffset(){
-	int offset = 0;
-	for (int i = 0; i < m_iMeshCount; ++i) {
-		offset += m_vAnimationData[i].GetJointCnt();
-	}
-	return offset;
-}
+//UINT CFbxImporter::GetCurrMeshJointIndexOffset(){
+//	int offset = 0;
+//	for (int i = 0; i < m_iMeshCount; ++i) {
+//		offset += m_vAnimationData[i].GetJointCnt();
+//	}
+//	return offset;
+//}
 
 FbxAMatrix CFbxImporter::GetGeometryTransformation(FbxMesh* pMesh)
 {
@@ -501,16 +497,11 @@ void CFbxImporter::GetControlPointData(FbxMesh * pMesh, CFbxMeshData & MeshData)
 void CFbxImporter::GetIndexData(FbxMesh * pMesh, CFbxMeshData & MeshData){
 	int nIndices = pMesh->GetPolygonVertexCount();
 
-	UINT* pIndices = new UINT[nIndices];
-	pIndices = (UINT*)pMesh->GetPolygonVertices();
+	UINT* pIndices = (UINT*)pMesh->GetPolygonVertices();
 	for (int j = 0; j < nIndices; ++j) {
 		MeshData.GetIndexs()[j] = pIndices[j];
 	}//end for
 	 //INDEX
-
-	 //사용안하는 녀석들 release
-	delete[] pIndices;
-
 }
 void CFbxImporter::GetNormalData(FbxMesh * pMesh, FbxGeometryElementNormal* vertexNormal, CFbxMeshData & MeshData){
 	vector<XMFLOAT3> vNormals;
@@ -612,24 +603,15 @@ CFbxImporter::CFbxImporter():CSingleTonBase<CFbxImporter>("fbximportersingleton"
 	//	DEBUGER->DebugMessageBox("Create()", "FBX Manager Create Success");
 	//}
 
-	m_pIoSettings = FbxIOSettings::Create(m_pManager, IOSROOT);//2.
+	//m_pIoSettings = FbxIOSettings::Create(m_pManager, IOSROOT);//2.
 }
 
 CFbxImporter::~CFbxImporter(){
 
-	if (m_pManager){
+	if (m_pManager) {
 		m_pManager->Destroy();
 		m_pManager = nullptr;
-	}
-	if (m_pIoSettings) {
-		m_pIoSettings->Destroy();
-		m_pIoSettings = nullptr;
-	}
-	if (m_pImporter) {
-		m_pImporter->Destroy();
-		m_pImporter = nullptr;
-	}
-
+	}	
 	if (m_pScene) {
 		m_pScene->Destroy();
 		m_pScene = nullptr;

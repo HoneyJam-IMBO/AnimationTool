@@ -16,6 +16,9 @@ bool CMesh::Begin() {
 	return true;
 }
 bool CMesh::End() {
+	delete[] m_pnIndices;
+	delete[] m_pVertices;
+
 	//----------------------vertex buffer release-------------------
 	if (m_ppd3dVertexBuffers) {
 		for (int i = 0; i < m_nVertexBuffers; ++i) {
@@ -142,6 +145,9 @@ void CMesh::CreateTBFromPoints(XMFLOAT3 * pPositions, XMFLOAT2 * pUVs, XMFLOAT3 
 }
 void CMesh::AddMeshTexture(shared_ptr<CTexture> pTexture){
 	m_vMeshTexture.emplace_back(pTexture);
+}
+void CMesh::SetMeshTexture(UINT index, shared_ptr<CTexture> pTexture){
+	m_vMeshTexture[index] = pTexture;
 }
 void CMesh::SetMeshMaterial(shared_ptr<CMaterial> pMaterial){
 	m_pMeshMaterial = pMaterial;

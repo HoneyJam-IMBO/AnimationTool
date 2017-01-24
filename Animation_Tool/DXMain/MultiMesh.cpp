@@ -124,7 +124,7 @@ bool CMultiMesh::Begin(string path){
 	//bone data set
 	int jointIndex = 0;
 
-	int size = FBXIMPORTER->GetTotalJointCnt();
+	//int size = FBXIMPORTER->GetTotalJointCnt();
 	XMMATRIX* pAnimationData = new XMMATRIX[size];
 	for (UINT i = 0; i < FBXIMPORTER->GetMeshCnt(); ++i) {
 		for (UINT j = 0; j < FBXIMPORTER->GetAnimationDatas()[i].GetJointCnt(); ++j) {

@@ -21,6 +21,7 @@ public:
 	//---------------------------mesh----------------------------------
 
 	//CAnimationInfo* GetAnimationInfo() { return m_pAnimationInfo; }
+	UINT GetMeshIndex() { return m_MeshIndex; }
 private:
 	//CAnimationInfo* m_pAnimationInfo{ nullptr };
 	UINT m_MeshIndex{ 0 };
@@ -28,6 +29,9 @@ private:
 	//vertex buffer
 	ID3D11Buffer* m_pd3dBoneIndexBuffer{ nullptr };
 	ID3D11Buffer* m_pd3dWeightBuffer{ nullptr };
+
+	XMFLOAT4* m_pxmf4BoneIndex;
+	XMFLOAT3* m_pxmf3Weight;
 public:
 	CFBXAnimationMesh(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext) : CUseFBXMesh(pd3dDevice, pd3dDeviceContext) {};
 	virtual ~CFBXAnimationMesh() {};

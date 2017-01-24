@@ -1,6 +1,7 @@
 #pragma once
 #include "DXObject.h"
 #include "AnimationInfo.h"
+#include "SkeletonData.h"
 #include "BoundingBox.h"
 
 class CAnimater : public DXObject {
@@ -22,6 +23,7 @@ public:
 
 	CAnimationInfo* GetCurAnimationInfo() { return m_vpAnimationInfos[m_CurAnimationIndex]; }
 	CAnimationInfo* GetAnimationInfo(UINT AnimationIndex = 0) { return m_vpAnimationInfos[AnimationIndex]; }
+	CSkeletonData* GetSkeletonData() { return m_pSkeletonData; }
 
 	size_t GetAnimationCnt() { return m_vpAnimationInfos.size(); }
 
@@ -35,6 +37,7 @@ public:
 	UINT GetAnimaterJointCnt();
 private:
 	vector<CAnimationInfo*> m_vpAnimationInfos;
+	CSkeletonData* m_pSkeletonData{ nullptr };
 	UINT m_CurAnimationIndex{ 0 };
 
 	CBoundingBox* m_pMainBoundingBox{ nullptr };

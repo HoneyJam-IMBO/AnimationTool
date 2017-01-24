@@ -13,7 +13,7 @@ void TW_CALL SetSelectMeshCallback(const void * value, void * clientData) {
 	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
 	float index = *static_cast<const float*>(value);
 	pObj->SetSelectMeshIndex(index);
-	
+	pObj->CreateMenuMeshTextureUI();
 	for (int i = 0; i < pObj->GetRenderContainer()->GetvMesh().size(); ++i) {
 		if (i == pObj->GetSelectMeshIndex()) {
 			pObj->GetRenderContainer()->GetMesh(i)->SetMeshMaterial(RESOURCEMGR->GetMaterial("RED"));
@@ -31,10 +31,32 @@ void TW_CALL GetSelectMeshCallback(void * value, void * clientData) {
 
 void TW_CALL SetMeshTextureButtonCallback(void * clientData) {
 	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	pObj->CreateMenuMeshTextureUI();
+
 	//make texture/ set texture
 	//pObj->GetRenderContainer()->GetMesh(pObj->GetSelectMeshIndex());
 }
+void TW_CALL LoadTextureFileCallback(void* clientData) {
+	/*
+	pSampler = make_shared<CSampler>(m_pd3dDevice, m_pd3dDeviceContext);
+	pSampler->Begin(PS_TEXTURE_SAMPLER, BIND_PS);
+	m_mSampler.insert(pairSampler("DEFAULT", pSampler));
+	UINT DefaultSlot = { PS_TEXTURE };
+	UINT DefaultFlag = { BIND_PS };
+	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/default.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	pTexture->Begin(pd3dSRV, pSampler, DefaultSlot, DefaultFlag);
+	m_mTexture.insert(pairTexture("DEFAULT", pTexture));
+	*/
+	StructLoadTextureFile* pData = reinterpret_cast<StructLoadTextureFile*>(clientData);
+	wstring path = L"../inputdata/";
+	path += pData->m_sName;
+	char name[64];
+	sprintf(name, "Test%d", dynamic_cast<CFBXAnimationMesh*>(pData->m_pMesh.get())->GetMeshIndex());
+	pData->m_pMesh->SetMeshTexture(0, RESOURCEMGR->CreateTexture(name, path.c_str(), RESOURCEMGR->GetSampler("DEFAULT")));
 
+	pData->m_pMesh->SetMeshMaterial(RESOURCEMGR->GetMaterial("DEFAULT"));
+}
 bool CGameObject::Begin() {
 
 	XMStoreFloat4x4(&m_xmf4x4World, XMMatrixIdentity());
@@ -362,7 +384,7 @@ void CGameObject::CreateObjectUI(){
 	TWBARMGR->DeleteBar(barName);
 	TWBARMGR->AddBar(barName);
 	//set param
-	TWBARMGR->SetBarSize(barName, 200, 200);
+	TWBARMGR->SetBarSize(barName, 250, 200);
 	TWBARMGR->SetBarPosition(barName, 0, 0);
 	TWBARMGR->SetBarColor(barName, 255, 0, 0);
 	TWBARMGR->SetBarContained(barName, true);
@@ -380,8 +402,8 @@ void CGameObject::CreateMeshUI(){
 	TWBARMGR->DeleteBar(barName);
 	TWBARMGR->AddBar(barName);
 	//set param
-	TWBARMGR->SetBarSize(barName, 300, 200);
-	TWBARMGR->SetBarPosition(barName, 700, 0);
+	TWBARMGR->SetBarSize(barName, 250, 200);
+	TWBARMGR->SetBarPosition(barName, 750, 0);
 	TWBARMGR->SetBarColor(barName, 255, 0, 255);
 	TWBARMGR->SetBarContained(barName, true);
 	TWBARMGR->SetBarMovable(barName, false);
@@ -389,15 +411,41 @@ void CGameObject::CreateMeshUI(){
 	//set param
 
 	TWBARMGR->AddMinMaxBarCB(barName, "SelectMesh", "SelectMeshIndex",
-		SetSelectMeshCallback, GetSelectMeshCallback, this, 0.f, m_pRenderContainer->GetvMesh().size(), 1.f);
+		SetSelectMeshCallback, GetSelectMeshCallback, this, 0.f, m_pRenderContainer->GetvMesh().size() - 1, 1.f);
 
-	TWBARMGR->AddButtonCB(barName, "SetSelect", "MeshTexture", SetMeshTextureButtonCallback, this);
+//	TWBARMGR->AddButtonCB(barName, "SetSelect", "MeshTexture", SetMeshTextureButtonCallback, this);
 	//char menuName[64];
 	//int i{ 0 };
 	//for (auto pMesh : m_pRenderContainer->GetvMesh()) {
 	//	sprintf(menuName, "Mesh%d", i);
 	//	TWBARMGR->AddButtonCB(barName, "SetTextureButton", menuName, SetMeshTextureButtonCallback, m_pRenderContainer->GetMesh(i++).get());
 	//}
+}
+
+void CGameObject::CreateMenuMeshTextureUI(){
+
+	const char* barName{ "LoadTextureFile" };
+	TWBARMGR->AddBar(barName);
+
+	vector<wstring> vFile;
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".jpg");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".JPG");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".png");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".PNG");
+
+	const char* groupName = "TextureFile";
+	char menuName[64];
+	int cnt{ 0 };
+	m_vStructLoadTextureFile.resize(vFile.size());
+	for (auto data : vFile) {
+		string s{ "" };
+		s.assign(data.cbegin(), data.cend());
+		m_vStructLoadTextureFile[cnt] = StructLoadTextureFile{ m_pRenderContainer->GetMesh(m_indexSelectMesh), data };
+		sprintf(menuName, "%s", s.c_str());
+		TWBARMGR->AddButtonCB(barName, groupName, menuName, LoadTextureFileCallback, &m_vStructLoadTextureFile[cnt]);
+		cnt++;
+	}
+
 }
 
 

@@ -205,11 +205,10 @@
     <ClInclude Include="FbxImporter.h" />
     <ClInclude Include="FbxJointData.h" />
     <ClInclude Include="FbxMeshData.h" />
-    <ClInclude Include="FbxAnimationData.h" />
+    <ClInclude Include="AnimationData.h" />
     <ClInclude Include="GlobalValueManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="KeyFrame.h" />
-    <ClInclude Include="MultiMesh.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SpaceMesh.h" />
     <ClInclude Include="StaticBuffer.h" />
@@ -266,6 +265,7 @@
     <ClInclude Include="ThirdPersonCamera.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VertexData.h" />
+    <ClInclude Include="SkeletonData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animater.cpp" />
@@ -305,11 +305,10 @@
     <ClCompile Include="FbxImporter.cpp" />
     <ClCompile Include="FbxJointData.cpp" />
     <ClCompile Include="FbxMeshData.cpp" />
-    <ClCompile Include="FbxAnimationData.cpp" />
+    <ClCompile Include="AnimationData.cpp" />
     <ClCompile Include="GlobalValueManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="KeyFrame.cpp" />
-    <ClCompile Include="MultiMesh.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SpaceMesh.cpp" />
     <ClCompile Include="StaticBuffer.cpp" />
@@ -368,6 +367,7 @@
     <ClCompile Include="ThirdPersonCamera.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VertexData.cpp" />
+    <ClCompile Include="SkeletonData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DXMain.rc" />

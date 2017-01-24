@@ -46,7 +46,7 @@ bool CAnimationInfo::Begin(shared_ptr<CAnimater> pAnimater){
 
 	m_pAnimationData = new CAnimationData();
 
-	*m_pAnimationData = FBXIMPORTER->GetAnimStackData().GetAnimationData();
+	*m_pAnimationData = FBXIMPORTER->GetAnimationData();
 	int nJoint{ 0 };
 
 		nJoint = m_pAnimater->GetSkeletonData()->GetJointDatas().size();
@@ -297,7 +297,7 @@ void CAnimationInfo::CreateSelectOBBUI(){
 			pBoundingBox->SetMyJointIndex(i);
 			pBoundingBox->SetMyIndex(GetActiveOBB().size());
 			pBoundingBox->SetMax(max);
-			GetActiveOBB().push_back(pBoundingBox);
+			m_lActiveBoundingBox.push_back(pBoundingBox);
 
 			//add obb position bar
 			char GroupName[64];

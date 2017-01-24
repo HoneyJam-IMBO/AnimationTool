@@ -24,7 +24,7 @@ bool CAnimater::Begin(){
 	m_pAnimBuffer->Begin(256, sizeof(XMMATRIX), nullptr, 10, BIND_VS);
 
 	m_pSkeletonData = new CSkeletonData;
-	*m_pSkeletonData = FBXIMPORTER->GetAnimStackData().GetSkeletonData();
+	*m_pSkeletonData = FBXIMPORTER->GetSkeletonData();
 
 	return true;
 }

@@ -183,9 +183,9 @@ enum shader_value_num {
 //space
 
 //aabb
-#define BOUNDINGBOX_NUM 50000
+#define BOUNDINGBOX_NUM 500
 //coordinatesystem
-#define COORD_NUM 10000
+#define COORD_NUM 500
 //singleton
 #include "GlobalValueManager.h"
 #define			GLOBALVALUEMGR	CGlobalValueManager::GetInstance()

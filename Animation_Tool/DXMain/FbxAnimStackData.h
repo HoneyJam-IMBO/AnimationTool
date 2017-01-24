@@ -1,7 +1,5 @@
 #pragma once
 #include "Object.h"
-#include "SkeletonData.h"
-#include "AnimationData.h"
 
 class CFbxAnimStackData : public CObject {
 public:
@@ -20,18 +18,12 @@ public:
 	FbxLongLong GetTimeEnd() { return m_tEnd.GetFrameCount(FbxTime::eFrames30); }
 	string GetAnimationName() { return m_sName; }
 
-	CAnimationData& GetAnimationData() { return m_AnimationData; }
-	CSkeletonData& GetSkeletonData() { return m_SkeletonData; }
 private:
 	string m_sName;//¾²·¹±â
-
 	FbxAnimStack* m_pAnimStack;
 	FbxTime::EMode m_TimeMode;
 	FbxTime m_tStart;
 	FbxTime m_tEnd;
-
-	CAnimationData m_AnimationData;
-	CSkeletonData m_SkeletonData;
 
 public:
 	CFbxAnimStackData() : CObject("fbxanimstackdata") {}

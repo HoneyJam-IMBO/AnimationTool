@@ -38,6 +38,8 @@ bool CFbxImporter::Begin(string path){
 
 	//SetModelScale(modelScale);
 	m_AnimStackData.Begin();
+	m_AnimationData.Begin();
+	m_SkeletonData.Begin();
 
 	LoadFile();
 
@@ -46,6 +48,9 @@ bool CFbxImporter::Begin(string path){
 
 bool CFbxImporter::End(){
 	m_AnimStackData.End();
+	m_AnimationData.End();
+	m_SkeletonData.End();
+
 	//m_vAnimationData.clear();
 	//mesh data
 	m_MeshScale = 1;
@@ -83,7 +88,7 @@ void CFbxImporter::LoadFile(){
 	//skeleton 트리 정보 얻기
 	LoadSkeleton(m_pScene->GetRootNode());
 
-	m_AnimStackData.GetAnimationData().SetJointCnt(m_AnimStackData.GetSkeletonData().GetJointCnt());
+	m_AnimationData.SetJointCnt(m_SkeletonData.GetJointCnt());
 	//fbx 정보 읽기
 	LoadNodeRecursive(m_pScene->GetRootNode());
 
@@ -105,7 +110,7 @@ void CFbxImporter::LoadAnimStack(){
 	m_AnimStackData.SetTimeMode(timeMode);
 	m_AnimStackData.SetTimeStart(start);
 	m_AnimStackData.SetTimeEnd(end);
-	m_AnimStackData.GetAnimationData().SetAnimationLength(end.GetFrameCount(timeMode) - start.GetFrameCount(timeMode) + 1);
+	m_AnimationData.SetAnimationLength(end.GetFrameCount(timeMode) - start.GetFrameCount(timeMode) + 1);
 
 	m_AnimStackData.SetpAnimStack(currAnimStack);
 
@@ -134,10 +139,10 @@ void CFbxImporter::ProcessSkeletonHierarchyRecursively(FbxNode * inNode, int myI
 		currJoint.SetParentIndex(inParentIndex);
 		currJoint.SetJointName(inNode->GetName());
 		currJoint.SetMyIndex(myIndex);
-		m_AnimStackData.GetSkeletonData().GetJointDatas().push_back(currJoint);
+		m_SkeletonData.GetJointDatas().push_back(currJoint);
 	}
 	for (int i = 0; i < inNode->GetChildCount(); i++) {
-		ProcessSkeletonHierarchyRecursively(inNode->GetChild(i), m_AnimStackData.GetSkeletonData().GetJointDatas().size(), myIndex);
+		ProcessSkeletonHierarchyRecursively(inNode->GetChild(i), m_SkeletonData.GetJointDatas().size(), myIndex);
 	}
 }
 
@@ -360,7 +365,7 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 
 		unsigned int numOfClusters = currSkin->GetClusterCount();
 		//DEBUGER->DebugGMessageBox(L"ExportAnimationData()", L"numOfClusters : %d", numOfClusters);
-		int test = m_AnimStackData.GetSkeletonData().GetJointCnt();
+		int test = m_SkeletonData.GetJointCnt();
 
 		//AnimationData.GetJointDatas().resize(m_AnimStackData.GetJointCnt());
 		//for (unsigned int clusterIndex = 0; clusterIndex < numOfClusters; ++clusterIndex)
@@ -379,7 +384,7 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 			globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix * curGeometryMtx;
 
 			// 현재 Joint의 Offset 행렬 구하기 
-			m_AnimStackData.GetSkeletonData().GetJointDatas()[currJointIndex].SetOffsetMtx(ConvertFbxMtxToXMMATRIX(globalBindposeInverseMatrix));
+			m_SkeletonData.GetJointDatas()[currJointIndex].SetOffsetMtx(ConvertFbxMtxToXMMATRIX(globalBindposeInverseMatrix));
 		
 			// 현재 Joint의 모든 영향을 받는 점들에 대해
 			//BlendWeightPair를 저장
@@ -397,7 +402,7 @@ bool CFbxImporter::ExportAnimationData(FbxMesh * pMesh) {
 				FbxAMatrix mGlobalTransform = currentTransformOffset.Inverse() * currCluster->GetLink()->EvaluateGlobalTransform(currTime);
 
 				CKeyFrame KeyFrame{ (double)i, ConvertFbxMtxToXMMATRIX(mGlobalTransform) };
-				m_AnimStackData.GetAnimationData().GetKeyFrames(currJointIndex).push_back(KeyFrame);
+				m_AnimationData.GetKeyFrames(currJointIndex).push_back(KeyFrame);
 			}
 		}
 	}
@@ -448,8 +453,8 @@ bool CFbxImporter::ReformBlendWeightPairInfo() {
 
 
 UINT CFbxImporter::FindJointIndexUsingName(const std::string& inJointName) {
-	for (unsigned int i = 0; i < m_AnimStackData.GetSkeletonData().GetJointDatas().size(); ++i) {
-		if (m_AnimStackData.GetSkeletonData().GetJointDatas()[i].GetJointName() == inJointName) {
+	for (unsigned int i = 0; i < m_SkeletonData.GetJointDatas().size(); ++i) {
+		if (m_SkeletonData.GetJointDatas()[i].GetJointName() == inJointName) {
 			return i;
 		}
 	}

@@ -804,6 +804,7 @@ void CResourceManager::ReleaseMeshs(){
 void CResourceManager::ReleaseMesh(string name){
 	map<string, shared_ptr<CMesh>> ::iterator iter = m_mMesh.find(name);
 	(iter->second)->End();
+	//delete iter->second.get();
 	m_mMesh.erase(iter);
 }
 

@@ -3,6 +3,7 @@
 #include "SingleTon.h"
 #include "FbxMeshData.h"
 #include "FbxAnimStackData.h"
+#include "SkeletonData.h"
 #include "AnimationData.h"
 
 #define ANIMATION_NUM 1
@@ -23,6 +24,9 @@ public:
 	vector<CFbxMeshData>& GetMeshDatas() { return m_vMeshData; }
 	//anim
 	CFbxAnimStackData& GetAnimStackData() { return m_AnimStackData; }
+	CAnimationData& GetAnimationData() { return m_AnimationData; }
+	CSkeletonData& GetSkeletonData() { return m_SkeletonData; }
+
 	//UINT GetAnimationCnt() { return static_cast<UINT>(m_vAnimationData.size()); }
 	//UINT GetTotalJointCnt();
 	//vector<CFbxAnimationData>& GetAnimationDatas() { return m_vAnimationData; }
@@ -69,6 +73,9 @@ private:
 	//animation data
 	int m_nTestIndex = 5;
 	CFbxAnimStackData				 m_AnimStackData;
+	CAnimationData m_AnimationData;
+	CSkeletonData m_SkeletonData;
+
 	//vector<CFbxAnimationData>		 m_vAnimationData;
 	//mesh data
 	UINT m_MeshScale{ 1 };

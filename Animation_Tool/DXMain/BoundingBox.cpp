@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "BoundingBox.h"
 
-bool CBoundingBox::Begin(XMVECTOR Position, XMVECTOR Extend) {
+bool CBoundingBox::Begin(XMVECTOR Position, XMVECTOR Extend, XMVECTOR Quaternion) {
 	SetPosition(Position);
 	SetScale(Extend);
-	XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionIdentity());
+	XMStoreFloat4(&m_xmf4Quaternion, Quaternion);
 	return true;
 }
 

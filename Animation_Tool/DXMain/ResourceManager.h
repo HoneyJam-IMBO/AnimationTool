@@ -18,8 +18,8 @@
 #include "BoundingBoxMesh.h"//BoundingBox mesh
 #include "DebugTextureMesh.h"//debug texture mesh
 #include "CoordinateSysMesh.h"//CoordinateSystem Mesh
-#include "UseFBXMesh.h"//fbx mesh
-#include "FBXAnimationMesh.h"//animation mesh
+#include "FileBasedMesh.h"//fbx mesh
+#include "AnimationMesh.h"//animation mesh
 #include "MultiMesh.h"//multiMesh
 
 #include "TestObject.h"
@@ -68,6 +68,10 @@ public:
 	void CreateMaterials();
 	void CreateAnimaters();
 
+	//.gjm file load
+	void CreateGJMResources();
+	void CreateGJMResource(wstring path);
+	//.gjm file load
 	//end func
 	void ReleaseTextures();
 	void ReleaseRenderShaders();

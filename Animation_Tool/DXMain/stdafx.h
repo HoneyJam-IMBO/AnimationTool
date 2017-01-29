@@ -205,5 +205,8 @@ enum shader_value_num {
 #define			TWBARMGR		CTwBarManager::GetInstance()
 #include "DirectoryFinder.h"
 #define			DIRECTORYFINDER	CDirectoryFinder::GetInstance()
-
+#include "Exporter.h"
+#define			EXPORTER	CExporter::GetInstance()
+#include "Importer.h"
+#define			IMPORTER	CImporter::GetInstance()
 #define USE_ANIM

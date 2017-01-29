@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 #include "ResourceManager.h"
 
@@ -170,8 +169,7 @@ void CResourceManager::CreateTextures(){
 
 }
 
-shared_ptr<CSampler> CResourceManager::CreateSampler(UINT Slot, UINT BindFlag, D3D11_TEXTURE_ADDRESS_MODE Mode, D3D11_FILTER Filter, D3D11_COMPARISON_FUNC ComparisionFunc, float MinLOD, float MaxLOD)
-{
+shared_ptr<CSampler> CResourceManager::CreateSampler(UINT Slot, UINT BindFlag, D3D11_TEXTURE_ADDRESS_MODE Mode, D3D11_FILTER Filter, D3D11_COMPARISON_FUNC ComparisionFunc, float MinLOD, float MaxLOD){
 	shared_ptr<CSampler> pSampler;
 	pSampler = make_shared<CSampler>(m_pd3dDevice, m_pd3dDeviceContext);
 	pSampler->Begin(Slot, BindFlag, Mode, Filter, ComparisionFunc, MinLOD, MaxLOD);
@@ -461,7 +459,7 @@ void CResourceManager::CreateMeshs(){
 	m_mMesh.insert(pairMesh("SkyBox", pMesh));
 
 #ifdef USE_ANIM
-	shared_ptr<CFBXAnimationMesh> pTestFBXMesh = make_shared<CFBXAnimationMesh>(m_pd3dDevice, m_pd3dDeviceContext);
+	shared_ptr<CAnimationMesh> pTestFBXMesh = make_shared<CAnimationMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #else
 	shared_ptr<CUseFBXMesh> pTestFBXMesh = make_shared<CUseFBXMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #endif
@@ -502,10 +500,10 @@ int CResourceManager::CreateMultiMesh(string path, string name){
 //	int i = FBXIMPORTER->GetMeshCnt();
 	if (FBXIMPORTER->GetHasAnimation()) {
 		
-		shared_ptr<CFBXAnimationMesh> pAnimMesh;
+		shared_ptr<CAnimationMesh> pAnimMesh;
 		for (UINT i = 0; i < FBXIMPORTER->GetMeshCnt(); ++i) {
 			sprintf(pName, "%s%d", name.c_str(), i);
-			pAnimMesh = make_shared<CFBXAnimationMesh>(m_pd3dDevice, m_pd3dDeviceContext);
+			pAnimMesh = make_shared<CAnimationMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 			pAnimMesh->Begin(i);
 			pAnimMesh->AddMeshTexture(m_mTexture["DEFAULT"]);
 			m_mMesh.insert(pairMesh(pName, pAnimMesh));
@@ -521,11 +519,11 @@ int CResourceManager::CreateMultiMesh(string path, string name){
 		pAnimationInfo->Begin(pAnimater);
 	}
 	else {
-		shared_ptr<CUseFBXMesh> pFBXMesh;
+		shared_ptr<CFileBasedMesh> pFBXMesh;
 		
 		for (UINT j = 0; j < FBXIMPORTER->GetMeshCnt(); ++j) {
 			sprintf(pName, "%s%d",name.c_str(), j);
-			pFBXMesh = make_shared<CUseFBXMesh>(m_pd3dDevice, m_pd3dDeviceContext);
+			pFBXMesh = make_shared<CFileBasedMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 			pFBXMesh->Begin(j);
 			m_mMesh.insert(pairMesh(pName, pFBXMesh));
 		}
@@ -775,6 +773,18 @@ void CResourceManager::CreateMaterials(){
 
 void CResourceManager::CreateAnimaters(){
 
+}
+
+void CResourceManager::CreateGJMResources(){
+	
+}
+
+void CResourceManager::CreateGJMResource(wstring path){
+	IMPORTER->Begin(path);
+
+
+
+	IMPORTER->End();
 }
 
 void CResourceManager::ReleaseTextures(){

@@ -82,6 +82,13 @@ public:
 	//setter
 	//animater mesh 선택을 표시하기 위한 함수
 	void SetMeshMaterial(shared_ptr<CMaterial> pMaterial);
+
+	//mesh data 를 export하기위한 함수 
+	UINT GetVertexCnt() { return m_nVertices; }
+	UINT GetIndexCnt() { return m_nIndices; }
+	UINT* GetInices() { return m_pnIndices; }
+	XMFLOAT3* GetVertices() { return m_pVertices; }
+
 protected:
 	//CBoundingBox m_tmpBOUNDINGBOX;
 	//aabb

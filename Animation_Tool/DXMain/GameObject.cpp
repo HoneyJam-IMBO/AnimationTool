@@ -52,7 +52,7 @@ void TW_CALL LoadTextureFileCallback(void* clientData) {
 	wstring path = L"../inputdata/";
 	path += pData->m_sName;
 	char name[64];
-	sprintf(name, "Test%d", dynamic_cast<CFBXAnimationMesh*>(pData->m_pMesh.get())->GetMeshIndex());
+	sprintf(name, "Test%d", dynamic_cast<CAnimationMesh*>(pData->m_pMesh.get())->GetMeshIndex());
 	pData->m_pMesh->SetMeshTexture(0, RESOURCEMGR->CreateTexture(name, path.c_str(), RESOURCEMGR->GetSampler("DEFAULT")));
 
 	pData->m_pMesh->SetMeshMaterial(RESOURCEMGR->GetMaterial("DEFAULT"));

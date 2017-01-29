@@ -29,6 +29,7 @@ public:
 	//void ChangeJointData(vector<string>& vJointName);
 
 	XMMATRIX GetCurFrameMtx(UINT JointIndex, UINT meshIndex = 0) { return m_pAnimationData->GetKeyFrames(JointIndex)[m_CurFrame].GetKeyFrameTransformMtx(); };
+	CAnimationData* GetAnimationData() { return m_pAnimationData; }
 	//map<UINT, vector<CFbxJointData>>& GetAnimationInfos() { return m_mMeshIndexJoints; }
 	//ui proc
 	void SelectAnimationProc();
@@ -43,23 +44,23 @@ public:
 
 	shared_ptr<CAnimater> GetAnimater() { return m_pAnimater; }
 private:
-	shared_ptr<CAnimater> m_pAnimater{ nullptr };
-	//animation 
-	CAnimationData* m_pAnimationData{ nullptr };
-	UINT m_AnimationIndex{ 0 };
-
-	//buffer
-	CStaticBuffer* m_pAnimBuffer{ nullptr };
-
-	//map<UINT, vector<CFbxJointData>> m_mMeshIndexJoints;
 	vector<CBoundingBox> m_vTempBoundingBox;
 	list<CBoundingBox*> m_lActiveBoundingBox;
-
-	float m_CurFrame{ 0 };
-	bool m_bAnimation{ true };
 	float m_fAnimationSpd{ 1.0f };
-	
+	//animation 
+	CAnimationData* m_pAnimationData{ nullptr };
+
+	UINT m_AnimationIndex{ 0 };//x
+
+
+	//buffer
+	CStaticBuffer* m_pAnimBuffer{ nullptr };//x
+
+	//map<UINT, vector<CFbxJointData>> m_mMeshIndexJoints;
+	float m_CurFrame{ 0 };//x
+	bool m_bAnimation{ true };//x
 	//map<int, int> m_mChangeIndex;
+	shared_ptr<CAnimater> m_pAnimater{ nullptr };//x
 public:
 	CAnimationInfo(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext);
 	~CAnimationInfo();

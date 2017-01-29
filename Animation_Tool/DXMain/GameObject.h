@@ -118,6 +118,8 @@ public:
 	void SetSelectMeshIndex(float& index) { 
 		m_indexSelectMesh = index; 
 	}
+
+	shared_ptr<CAnimater> GetAnimater() { return m_pAnimater; }
 protected:
 	int m_indexSelectMesh{ 0 };
 

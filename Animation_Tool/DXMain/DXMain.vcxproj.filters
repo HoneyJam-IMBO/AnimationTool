@@ -321,9 +321,6 @@
     <Filter Include="소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh">
       <UniqueIdentifier>{bd2a88eb-d7d3-4b33-98df-9078154317a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh\FBXAnimationMesh">
-      <UniqueIdentifier>{f2bcac18-db54-432c-b6b7-e2a21d06db1a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\33.DXObject\22.Mesh\DEBUG\CoordinateSysMesh">
       <UniqueIdentifier>{e826c3cd-7505-4f41-a7e4-35481966e6c3}</UniqueIdentifier>
     </Filter>
@@ -362,6 +359,27 @@
     </Filter>
     <Filter Include="소스 파일\SingleTon\FbxImporter\FbxAnimStackData\SkeletonData\FbxJointData">
       <UniqueIdentifier>{40c428ad-1842-4316-9c9c-ff5d4bb7cdf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\Exporter">
+      <UniqueIdentifier>{81064c3b-ba51-415e-9373-daa82e3e0858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\Exporter\FileExporter">
+      <UniqueIdentifier>{a41d9474-0b93-4d8a-911f-e5a60d2a8c47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\Exporter\FileExporter\TxtExporter">
+      <UniqueIdentifier>{41c7b566-f7a8-43c8-bd03-c3a70941b4d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\Importer">
+      <UniqueIdentifier>{29749781-0bc6-45f9-8e73-4dd3098ef9d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\Importer\FileImporter">
+      <UniqueIdentifier>{f25557c4-a22a-4b27-98a5-69ea6034061d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\SingleTon\Importer\FileImporter\TxtImporter">
+      <UniqueIdentifier>{25fe20d1-9cc4-4719-a4ef-7feac9357036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh\AnimationMesh">
+      <UniqueIdentifier>{f2bcac18-db54-432c-b6b7-e2a21d06db1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -578,12 +596,6 @@
     <ClInclude Include="DebugTextureData.h">
       <Filter>소스 파일\SingleTon\Debuger\DebugData\DebugTextureData</Filter>
     </ClInclude>
-    <ClInclude Include="UseFBXMesh.h">
-      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="FBXAnimationMesh.h">
-      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh\FBXAnimationMesh</Filter>
-    </ClInclude>
     <ClInclude Include="StaticBuffer.h">
       <Filter>소스 파일\33.DXObject\77.Buffer\ConstantBuffer\StaticBuffer</Filter>
     </ClInclude>
@@ -661,6 +673,30 @@
     </ClInclude>
     <ClInclude Include="AnimationData.h">
       <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData\AnimationData</Filter>
+    </ClInclude>
+    <ClInclude Include="TxtExporter.h">
+      <Filter>소스 파일\SingleTon\Exporter\FileExporter\TxtExporter</Filter>
+    </ClInclude>
+    <ClInclude Include="Exporter.h">
+      <Filter>소스 파일\SingleTon\Exporter</Filter>
+    </ClInclude>
+    <ClInclude Include="FileExporter.h">
+      <Filter>소스 파일\SingleTon\Exporter\FileExporter</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer.h">
+      <Filter>소스 파일\SingleTon\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="FileImporter.h">
+      <Filter>소스 파일\SingleTon\Importer\FileImporter</Filter>
+    </ClInclude>
+    <ClInclude Include="TxtImporter.h">
+      <Filter>소스 파일\SingleTon\Importer\FileImporter\TxtImporter</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationMesh.h">
+      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh\AnimationMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="FileBasedMesh.h">
+      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -865,12 +901,6 @@
     <ClCompile Include="DebugTextureData.cpp">
       <Filter>소스 파일\SingleTon\Debuger\DebugData\DebugTextureData</Filter>
     </ClCompile>
-    <ClCompile Include="UseFBXMesh.cpp">
-      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="FBXAnimationMesh.cpp">
-      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh\FBXAnimationMesh</Filter>
-    </ClCompile>
     <ClCompile Include="StaticBuffer.cpp">
       <Filter>소스 파일\33.DXObject\77.Buffer\ConstantBuffer\StaticBuffer</Filter>
     </ClCompile>
@@ -948,6 +978,30 @@
     </ClCompile>
     <ClCompile Include="AnimationData.cpp">
       <Filter>소스 파일\SingleTon\FbxImporter\FbxAnimStackData\AnimationData</Filter>
+    </ClCompile>
+    <ClCompile Include="TxtExporter.cpp">
+      <Filter>소스 파일\SingleTon\Exporter\FileExporter\TxtExporter</Filter>
+    </ClCompile>
+    <ClCompile Include="Exporter.cpp">
+      <Filter>소스 파일\SingleTon\Exporter</Filter>
+    </ClCompile>
+    <ClCompile Include="FileExporter.cpp">
+      <Filter>소스 파일\SingleTon\Exporter\FileExporter</Filter>
+    </ClCompile>
+    <ClCompile Include="Importer.cpp">
+      <Filter>소스 파일\SingleTon\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="FileImporter.cpp">
+      <Filter>소스 파일\SingleTon\Importer\FileImporter</Filter>
+    </ClCompile>
+    <ClCompile Include="TxtImporter.cpp">
+      <Filter>소스 파일\SingleTon\Importer\FileImporter\TxtImporter</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationMesh.cpp">
+      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh\AnimationMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="FileBasedMesh.cpp">
+      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

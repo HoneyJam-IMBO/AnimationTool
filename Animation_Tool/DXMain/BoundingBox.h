@@ -11,7 +11,7 @@ struct VS_VB_BOUNDINGBOX_INSTANCE {
 
 class CBoundingBox : public CGameObject{
 public:
-	bool Begin(XMVECTOR Position, XMVECTOR Extend);
+	bool Begin(XMVECTOR Position, XMVECTOR Extend, XMVECTOR Quaternion = XMQuaternionIdentity());
 	virtual bool End() { return CGameObject::End(); };
 
 	//debug buffer controll
@@ -38,8 +38,8 @@ public:
 	void SetMyIndex(int index) { m_nMyIndex = index; }
 	int GetMyIndex() { return m_nMyIndex; }
 
-	bool GetToolActive() { return m_bToolAactive; }
-	void SetToolActive(bool b) { m_bToolAactive = b; }
+	bool GetToolActive() { return m_bToolActive; }
+	void SetToolActive(bool b) { m_bToolActive = b; }
 	//void SetAnimater(CAnimationInfo* pAnimationInfo) { m_pAnimationInfo = pAnimationInfo; }
 private:
 	//test
@@ -49,7 +49,7 @@ private:
 	int m_nMyJointIndex{ 0 };
 	int m_nMyIndex{ 0 };
 
-	bool m_bToolAactive{ true };
+	bool m_bToolActive{ true };
 	//CAnimationInfo* m_pAnimationInfo;
 public:
 	CBoundingBox();

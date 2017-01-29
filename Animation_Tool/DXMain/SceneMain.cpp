@@ -36,8 +36,9 @@ void TW_CALL ClearAllButtonCallback(void * clientData) {
 }
 void TW_CALL WriteNowButtonCallback(void * clientData) {
 	CSceneMain* pScene = reinterpret_cast<CSceneMain*>(clientData);
-	//make texture/ set texture
-	//pObj->GetRenderContainer()->GetMesh(pObj->GetSelectMeshIndex());
+	EXPORTER->Begin(L"../outputdata/text.txt");
+	EXPORTER->ExportFbxObject(pScene->m_pFBXObject);
+	EXPORTER->End();
 }
 bool CSceneMain::Begin() {
 

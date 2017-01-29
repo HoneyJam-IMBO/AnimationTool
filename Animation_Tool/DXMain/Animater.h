@@ -36,11 +36,12 @@ public:
 	//helper func
 	UINT GetAnimaterJointCnt();
 private:
-	vector<CAnimationInfo*> m_vpAnimationInfos;
+	CBoundingBox* m_pMainBoundingBox{ nullptr };
 	CSkeletonData* m_pSkeletonData{ nullptr };
+
+	vector<CAnimationInfo*> m_vpAnimationInfos;
 	UINT m_CurAnimationIndex{ 0 };
 
-	CBoundingBox* m_pMainBoundingBox{ nullptr };
 //	//joint tree Á¤º¸
 //	vector<string> m_vJointName;
 

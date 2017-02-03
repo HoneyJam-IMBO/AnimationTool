@@ -55,7 +55,7 @@ void CDirectoryFinder::GetFiles(vector<tstring>& vList, tstring sPath, bool bSea
 				
 				if (length < 0) length = sPath.length();
 				wstring s = (bAllDirectories ? sTmp : sTmp.substr(length, sTmp.length() - length));
-				s = ReplaceString(s, L"\\", L"/");
+				//s = ReplaceString(s, L"\\", L"/");
 				vList.push_back(s);
 			}
 

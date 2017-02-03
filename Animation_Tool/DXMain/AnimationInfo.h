@@ -21,7 +21,8 @@ public:
 	float& GetAnimationSpd() { return m_fAnimationSpd; }
 	UINT GetAnimationIndex() { return m_AnimationIndex; }
 	void SetAnimationIndex(UINT index) { m_AnimationIndex = index; }
-
+	void SetAnimater(shared_ptr<CAnimater> pAnimater) { m_pAnimater = pAnimater; }
+	void SetAnimationData(CAnimationData* pAnimationData) { m_pAnimationData = pAnimationData; }
 	//utill 
 	void Reset();
 
@@ -43,6 +44,12 @@ public:
 	list<CBoundingBox*>& GetActiveOBB() { return m_lActiveBoundingBox; }
 
 	shared_ptr<CAnimater> GetAnimater() { return m_pAnimater; }
+
+	//create func
+	static CAnimationInfo* CreateAnimationInfoFromFBXFile(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext, shared_ptr<CAnimater>  pAnimater);
+	static CAnimationInfo* CreateAnimationInfoFromGJMFile(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext, shared_ptr<CAnimater>  pAnimater);
+
+	void SetAnimationSpd(float spd) { m_fAnimationSpd = spd; }
 private:
 	vector<CBoundingBox> m_vTempBoundingBox;
 	list<CBoundingBox*> m_lActiveBoundingBox;

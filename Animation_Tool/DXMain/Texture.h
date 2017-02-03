@@ -22,9 +22,11 @@ public:
 
 	//setter
 	void SetSampler(shared_ptr<CSampler> pSampler);
+	void SetsPath(string path) { m_sPath = path; }
 	void SetConstantBuffer(shared_ptr<CConstantBuffer> pConstantBuffer);
 	//getter
 	ID3D11ShaderResourceView* GetShaderResourceView() { return m_pd3dsrvTexture; }
+	string GetsPath() { return m_sPath; }
 	shared_ptr<CSampler> GetvSampler() { return m_pSampler; }
 
 	ID3D11ShaderResourceView *CreateTexture2DArraySRV(_TCHAR(*ppstrFilePaths)[128], UINT nTextures);
@@ -35,6 +37,7 @@ protected:
 	UINT							m_TextureStartSlot{ 0 };
 	UINT							m_BindFlag{ 0 };
 
+	string							m_sPath;
 	//이 안에 여러개의 dx객체들이 존재함
 	//smapler 1개 texture가 1개니까
 	shared_ptr<CSampler>		m_pSampler{ nullptr };

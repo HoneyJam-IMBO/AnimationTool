@@ -21,7 +21,7 @@ struct VS_VB_INSTANCE {
 class CMesh;
 struct StructLoadTextureFile {
 	shared_ptr<CMesh> m_pMesh;
-	wstring m_sName;
+	string m_sName;
 };
 
 class CGameObject : public CObject {

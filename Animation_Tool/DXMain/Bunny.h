@@ -3,7 +3,7 @@
 #include "RotateComponent.h"
 
 struct CTestStruct {
-	CAnimationMesh* pMesh;
+	CFileBasedMesh* pMesh;
 	CFbxJointData* pJoint;
 };
 class CBunny : public CGameObject {

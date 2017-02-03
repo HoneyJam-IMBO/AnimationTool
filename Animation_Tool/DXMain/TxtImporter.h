@@ -4,15 +4,15 @@
 //File Exporter가 사용하는 객체
 class CTxtImporter :public CFileImporter {
 public:
-	virtual void ReadWCHAR(wifstream& in, WCHAR* data, int size);
-	virtual void ReadCHAR(wifstream& in, char* data, int size);
-	virtual void ReadUINT(wifstream& in, UINT& data);
-	virtual void ReadInt(wifstream& in, int& data);
-	virtual void ReadFloat(wifstream& in, float& data);
+	virtual string Readstring(ifstream& in);
+	virtual UINT ReadUINT(ifstream& in);
+	virtual int ReadInt(ifstream& in);
+	virtual float ReadFloat(ifstream& in);
+	virtual bool ReadBool(ifstream& in);
 
 	//txt file 사용할 경우 각 인자의 경계
-	virtual void ReadSpace(wifstream& in);
-	virtual void ReadEnter(wifstream& in);
+	virtual void ReadSpace(ifstream& in);
+	virtual void ReadEnter(ifstream& in);
 private:
 
 public:

@@ -35,7 +35,20 @@ public:
 
 	//helper func
 	UINT GetAnimaterJointCnt();
+
+
+	//create func
+	static shared_ptr<CAnimater> CreateAnimaterFromFBXFile(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext, bool bHasAnimation = true);
+	static shared_ptr<CAnimater> CreateAnimaterFromGJMFile(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext, bool bHasAnimation = true);
+
+	void SetMeshOffsetMtx(XMFLOAT4X4& xmf4x4Mtx) { m_xmf4x4MeshOffsetMtx = xmf4x4Mtx; }
+	void SetMeshOffsetMtx(XMMATRIX xmMtx) { XMStoreFloat4x4(&m_xmf4x4MeshOffsetMtx, xmMtx); }
+	void SetpAnimBuffer(CStaticBuffer* pAnimBuffer) { m_pAnimBuffer = pAnimBuffer; }
+	void SetpMainAABB(CBoundingBox* pMainBoundingBox) { m_pMainBoundingBox = pMainBoundingBox; }
+	void SetpSkeletonData(CSkeletonData* pSkeletonData) { m_pSkeletonData = pSkeletonData; }
+
 private:
+	XMFLOAT4X4 m_xmf4x4MeshOffsetMtx;
 	CBoundingBox* m_pMainBoundingBox{ nullptr };
 	CSkeletonData* m_pSkeletonData{ nullptr };
 

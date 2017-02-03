@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "Mesh.h"
 
+#define DEFAULT_AABB 10
 bool CMesh::Begin() {
 
 	//create default aabbzzz
 	BoundingBox boundingBox;
-	BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(+FLT_MAX, +FLT_MAX, +FLT_MAX, 0.f), XMVectorSet(-FLT_MAX, -FLT_MAX, -FLT_MAX, 0.f));
+	BoundingBox::CreateFromPoints(boundingBox, XMVectorSet(+DEFAULT_AABB, +DEFAULT_AABB, +DEFAULT_AABB, 0.f), XMVectorSet(-DEFAULT_AABB, -DEFAULT_AABB, -DEFAULT_AABB, 0.f));
 	m_AABB.SetBoundingBoxInfo(boundingBox);
 	
 	
@@ -67,6 +68,16 @@ void CMesh::RenderExcute(UINT nInstance) {
 	else
 		m_pd3dDeviceContext->DrawInstanced(m_nVertices, nInstance, m_nStartVertexLocation, m_nStartInstanceLocation);
 
+}
+
+bool CMesh::CreateVertexBuffer(){
+
+	return true;
+}
+
+bool CMesh::CreateIndexBuffer(){
+
+	return true;
 }
 
 void CMesh::AssembleToVertexBuffer(int nBuffers, ID3D11Buffer **ppd3dBuffers, UINT *pnBufferStrides, UINT *pnBufferOffsets)

@@ -57,7 +57,7 @@ public:
 	CGameObject* PickObjectPointedByCursor(int xClient, int yClient);
 
 	//animation tool을 위한 함수
-	void CreateFBXObject(string path);
+	void CreateControllObject(string path);
 	void CreateLoadFileUI();
 	void AddFBXAnimationInfo(string path);
 	void CreateAddInfoUI();

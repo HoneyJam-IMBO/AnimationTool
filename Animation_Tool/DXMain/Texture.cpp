@@ -33,6 +33,9 @@ bool CTexture::Begin(UINT nTextures, ID3D11Texture2D **ppd3dTextures, shared_ptr
 
 //from file
 bool CTexture::Begin(_TCHAR(pstrFilePath)[128], shared_ptr<CSampler> pSampler, UINT Slot, UINT BindFlag, shared_ptr<CConstantBuffer> pConstantBuffer){
+	wstring path{ pstrFilePath };
+	m_sPath.assign(path.cbegin(), path.cend());
+
 	//sampler
 	m_pSampler = pSampler;
 	//constant buffer

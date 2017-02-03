@@ -3,10 +3,10 @@
 
 void TW_CALL LoadFileCallback(void * clientData) {
 	LoadFileStruct* pLFS = reinterpret_cast<LoadFileStruct*>(clientData);
-	string s = pLFS->Filename;
-	string path{ "../inputdata/" };
+//	string s = pLFS->Filename;
+//	string path{ "../inputdata/" };
 
-	pLFS->m_pScene->CreateFBXObject(path+s);
+	pLFS->m_pScene->CreateControllObject(pLFS->Filename);
 	const char* barName{ "LoadFile" };
 	TWBARMGR->DeleteBar(barName);
 	//string s = pLFS;
@@ -17,10 +17,10 @@ void TW_CALL LoadFileButtonCallback(void * clientData) {
 }
 void TW_CALL AddInfoCallback(void * clientData) {
 	LoadFileStruct* pLFS = reinterpret_cast<LoadFileStruct*>(clientData);
-	string s = pLFS->Filename;
-	string path{ "../inputdata/" };
+//	string s = pLFS->Filename;
+//	string path{ "../inputdata/" };
 
-	pLFS->m_pScene->AddFBXAnimationInfo(path + s);
+	pLFS->m_pScene->AddFBXAnimationInfo(pLFS->Filename);
 	
 	const char* barName{ "AddInfo" };
 	TWBARMGR->DeleteBar(barName);
@@ -216,19 +216,19 @@ bool CSceneMain::End() {
 }
 
 void CSceneMain::Animate(float fTimeElapsed) {
-	m_LoadFileStruct;
-	//DEBUGER->AddText(100, 100, 100, YT_Color(255, 0, 0), L"TEST");
+	//drag & drop 처리문
 	const char* test{ nullptr };
 	test = INPUTMGR->GetDropFileName();
 	if (test) {
 		if (nullptr == m_pFBXObject) {//만약 없다면 
-			CreateFBXObject("../../Assets/Model/fbx/1-2/Die_85.fbx");
+			CreateControllObject("../../Assets/Model/fbx/1-2/Die_85.fbx");
 		}
 		else {
-			RESOURCEMGR->CreateAnimater("../../Assets/Model/fbx/1-1/ATK1_45.fbx", "Test");
+			AddFBXAnimationInfo("../../Assets/Model/fbx/1-2/Die_85.fbx");
 			m_pFBXObject->PickingProc();
 		}
 	}
+	//drag & drop 처리문
 	//-----------------------------------space------------------------------
 	m_pSpaceContainer->Animate(fTimeElapsed);
 	//-----------------------------------space------------------------------
@@ -365,10 +365,10 @@ CGameObject* CSceneMain::PickObjectPointedByCursor(int xClient, int yClient)
 	return(pNearestObject);
 }
 
-void CSceneMain::CreateFBXObject(string path){
-	//path = DIRECTORYFINDER->ReplaceString(path, L"\\", L"/");
+void CSceneMain::CreateControllObject(string path){
 //resource 제작	
 	m_MeshCnt = RESOURCEMGR->CreateMultiMesh(path, "Test");
+	//m_MeshCnt = RESOURCEMGR->CreateMultiMesh("../outputata/text.txt", "Test");
 	RCSELLER->GetRenderContainer(object_id::OBJECT_FBX_ELF)->ClearMesh();
 	char pName[20];
 	for (int i = 0; i < m_MeshCnt; ++i) {
@@ -396,19 +396,40 @@ void CSceneMain::CreateLoadFileUI(){
 	TWBARMGR->AddBar(barName);
 
 	vector<wstring> vFile;
-	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".fbx");
-	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".FBX");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".fbx");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".FBX");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".gjm");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".GJM");
+	DIRECTORYFINDER->GetFiles(vFile, L"../outputdata", true, true, L".gjm");
+	DIRECTORYFINDER->GetFiles(vFile, L"../outputdata", true, true, L".GJM");
+	//test
+	DIRECTORYFINDER->GetFiles(vFile, L"../outputdata", true, true, L".txt");
 
-	const char* groupName = "File";
+	//const char* groupName = "File";
 	char menuName[64];
 	int cnt{ 0 };
 	m_LoadFileStruct.resize(vFile.size());
 	for (auto data : vFile) {
-		string s{ "" };
-		s.assign(data.cbegin(), data.cend());
-		m_LoadFileStruct[cnt] = LoadFileStruct{ this, s };
-		sprintf(menuName, "%s", s.c_str());
-		TWBARMGR->AddButtonCB(barName, groupName, menuName, LoadFileCallback, &m_LoadFileStruct[cnt]);
+		//file directory store;
+		data = DIRECTORYFINDER->ReplaceString(data, L"\\", L"/");
+		string filsDirectory{ "" };
+		filsDirectory.assign(data.cbegin(), data.cend());
+		m_LoadFileStruct[cnt] = LoadFileStruct{ this, filsDirectory };
+
+		//menu name = file name
+		string menuNameString{ "" };
+		menuNameString.assign(data.cbegin(), data.cend());
+		sprintf(menuName, "%s", menuNameString.c_str());
+
+		//group name = directory name
+		data = DIRECTORYFINDER->ReplaceString(data, L"/", L"\\");
+		LPWSTR str = (LPWSTR)data.c_str();
+		PathRemoveFileSpec(str);
+	
+		wstring wGroupName{ str };
+		string groupName;
+		groupName.assign(wGroupName.cbegin(), wGroupName.cend());
+		TWBARMGR->AddButtonCB(barName, groupName.c_str() , menuName, LoadFileCallback, &m_LoadFileStruct[cnt]);
 		cnt++;
 	}
 	//make texture/ set texture
@@ -417,10 +438,21 @@ void CSceneMain::CreateLoadFileUI(){
 
 void CSceneMain::AddFBXAnimationInfo(string path){
 	if (nullptr == m_pFBXObject) {
-		CreateFBXObject(path);
+		//wstring ws{ L"" };
+		//ws.assign(path.cbegin(), path.cend());
+		CreateControllObject(path);
 		return;
 	}
-	RESOURCEMGR->CreateAnimater(path, "Test");
+
+	//fbx animation info 추가!
+	string name{ "Test" };
+	FBXIMPORTER->Begin(path);
+	if (FBXIMPORTER->GetHasAnimation()) {
+		CAnimationInfo* pAnimationInfo = CAnimationInfo::CreateAnimationInfoFromFBXFile(m_pd3dDevice, m_pd3dDeviceContext, RESOURCEMGR->GetAnimater(name));
+	}
+	FBXIMPORTER->End();
+	//fbx animation info 추가!
+
 	m_pFBXObject->PickingProc();
 }
 

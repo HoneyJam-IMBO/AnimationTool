@@ -3,6 +3,7 @@
 
 #include "RenderContainer.h"
 #include "RenderContainerSeller.h"
+#include "FileBasedMesh.h"
 #include "TerrainContainer.h"
 #include "Layer.h"
 #include "Animater.h"
@@ -49,11 +50,14 @@ void TW_CALL LoadTextureFileCallback(void* clientData) {
 	m_mTexture.insert(pairTexture("DEFAULT", pTexture));
 	*/
 	StructLoadTextureFile* pData = reinterpret_cast<StructLoadTextureFile*>(clientData);
-	wstring path = L"../inputdata/";
-	path += pData->m_sName;
+	//string path = "../inputdata/";
+	//path += pData->m_sName;
+	wstring wPath{ L"" };
+	wPath.assign(pData->m_sName.cbegin(), pData->m_sName.cend());
+
 	char name[64];
-	sprintf(name, "Test%d", dynamic_cast<CAnimationMesh*>(pData->m_pMesh.get())->GetMeshIndex());
-	pData->m_pMesh->SetMeshTexture(0, RESOURCEMGR->CreateTexture(name, path.c_str(), RESOURCEMGR->GetSampler("DEFAULT")));
+	sprintf(name, "Test%d", dynamic_cast<CFileBasedMesh*>(pData->m_pMesh.get())->GetMeshIndex());
+	pData->m_pMesh->SetMeshTexture(0, RESOURCEMGR->CreateTexture(name, wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT")));
 
 	pData->m_pMesh->SetMeshMaterial(RESOURCEMGR->GetMaterial("DEFAULT"));
 }
@@ -428,10 +432,10 @@ void CGameObject::CreateMenuMeshTextureUI(){
 	TWBARMGR->AddBar(barName);
 
 	vector<wstring> vFile;
-	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".jpg");
-	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".JPG");
-	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".png");
-	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".PNG");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".jpg");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".JPG");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".png");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".PNG");
 
 	const char* groupName = "TextureFile";
 	char menuName[64];
@@ -440,7 +444,7 @@ void CGameObject::CreateMenuMeshTextureUI(){
 	for (auto data : vFile) {
 		string s{ "" };
 		s.assign(data.cbegin(), data.cend());
-		m_vStructLoadTextureFile[cnt] = StructLoadTextureFile{ m_pRenderContainer->GetMesh(m_indexSelectMesh), data };
+		m_vStructLoadTextureFile[cnt] = StructLoadTextureFile{ m_pRenderContainer->GetMesh(m_indexSelectMesh), s };
 		sprintf(menuName, "%s", s.c_str());
 		TWBARMGR->AddButtonCB(barName, groupName, menuName, LoadTextureFileCallback, &m_vStructLoadTextureFile[cnt]);
 		cnt++;

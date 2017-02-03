@@ -199,7 +199,6 @@
     <ClInclude Include="DXMain.h" />
     <ClInclude Include="DirectXFramework.h" />
     <ClInclude Include="DXObject.h" />
-    <ClInclude Include="AnimationMesh.h" />
     <ClInclude Include="FbxAnimStackData.h" />
     <ClInclude Include="FbxBlendWeightPair.h" />
     <ClInclude Include="FbxImporter.h" />
@@ -305,7 +304,6 @@
     <ClCompile Include="DXObject.cpp" />
     <ClCompile Include="DirectXFramework.cpp" />
     <ClCompile Include="DXMain.cpp" />
-    <ClCompile Include="AnimationMesh.cpp" />
     <ClCompile Include="FbxAnimStackData.cpp" />
     <ClCompile Include="FbxBlendWeightPair.cpp" />
     <ClCompile Include="FbxImporter.cpp" />

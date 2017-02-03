@@ -318,9 +318,6 @@
     <Filter Include="소스 파일\33.DXObject\22.Mesh\OBJECT\TerrainMesh">
       <UniqueIdentifier>{7fbeeb56-3fb0-46dc-b95b-d219092f442c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh">
-      <UniqueIdentifier>{bd2a88eb-d7d3-4b33-98df-9078154317a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\33.DXObject\22.Mesh\DEBUG\CoordinateSysMesh">
       <UniqueIdentifier>{e826c3cd-7505-4f41-a7e4-35481966e6c3}</UniqueIdentifier>
     </Filter>
@@ -378,8 +375,8 @@
     <Filter Include="소스 파일\SingleTon\Importer\FileImporter\TxtImporter">
       <UniqueIdentifier>{25fe20d1-9cc4-4719-a4ef-7feac9357036}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh\AnimationMesh">
-      <UniqueIdentifier>{f2bcac18-db54-432c-b6b7-e2a21d06db1a}</UniqueIdentifier>
+    <Filter Include="소스 파일\33.DXObject\22.Mesh\OBJECT\FileBasedMesh">
+      <UniqueIdentifier>{bd2a88eb-d7d3-4b33-98df-9078154317a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -692,11 +689,8 @@
     <ClInclude Include="TxtImporter.h">
       <Filter>소스 파일\SingleTon\Importer\FileImporter\TxtImporter</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationMesh.h">
-      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh\AnimationMesh</Filter>
-    </ClInclude>
     <ClInclude Include="FileBasedMesh.h">
-      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh</Filter>
+      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FileBasedMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -997,11 +991,8 @@
     <ClCompile Include="TxtImporter.cpp">
       <Filter>소스 파일\SingleTon\Importer\FileImporter\TxtImporter</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationMesh.cpp">
-      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh\AnimationMesh</Filter>
-    </ClCompile>
     <ClCompile Include="FileBasedMesh.cpp">
-      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FBXMesh</Filter>
+      <Filter>소스 파일\33.DXObject\22.Mesh\OBJECT\FileBasedMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

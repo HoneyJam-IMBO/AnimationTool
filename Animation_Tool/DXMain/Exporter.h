@@ -14,13 +14,16 @@ public:
 	void WriteFBXAnimaterData(CTestObject* pFBXObject);
 	void WriteAllFBXAnimationInfo(CTestObject* pFBXObject);
 
-	void WriteWCHAR(const WCHAR* data, int size);
-	void WriteCHAR(const char* data, int size);
+	void WriteWCHAR(const WCHAR* data);
+	void WriteCHAR(const char* data);
+	void WriteWstring(const wstring data);
+	void Writestring(const string data);
 	void WriteUINT(const UINT data);
 	void WriteInt(const int data);
 	void WriteFloat(const float data);
 	void WriteFloat4x4(const XMFLOAT4X4 xmf4x4);
 	void WriteXMMatrix(const XMMATRIX xmMtx);
+	void WriteBool(const bool b);
 	//txt file 사용할 경우 각 인자의 경계
 	void WriteSpace();
 	void WriteEnter();

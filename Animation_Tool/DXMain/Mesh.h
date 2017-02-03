@@ -28,8 +28,8 @@ public:
 	void Render(UINT nInstance);
 	virtual void RenderExcute(UINT nInstance);
 	//begin func
-	virtual bool CreateVertexBuffer() { return true; }
-	virtual bool CreateIndexBuffer() { return true; }
+	virtual bool CreateVertexBuffer();
+	virtual bool CreateIndexBuffer();
 	//begin func
 
 	virtual void Update(float fTimeElapsed) {}
@@ -54,10 +54,10 @@ public:
 
 	//setter
 	void Setd3dPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY d3dPrimitiveTopology) {m_d3dPrimitiveTopology = d3dPrimitiveTopology;}
-	void SetnVertices(UINT nVertices) {	m_nVertices = nVertices;}
-	void SetnIndices(UINT nIndices) {	m_nIndices = nIndices;}
-	void SetpnIndices(UINT* pnIndices) {m_pnIndices = pnIndices;}
-	void SetpVertices(XMFLOAT3* pVertices) {m_pVertices = pVertices;}
+	//void SetnVertices(UINT nVertices) {	m_nVertices = nVertices;}
+	//void SetnIndices(UINT nIndices) {	m_nIndices = nIndices;}
+	//void SetpnIndices(UINT* pnIndices) {m_pnIndices = pnIndices;}
+	//void SetpVertices(XMFLOAT3* pVertices) {m_pVertices = pVertices;}
 	//-----------------------------------render option-------------------------
 	void SetnStartIndexLocation(UINT nStartIndexLocation) {	m_nStartIndexLocation = nStartIndexLocation;}
 	void SetnStartVertexLocation(UINT nStartVertexLocation) {m_nStartVertexLocation = nStartVertexLocation;}
@@ -79,6 +79,7 @@ public:
 
 	void AddMeshTexture(shared_ptr<CTexture>);
 	void SetMeshTexture(UINT index, shared_ptr<CTexture>);
+	vector<shared_ptr<CTexture>>& GetvMeshTexture() { return m_vMeshTexture; }
 	//setter
 	//animater mesh 선택을 표시하기 위한 함수
 	void SetMeshMaterial(shared_ptr<CMaterial> pMaterial);
@@ -89,6 +90,12 @@ public:
 	UINT* GetInices() { return m_pnIndices; }
 	XMFLOAT3* GetVertices() { return m_pVertices; }
 
+	//mseh data를 set하기 위한 함수
+	void SetnVertices(UINT nVertices) { m_nVertices = nVertices; }
+	void SetnIndices(UINT nIndices) { m_nIndices = nIndices; }
+	void SetpIndices(UINT* pnIndices) { m_pnIndices = pnIndices; }
+	void SetpVertices(XMFLOAT3* pVertices) { m_pVertices = pVertices; }
+
 protected:
 	//CBoundingBox m_tmpBOUNDINGBOX;
 	//aabb
@@ -96,7 +103,9 @@ protected:
 	//obb
 	vector<CBoundingBox> m_vOBB;
 
+	//mesh texture
 	vector<shared_ptr<CTexture>> m_vMeshTexture;
+
 	shared_ptr<CMaterial> m_pMeshMaterial{ nullptr };
 	//topology
 	D3D11_PRIMITIVE_TOPOLOGY m_d3dPrimitiveTopology{ D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST };

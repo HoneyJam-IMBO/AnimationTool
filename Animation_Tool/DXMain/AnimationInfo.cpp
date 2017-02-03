@@ -41,25 +41,17 @@ void TW_CALL CreateSelectOBBCallback(void * clientData) {
 	
 }
 bool CAnimationInfo::Begin(shared_ptr<CAnimater> pAnimater){
-	m_AnimationIndex = pAnimater->GetAnimationCnt();
-	m_pAnimater = pAnimater;
-
-	m_pAnimationData = new CAnimationData();
-
-	*m_pAnimationData = FBXIMPORTER->GetAnimationData();
 	int nJoint{ 0 };
 
-		nJoint = m_pAnimater->GetSkeletonData()->GetJointDatas().size();
+	nJoint = m_pAnimater->GetSkeletonData()->GetJointDatas().size();
 
-		for (int j = 0; j < nJoint; ++j) {
-			XMMATRIX FrameTransform;
-			CBoundingBox boundingBox;
-			boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
-			boundingBox.SetActive(false);
-			m_vTempBoundingBox.push_back(boundingBox);
-		}
-	
-
+	for (int j = 0; j < nJoint; ++j) {
+		XMMATRIX FrameTransform;
+		CBoundingBox boundingBox;
+		boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
+		boundingBox.SetActive(false);
+		m_vTempBoundingBox.push_back(boundingBox);
+	}
 
 //	for (int MeshIndex = 0; MeshIndex < FBXIMPORTER->GetAnimationDatas().size(); ++MeshIndex) {
 //		nJoint = static_cast<int>(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointCnt());
@@ -73,7 +65,6 @@ bool CAnimationInfo::Begin(shared_ptr<CAnimater> pAnimater){
 //			m_vTempBoundingBox.push_back(boundingBox);
 //		}
 //	}
-
 	m_pAnimBuffer = new CStaticBuffer(m_pd3dDevice, m_pd3dDeviceContext);
 	m_pAnimBuffer->Begin(256, sizeof(XMMATRIX), nullptr, 10, BIND_VS);
 
@@ -141,6 +132,7 @@ void CAnimationInfo::Update(float fTimeElapsed){
 		}
 	}
 	//debug
+
 	for (auto data : m_lActiveBoundingBox) {
 		float fMin = data->GetMin();
 		float fMax = data->GetMax();
@@ -153,6 +145,7 @@ void CAnimationInfo::Update(float fTimeElapsed){
 				BoundingOrientedBox originObb = data->GetOBB();
 				if (false == m_pAnimationData->GetKeyFrames(data->GetMyJointIndex()).empty()) {
 					originObb.Transform(originObb, m_pAnimationData->GetKeyFrames(data->GetMyJointIndex())[m_CurFrame].GetKeyFrameTransformMtx());
+					//originObb.Transform(originObb, data->GetWorldMtx());
 					DEBUGER->RegistOBB(originObb);
 				}
 			}
@@ -432,6 +425,80 @@ void CAnimationInfo::CreateAnimationInfoUI(){
 		//TWBARMGR->AddBoundingBoxActiveBar("PickingBar", groupName, boolMenuName, NULL);
 
 	}
+}
+
+CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromFBXFile(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext, shared_ptr<CAnimater>  pAnimater){
+	CAnimationInfo* pAnimationInfo = new CAnimationInfo(pd3dDevice, pd3dDeviceContext);
+	pAnimationInfo->SetAnimationIndex(pAnimater->GetAnimationCnt());
+	pAnimationInfo->SetAnimater(pAnimater);
+
+	CAnimationData* pAnimationData = new CAnimationData();
+	*pAnimationData = FBXIMPORTER->GetAnimationData();
+
+	pAnimationInfo->SetAnimationData(pAnimationData);
+	pAnimationInfo->Begin(pAnimater);
+	return pAnimationInfo;
+}
+
+CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromGJMFile(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext, shared_ptr<CAnimater>  pAnimater){
+	CAnimationInfo* pAnimationInfo = new CAnimationInfo(pd3dDevice, pd3dDeviceContext);
+	pAnimationInfo->SetAnimationIndex(pAnimater->GetAnimationCnt());
+	pAnimationInfo->SetAnimater(pAnimater);
+
+	//obb info
+	int obbCnt = IMPORTER->ReadInt();
+	for (int j = 0; j < obbCnt; ++j) {
+		CBoundingBox* pBoundingBox = new CBoundingBox();
+		float min = IMPORTER->ReadFloat();
+		float max = IMPORTER->ReadFloat();
+		int myJointIndex = IMPORTER->ReadInt();
+
+		XMFLOAT3 xmf3Pos;
+		xmf3Pos.x = IMPORTER->ReadFloat();
+		xmf3Pos.y = IMPORTER->ReadFloat();
+		xmf3Pos.z = IMPORTER->ReadFloat();
+
+		XMFLOAT4 xmf4Scale;
+		xmf4Scale.x = IMPORTER->ReadFloat();
+		xmf4Scale.y = IMPORTER->ReadFloat();
+		xmf4Scale.z = IMPORTER->ReadFloat();
+		xmf4Scale.w = 1.0f;
+
+		XMFLOAT4 xmf4Quaternion;
+		xmf4Quaternion.x = IMPORTER->ReadFloat();
+		xmf4Quaternion.y = IMPORTER->ReadFloat();
+		xmf4Quaternion.z = IMPORTER->ReadFloat();
+		xmf4Quaternion.w = IMPORTER->ReadFloat();
+		pBoundingBox->Begin(XMLoadFloat3(&xmf3Pos), XMLoadFloat4(&xmf4Scale), XMLoadFloat4(&xmf4Quaternion));
+		//pBoundingBox->SetPosition(XMLoadFloat3(&xmf3Pos));
+
+		pBoundingBox->SetMin(min);
+		pBoundingBox->SetMax(max);
+		pBoundingBox->SetMyJointIndex(myJointIndex);
+		pAnimationInfo->GetActiveOBB().push_back(pBoundingBox);
+	}//obb for end
+	float animationSpd = IMPORTER->ReadFloat();
+	pAnimationInfo->SetAnimationSpd(animationSpd);
+
+	CAnimationData* pAnimationData = new CAnimationData();
+	int jointCnt = pAnimater->GetSkeletonData()->GetJointCnt();
+	int frameCnt = IMPORTER->ReadInt();
+	pAnimationData->SetAnimationLength(frameCnt);
+
+	for (int j = 0; j < jointCnt; ++j) {
+		int curJointFrameCnt = IMPORTER->ReadInt();
+		pAnimationData->GetAllKeyFrame().resize(jointCnt);
+		if (curJointFrameCnt <= 0) continue;
+		for (int k = 0; k < frameCnt; ++k) {
+			CKeyFrame keyFrame;
+			keyFrame.SetKeyFrameTransformMtx(IMPORTER->ReadXMMatrix());
+			pAnimationData->GetAllKeyFrame()[j].push_back(keyFrame);
+		}//end frame for
+	}//end joint for
+
+	pAnimationInfo->SetAnimationData(pAnimationData);
+	pAnimationInfo->Begin(pAnimater);
+	return pAnimationInfo;
 }
 
 CAnimationInfo::CAnimationInfo(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext) : DXObject("animationinfo", pd3dDevice, pd3dDeviceContext){

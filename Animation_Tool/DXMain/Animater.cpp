@@ -17,15 +17,6 @@ void TW_CALL JointSelectButtonCallback(void * clientData) {
 bool CAnimater::Begin(){
 	m_vpAnimationInfos.clear();
 
-	m_pMainBoundingBox = new CBoundingBox();
-	m_pMainBoundingBox->Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(5.f, 5.f, 5.f, 1.f));
-
-	m_pAnimBuffer = new CStaticBuffer(m_pd3dDevice, m_pd3dDeviceContext);
-	m_pAnimBuffer->Begin(256, sizeof(XMMATRIX), nullptr, 10, BIND_VS);
-
-	m_pSkeletonData = new CSkeletonData;
-	*m_pSkeletonData = FBXIMPORTER->GetSkeletonData();
-
 	return true;
 }
 
@@ -190,7 +181,86 @@ UINT CAnimater::GetAnimaterJointCnt(){
 	return JointCnt;
 }
 
+shared_ptr<CAnimater> CAnimater::CreateAnimaterFromFBXFile(ID3D11Device * pd3dDevice, ID3D11DeviceContext * pd3dDeviceContext, bool bHasAnimation){
+	if (bHasAnimation) {
+		shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>(pd3dDevice, pd3dDeviceContext);
+		pAnimater->SetMeshOffsetMtx(XMMatrixIdentity());
+
+		CBoundingBox* pMainBoundingBox = new CBoundingBox();
+		pMainBoundingBox->Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(5.f, 5.f, 5.f, 1.f));
+		pAnimater->SetpMainAABB(pMainBoundingBox);
+
+		CStaticBuffer* pAnimBuffer = new CStaticBuffer(pd3dDevice, pd3dDeviceContext);
+		pAnimBuffer->Begin(256, sizeof(XMMATRIX), nullptr, 10, BIND_VS);
+		pAnimater->SetpAnimBuffer(pAnimBuffer);
+
+		CSkeletonData* pSkeletonData = new CSkeletonData;
+		*pSkeletonData = FBXIMPORTER->GetSkeletonData();
+		pAnimater->SetpSkeletonData(pSkeletonData);
+
+		pAnimater->Begin();
+		return pAnimater;
+	}
+
+	return nullptr;
+}
+
+shared_ptr<CAnimater> CAnimater::CreateAnimaterFromGJMFile(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext, bool bHasAnimation){
+
+	if (bHasAnimation) {
+		//animation data가 있으면
+		shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>(pd3dDevice, pd3dDeviceContext);
+		XMFLOAT4X4 xmf4x4MeshOffsetMtx = IMPORTER->ReadFloat4x4();
+		pAnimater->SetMeshOffsetMtx(xmf4x4MeshOffsetMtx);
+		
+		XMFLOAT3 xmf3Position;
+		xmf3Position.x = IMPORTER->ReadFloat();
+		xmf3Position.y = IMPORTER->ReadFloat();
+		xmf3Position.z = IMPORTER->ReadFloat();
+
+		XMFLOAT4 xmf4Scale;
+		xmf4Scale.x = IMPORTER->ReadFloat();
+		xmf4Scale.y = IMPORTER->ReadFloat();
+		xmf4Scale.z = IMPORTER->ReadFloat();
+		xmf4Scale.w = 1.f;
+
+		CBoundingBox* pMainBoundingBox = new CBoundingBox();
+		pMainBoundingBox->Begin(XMLoadFloat3(&xmf3Position), XMLoadFloat4(&xmf4Scale));
+		pAnimater->SetpMainAABB(pMainBoundingBox);
+
+		CStaticBuffer* pAnimBuffer = new CStaticBuffer(pd3dDevice, pd3dDeviceContext);
+		pAnimBuffer->Begin(256, sizeof(XMMATRIX), nullptr, 10, BIND_VS);
+		pAnimater->SetpAnimBuffer(pAnimBuffer);
+
+		CSkeletonData* pSkeletonData = new CSkeletonData;
+		//set skeleton data
+		UINT nJointCnt = IMPORTER->ReadUINT();
+		for (UINT i = 0; i < nJointCnt; ++i) {
+			CFbxJointData jointData;
+			jointData.SetJointName(IMPORTER->Readstring());
+			jointData.SetMyIndex(IMPORTER->ReadUINT());
+			jointData.SetParentIndex(IMPORTER->ReadUINT());
+			jointData.SetOffsetMtx(IMPORTER->ReadXMMatrix());
+			pSkeletonData->GetJointDatas().push_back(jointData);
+		};
+		//set skeleton data
+		pAnimater->SetpSkeletonData(pSkeletonData);
+
+		pAnimater->Begin();
+
+		//CAnimationInfo* pAnimationInfo;
+		//pAnimationInfo = new CAnimationInfo(pd3dDevice, pd3dDeviceContext);
+		//pAnimationInfo->Begin(pAnimater);
+
+		return pAnimater;
+	}
+
+	return nullptr;
+	//return shared_ptr<CAnimater>();
+}
+
 CAnimater::CAnimater(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dDeviceContext) : DXObject("animater", pd3dDevice, pd3dDeviceContext) {
+	XMStoreFloat4x4(&m_xmf4x4MeshOffsetMtx, XMMatrixIdentity());
 }
 
 CAnimater::~CAnimater(){

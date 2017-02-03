@@ -19,7 +19,7 @@
 #include "DebugTextureMesh.h"//debug texture mesh
 #include "CoordinateSysMesh.h"//CoordinateSystem Mesh
 #include "FileBasedMesh.h"//fbx mesh
-#include "AnimationMesh.h"//animation mesh
+//#include "AnimationMesh.h"//animation mesh
 #include "MultiMesh.h"//multiMesh
 
 #include "TestObject.h"
@@ -61,17 +61,21 @@ public:
 	shared_ptr<CTexture> CreateTexture(string name, const TCHAR* pstrTextureNames, shared_ptr<CSampler> pSampler, UINT Slot = 0, UINT BindFlag = BIND_PS);
 	void CreateRenderShaders();
 	void CreateMeshs();
-	int CreateMultiMesh(string path, string name);
 	void CreateAnimater(string path, string animaterName);
 	void CreateBuffers();
 	void CreateGlobalBuffers();
 	void CreateMaterials();
 	void CreateAnimaters();
 
+	UINT CreateMultiMesh(string path, string name);
 	//.gjm file load
 	void CreateGJMResources();
-	void CreateGJMResource(wstring path);
+	UINT CreateGJMResource(string path, string name);
 	//.gjm file load
+	//fbx file load
+	void CreateFBXResources();
+	UINT CreateFBXResource(string path, string name);
+	//fbx file load
 	//end func
 	void ReleaseTextures();
 	void ReleaseRenderShaders();

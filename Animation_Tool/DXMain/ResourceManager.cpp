@@ -37,8 +37,8 @@ void CResourceManager::CreateTextures(){
 	int nIndex = 0;
 	_TCHAR pstrTextureNames[128];
 	_stprintf_s(pstrTextureNames, _T("../../Assets/SkyBox_%d.dds"), nIndex);
-	ID3D11ShaderResourceView *pd3dSRV = NULL;
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, pstrTextureNames, NULL, NULL, &pd3dSRV, NULL);
+	//ID3D11ShaderResourceView *pd3dSRV = NULL;
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, pstrTextureNames, NULL, NULL, &pd3dSRV, NULL);
 	
 	UINT Slot = { PS_SLOT_SKYBOX };
 	UINT BindFlag = { BIND_PS };
@@ -47,7 +47,7 @@ void CResourceManager::CreateTextures(){
 	pSampler->Begin();
 	m_mSampler.insert(pairSampler("SkyBox", pSampler));
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, Slot, BindFlag);
+	pTexture->Begin(pstrTextureNames, pSampler, Slot, BindFlag);
 	m_mTexture.insert(pairTexture("SkyBox", pTexture));
 
 	pSampler = make_shared<CSampler>(m_pd3dDevice, m_pd3dDeviceContext);
@@ -55,9 +55,9 @@ void CResourceManager::CreateTextures(){
 	m_mSampler.insert(pairSampler("DEFAULT", pSampler));
 	UINT DefaultSlot = { PS_TEXTURE };
 	UINT DefaultFlag = { BIND_PS };
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/default.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/default.jpg"), NULL, NULL, &pd3dSRV, NULL);
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, DefaultSlot, DefaultFlag);
+	pTexture->Begin(_T("../../Assets/default.jpg"), pSampler, DefaultSlot, DefaultFlag);
 	m_mTexture.insert(pairTexture("DEFAULT", pTexture));
 	////elf
 	////0 Çã¸®¶ì
@@ -119,28 +119,28 @@ void CResourceManager::CreateTextures(){
 	pSampler = make_shared<CSampler>(m_pd3dDevice, m_pd3dDeviceContext);
 	pSampler->Begin(PS_TEXTURE_SAMPLER, BIND_DS, D3D11_TEXTURE_ADDRESS_CLAMP);
 	m_mSampler.insert(pairSampler("TerrainHeightMap", pSampler));
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/HeightMap.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/HeightMap.jpg"), NULL, NULL, &pd3dSRV, NULL);
 	UINT HeightMapSlot = { DS_SLOT_HEIGHTMAP };
 	UINT HeightMapBindFlag = { BIND_DS };
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, HeightMapSlot, HeightMapBindFlag);
+	pTexture->Begin(_T("../../Assets/HeightMap.jpg"), pSampler, HeightMapSlot, HeightMapBindFlag);
 	m_mTexture.insert(pairTexture("TerrainHeightMap", pTexture));
 	//terrain base texture
 	pSampler = make_shared<CSampler>(m_pd3dDevice, m_pd3dDeviceContext);
 	pSampler->Begin(PS_TEXTURE_SAMPLER, BIND_PS);
 	m_mSampler.insert(pairSampler("Terrain", pSampler));
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Base_Texture.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Base_Texture.jpg"), NULL, NULL, &pd3dSRV, NULL);
 	HeightMapSlot = { PS_SLOT_TERRAIN_BASE };
 	HeightMapBindFlag = { BIND_PS };
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, HeightMapSlot, HeightMapBindFlag);
+	pTexture->Begin(_T("../../Assets/Base_Texture.jpg"), pSampler, HeightMapSlot, HeightMapBindFlag);
 	m_mTexture.insert(pairTexture("TerrainBase", pTexture));
 	//terrain detail texture
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Detail_Texture_9.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Detail_Texture_9.jpg"), NULL, NULL, &pd3dSRV, NULL);
 	HeightMapSlot = { PS_SLOT_TERRAIN_DETAIL };
 	HeightMapBindFlag = { BIND_PS };
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, HeightMapSlot, HeightMapBindFlag);
+	pTexture->Begin(_T("../../Assets/Detail_Texture_9.jpg"), pSampler, HeightMapSlot, HeightMapBindFlag);
 	m_mTexture.insert(pairTexture("TerrainDetail", pTexture));
 	//terrain normal map
 	//make sampler
@@ -148,14 +148,14 @@ void CResourceManager::CreateTextures(){
 	pSampler->Begin(PS_NORMALMAP_SAMPLER, BIND_PS);
 	m_mSampler.insert(pairSampler("TerrainNormal", pSampler));
 	//make sampler
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Base_Texture_Normal.jpg"), NULL, NULL, &pd3dSRV, NULL);
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Base_Texture_Normal.jpg"), NULL, NULL, &pd3dSRV, NULL);
 	HeightMapSlot = { PS_SLOT_NORMALMAP };
 	HeightMapBindFlag = { BIND_PS };
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, HeightMapSlot, HeightMapBindFlag);
+	pTexture->Begin(_T("../../Assets/Base_Texture_Normal.jpg"), pSampler, HeightMapSlot, HeightMapBindFlag);
 	m_mTexture.insert(pairTexture("TerrainNormalMap", pTexture));
 
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/Test/03_Monster/tex_Zombunny_diffuse.png"), NULL, NULL, &pd3dSRV, NULL);
+	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/Test/03_Monster/tex_Zombunny_diffuse.png"), NULL, NULL, &pd3dSRV, NULL);
 	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Lower_SP_HEY.tga"), NULL, NULL, &pd3dsrvTexture, NULL);
 	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/fbx/CH_PC_ElfF_F_RB0101_A00_Upper_D_HEY.jpg"), NULL, NULL, &pd3dsrvTexture, NULL);
 	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/Model/Test/02_Character_Juno/tex_Juno_diffuse.png"), NULL, NULL, &pd3dsrvTexture, NULL);
@@ -164,7 +164,7 @@ void CResourceManager::CreateTextures(){
 	UINT JunoSlot = { PS_TEXTURE };
 	UINT JunoBindFlag = { BIND_PS };
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, m_mSampler["DEFAULT"], JunoSlot, JunoBindFlag);
+	pTexture->Begin(_T("../../Assets/Model/Test/03_Monster/tex_Zombunny_diffuse.png"), m_mSampler["DEFAULT"], JunoSlot, JunoBindFlag);
 	m_mTexture.insert(pairTexture("FBX", pTexture));
 
 }
@@ -182,12 +182,10 @@ shared_ptr<CTexture> CResourceManager::CreateTexture(string name, const TCHAR* p
 	//UINT BindFlag = { BIND_PS };
 	//_TCHAR pstrTextureNames[128];
 	shared_ptr<CTexture> pTexture;
-	ID3D11ShaderResourceView *pd3dSRV = NULL;
-	D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, pstrTextureNames, NULL, NULL, &pd3dSRV, NULL);
 
 	//make sampler
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
-	pTexture->Begin(pd3dSRV, pSampler, Slot, BindFlag);
+	pTexture->Begin((wchar_t*)pstrTextureNames, pSampler, Slot, BindFlag);
 	m_mTexture.insert(pairTexture(name, pTexture));
 	return pTexture;
 
@@ -459,7 +457,7 @@ void CResourceManager::CreateMeshs(){
 	m_mMesh.insert(pairMesh("SkyBox", pMesh));
 
 #ifdef USE_ANIM
-	shared_ptr<CAnimationMesh> pTestFBXMesh = make_shared<CAnimationMesh>(m_pd3dDevice, m_pd3dDeviceContext);
+	shared_ptr<CFileBasedMesh> pTestFBXMesh = make_shared<CFileBasedMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #else
 	shared_ptr<CUseFBXMesh> pTestFBXMesh = make_shared<CUseFBXMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #endif
@@ -492,65 +490,11 @@ void CResourceManager::CreateMeshs(){
 	//mesh
 }
 
-int CResourceManager::CreateMultiMesh(string path, string name){
-	//multi mesh data load
-	FBXIMPORTER->Begin(path);
-	char pName[20];
-	
-//	int i = FBXIMPORTER->GetMeshCnt();
-	if (FBXIMPORTER->GetHasAnimation()) {
-		
-		shared_ptr<CAnimationMesh> pAnimMesh;
-		for (UINT i = 0; i < FBXIMPORTER->GetMeshCnt(); ++i) {
-			sprintf(pName, "%s%d", name.c_str(), i);
-			pAnimMesh = make_shared<CAnimationMesh>(m_pd3dDevice, m_pd3dDeviceContext);
-			pAnimMesh->Begin(i);
-			pAnimMesh->AddMeshTexture(m_mTexture["DEFAULT"]);
-			m_mMesh.insert(pairMesh(pName, pAnimMesh));
-		}
-		
-		sprintf(pName, "%s", name.c_str());
-		shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>(m_pd3dDevice, m_pd3dDeviceContext);
-		pAnimater->Begin();
-		m_mAnimater.insert(pairAnimater(pName, pAnimater));
-
-		CAnimationInfo* pAnimationInfo;
-		pAnimationInfo = new CAnimationInfo(m_pd3dDevice, m_pd3dDeviceContext);
-		pAnimationInfo->Begin(pAnimater);
-	}
-	else {
-		shared_ptr<CFileBasedMesh> pFBXMesh;
-		
-		for (UINT j = 0; j < FBXIMPORTER->GetMeshCnt(); ++j) {
-			sprintf(pName, "%s%d",name.c_str(), j);
-			pFBXMesh = make_shared<CFileBasedMesh>(m_pd3dDevice, m_pd3dDeviceContext);
-			pFBXMesh->Begin(j);
-			m_mMesh.insert(pairMesh(pName, pFBXMesh));
-		}
-	}
-	
-
-	int meshCnt = FBXIMPORTER->GetMeshCnt();
-	FBXIMPORTER->End();
-	return meshCnt;
-}
-
 void CResourceManager::CreateAnimater(string path, string animaterName){
 	FBXIMPORTER->Begin(path);
-
-	//	int i = FBXIMPORTER->GetMeshCnt();
 	if (FBXIMPORTER->GetHasAnimation()) {
-		//shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>(m_pd3dDevice, m_pd3dDeviceContext);
-		//pAnimater->Begin();
-		CAnimationInfo* pAnimationInfo;
-
-		pAnimationInfo = new CAnimationInfo(m_pd3dDevice, m_pd3dDeviceContext);
-		pAnimationInfo->Begin(m_mAnimater[animaterName]);
-
-		//pAnimater->AddAnimationInfo(pAnimationInfo);
-		//m_mAnimater.insert(pairAnimater("ELF2", pAnimater));
+		CAnimationInfo* pAnimationInfo = CAnimationInfo::CreateAnimationInfoFromFBXFile(m_pd3dDevice, m_pd3dDeviceContext, m_mAnimater[animaterName]);
 	}
-
 	FBXIMPORTER->End();
 }
 
@@ -768,23 +712,98 @@ void CResourceManager::CreateMaterials(){
 	pMaterial = make_shared<CMaterial>(m_pd3dDevice, m_pd3dDeviceContext);
 	pMaterial->Begin(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1.f, 1.f);
 	m_mMaterial.insert(pairMaterial("SkyBox", pMaterial));
-
 }
 
+UINT CResourceManager::CreateMultiMesh(string path, string name) {
+	wstring ws{ L"" };
+	ws.assign(path.cbegin(), path.cend());
+	wstring extention{ PathFindExtension(ws.c_str()) };
+
+	if (L".FBX" == extention || L".fbx" == extention) {
+		return CreateFBXResource(path, name);
+	}
+	else if (L".GJM" == extention || L".gjm" == extention || L".txt" == extention) {
+		return CreateGJMResource(path, name);
+	}
+}
 void CResourceManager::CreateAnimaters(){
 
 }
 
 void CResourceManager::CreateGJMResources(){
-	
+	//WCHAR*pwchar;
+	//IMPORTER->ReadWCHAR(pwchar, 0);
 }
 
-void CResourceManager::CreateGJMResource(wstring path){
+UINT CResourceManager::CreateGJMResource(string path, string name){
 	IMPORTER->Begin(path);
+	char pName[20];
 
+	bool bHasAnimation = IMPORTER->ReadBool();
 
+	shared_ptr<CMesh> pMesh;
+	UINT nMeshCnt = IMPORTER->ReadUINT();
+	for (UINT i = 0; i < nMeshCnt; ++i) {
+		sprintf(pName, "%s%d", name.c_str(), i);
+		pMesh = CFileBasedMesh::CreateMeshFromGJMFile(m_pd3dDevice, m_pd3dDeviceContext, i, bHasAnimation);
+		m_mMesh.insert(pairMesh(pName, pMesh));
+	}
+	if (false == bHasAnimation) return nMeshCnt;
+
+	//animater
+	sprintf(pName, "%s", name.c_str());
+	shared_ptr<CAnimater> pAnimater = CAnimater::CreateAnimaterFromGJMFile(m_pd3dDevice, m_pd3dDeviceContext);
+	m_mAnimater.insert(pairAnimater(pName, pAnimater));
+
+	//animation info
+	int animationCnt = IMPORTER->ReadInt();
+	for (int i = 0; i < animationCnt; ++i) {
+		CAnimationInfo* pAnimationInfo = CAnimationInfo::CreateAnimationInfoFromGJMFile(m_pd3dDevice, m_pd3dDeviceContext, pAnimater);
+	}//end animation info for
 
 	IMPORTER->End();
+	return nMeshCnt;
+}
+
+void CResourceManager::CreateFBXResources(){
+
+}
+
+UINT CResourceManager::CreateFBXResource(string path, string name){
+	string sPath{ "" };
+	sPath.assign(path.cbegin(), path.cend());
+
+	//multi mesh data load
+	FBXIMPORTER->Begin(sPath);
+	char pName[20];
+
+	shared_ptr<CFileBasedMesh> pFBXMesh;
+	//	int i = FBXIMPORTER->GetMeshCnt();
+	if (FBXIMPORTER->GetHasAnimation()) {
+
+		for (UINT i = 0; i < FBXIMPORTER->GetMeshCnt(); ++i) {
+			sprintf(pName, "%s%d", name.c_str(), i);
+			pFBXMesh = CFileBasedMesh::CreateMeshFromFBXFile(m_pd3dDevice, m_pd3dDeviceContext, i);
+			m_mMesh.insert(pairMesh(pName, pFBXMesh));
+		}
+
+		sprintf(pName, "%s", name.c_str());
+		shared_ptr<CAnimater> pAnimater = CAnimater::CreateAnimaterFromFBXFile(m_pd3dDevice, m_pd3dDeviceContext);
+		CAnimationInfo* pAnimationInfo = CAnimationInfo::CreateAnimationInfoFromFBXFile(
+			m_pd3dDevice, m_pd3dDeviceContext, pAnimater);
+		m_mAnimater.insert(pairAnimater(pName, pAnimater));
+	}
+	else {
+		for (UINT j = 0; j < FBXIMPORTER->GetMeshCnt(); ++j) {
+			sprintf(pName, "%s%d", name.c_str(), j);
+			pFBXMesh = CFileBasedMesh::CreateMeshFromFBXFile(m_pd3dDevice, m_pd3dDeviceContext, j);
+			m_mMesh.insert(pairMesh(pName, pFBXMesh));
+		}
+	}
+
+	int meshCnt = FBXIMPORTER->GetMeshCnt();
+	FBXIMPORTER->End();
+	return meshCnt;
 }
 
 void CResourceManager::ReleaseTextures(){

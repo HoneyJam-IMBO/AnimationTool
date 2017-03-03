@@ -437,16 +437,28 @@ void CGameObject::CreateMenuMeshTextureUI(){
 	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".png");
 	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".PNG");
 
-	const char* groupName = "TextureFile";
-	char menuName[64];
 	int cnt{ 0 };
 	m_vStructLoadTextureFile.resize(vFile.size());
 	for (auto data : vFile) {
-		string s{ "" };
-		s.assign(data.cbegin(), data.cend());
-		m_vStructLoadTextureFile[cnt] = StructLoadTextureFile{ m_pRenderContainer->GetMesh(m_indexSelectMesh), s };
-		sprintf(menuName, "%s", s.c_str());
-		TWBARMGR->AddButtonCB(barName, groupName, menuName, LoadTextureFileCallback, &m_vStructLoadTextureFile[cnt]);
+		//file directory store;
+		data = DIRECTORYFINDER->ReplaceString(data, L"\\", L"/");
+		string filsDirectory{ "" };
+		filsDirectory.assign(data.cbegin(), data.cend());
+		m_vStructLoadTextureFile[cnt] = StructLoadTextureFile{ m_pRenderContainer->GetMesh(m_indexSelectMesh), filsDirectory };
+
+		//menu name = file name
+		string menuNameString{ "" };
+		menuNameString.assign(data.cbegin(), data.cend());
+
+		//group name = directory name
+		data = DIRECTORYFINDER->ReplaceString(data, L"/", L"\\");
+		LPWSTR str = (LPWSTR)data.c_str();
+		PathRemoveFileSpec(str);
+
+		wstring wGroupName{ str };
+		string groupName;
+		groupName.assign(wGroupName.cbegin(), wGroupName.cend());
+		TWBARMGR->AddButtonCB(barName, groupName.c_str(), menuNameString.c_str(), LoadTextureFileCallback, &m_vStructLoadTextureFile[cnt]);
 		cnt++;
 	}
 

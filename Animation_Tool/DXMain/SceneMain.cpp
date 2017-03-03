@@ -460,33 +460,38 @@ void CSceneMain::CreateAddInfoUI(){
 	const char* barName{ "AddInfo" };
 	TWBARMGR->AddBar(barName);
 
-	if (m_LoadFileStruct.empty()) {
-		vector<wstring> vFile;
-		DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".fbx");
-		DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, false, L".FBX");
+	m_LoadFileStruct.clear();
 
-		const char* groupName = "File";
-		char menuName[64];
-		int cnt{ 0 };
-		m_LoadFileStruct.resize(vFile.size());
-		for (auto data : vFile) {
-			string s{ "" };
-			s.assign(data.cbegin(), data.cend());
-			m_LoadFileStruct[cnt] = LoadFileStruct{ this, s };
-			sprintf(menuName, "%s", s.c_str());
-			TWBARMGR->AddButtonCB(barName, groupName, menuName, AddInfoCallback, &m_LoadFileStruct[cnt]);
-			cnt++;
-		}
-	}
-	else {
-		const char* groupName = "File";
-		char menuName[64];
-		int cnt{ 0 };
-		for (auto data : m_LoadFileStruct) {
-			sprintf(menuName, "%s", m_LoadFileStruct[cnt].Filename.c_str());
-			TWBARMGR->AddButtonCB(barName, groupName, menuName, AddInfoCallback, &m_LoadFileStruct[cnt]);
-			cnt++;
-		}
+	vector<wstring> vFile;
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".fbx");
+	DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".FBX");
+
+	const char* groupName = "File";
+	char menuName[64];
+	int cnt{ 0 };
+	m_LoadFileStruct.resize(vFile.size());
+	for (auto data : vFile) {
+		//file directory store;
+		data = DIRECTORYFINDER->ReplaceString(data, L"\\", L"/");
+		string filsDirectory{ "" };
+		filsDirectory.assign(data.cbegin(), data.cend());
+		m_LoadFileStruct[cnt] = LoadFileStruct{ this, filsDirectory };
+
+		//menu name = file name
+		string menuNameString{ "" };
+		menuNameString.assign(data.cbegin(), data.cend());
+		sprintf(menuName, "%s", menuNameString.c_str());
+
+		//group name = directory name
+		data = DIRECTORYFINDER->ReplaceString(data, L"/", L"\\");
+		LPWSTR str = (LPWSTR)data.c_str();
+		PathRemoveFileSpec(str);
+
+		wstring wGroupName{ str };
+		string groupName;
+		groupName.assign(wGroupName.cbegin(), wGroupName.cend());
+		TWBARMGR->AddButtonCB(barName, groupName.c_str(), menuName, AddInfoCallback, &m_LoadFileStruct[cnt]);
+		cnt++;
 	}
 }
 

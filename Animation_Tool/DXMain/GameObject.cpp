@@ -162,7 +162,6 @@ void CGameObject::RotateWorldAxis(float x, float y, float z) {
 	SetQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
 }
 void CGameObject::SetPosition(XMVECTOR pos) {
-	XMFLOAT3 m_xmf3Position;
 	XMStoreFloat3(&m_xmf3Position, pos);
 
 	m_xmf4x4World._41 = m_xmf3Position.x;

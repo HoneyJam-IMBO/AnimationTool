@@ -69,7 +69,6 @@ CBoundingBox::CBoundingBox() :CGameObject("boundingbox"){
 	XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionIdentity());
 	XMStoreFloat3(&m_xmf3Position, XMQuaternionIdentity());
 	XMStoreFloat4x4(&m_xmf4x4World, XMMatrixIdentity());
-
 }
 
 CBoundingBox::~CBoundingBox()

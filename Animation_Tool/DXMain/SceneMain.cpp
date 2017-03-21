@@ -36,7 +36,19 @@ void TW_CALL ClearAllButtonCallback(void * clientData) {
 }
 void TW_CALL WriteNowButtonCallback(void * clientData) {
 	CSceneMain* pScene = reinterpret_cast<CSceneMain*>(clientData);
-	EXPORTER->Begin(L"../outputdata/text.txt");
+
+	WCHAR wc[128];
+	wcout << L"if you want write file input the path, fileName " << endl;
+	wcout << L"outputPath : ";
+	wcin >> wc;
+	wstring wsOutputPath{ (WCHAR*)wc };
+
+	wcout << L"fileName : ";
+	wcin >> wc;
+	wstring wsFileName{ (WCHAR*)wc };
+	wsFileName += L".gjm";
+	
+	EXPORTER->Begin(wsOutputPath + wsFileName);
 	EXPORTER->ExportFbxObject(pScene->m_pFBXObject);
 	EXPORTER->End();
 }

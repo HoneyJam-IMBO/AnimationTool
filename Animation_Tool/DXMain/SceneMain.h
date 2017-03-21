@@ -27,6 +27,7 @@
 #include "SpotLight.h"
 #include "CapsuleLight.h"
 #include "DirectionalLight.h"
+#include <iostream>
 
 static XMFLOAT4 xmf4DirectionalLightColor;
 

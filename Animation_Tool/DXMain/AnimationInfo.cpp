@@ -453,10 +453,11 @@ CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromGJMFile(ID3D11Device* pd3
 		float max = IMPORTER->ReadFloat();
 		int myJointIndex = IMPORTER->ReadInt();
 
-		XMFLOAT3 xmf3Pos;
-		xmf3Pos.x = IMPORTER->ReadFloat();
-		xmf3Pos.y = IMPORTER->ReadFloat();
-		xmf3Pos.z = IMPORTER->ReadFloat();
+		XMFLOAT4 xmf4Pos;
+		xmf4Pos.x = IMPORTER->ReadFloat();
+		xmf4Pos.y = IMPORTER->ReadFloat();
+		xmf4Pos.z = IMPORTER->ReadFloat();
+		xmf4Pos.w = 1.0f;
 
 		XMFLOAT4 xmf4Scale;
 		xmf4Scale.x = IMPORTER->ReadFloat();
@@ -469,7 +470,7 @@ CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromGJMFile(ID3D11Device* pd3
 		xmf4Quaternion.y = IMPORTER->ReadFloat();
 		xmf4Quaternion.z = IMPORTER->ReadFloat();
 		xmf4Quaternion.w = IMPORTER->ReadFloat();
-		pBoundingBox->Begin(XMLoadFloat3(&xmf3Pos), XMLoadFloat4(&xmf4Scale), XMLoadFloat4(&xmf4Quaternion));
+		pBoundingBox->Begin(XMLoadFloat4(&xmf4Pos), XMLoadFloat4(&xmf4Scale), XMLoadFloat4(&xmf4Quaternion));
 		//pBoundingBox->SetPosition(XMLoadFloat3(&xmf3Pos));
 
 		pBoundingBox->SetMin(min);

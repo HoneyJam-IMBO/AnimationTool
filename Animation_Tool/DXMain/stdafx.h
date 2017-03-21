@@ -7,6 +7,9 @@
 
 #include "targetver.h"
 
+//console
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_NON_CONFORMING_SWPRINTFS

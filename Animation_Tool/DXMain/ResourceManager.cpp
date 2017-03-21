@@ -459,7 +459,7 @@ void CResourceManager::CreateMeshs(){
 #ifdef USE_ANIM
 	shared_ptr<CFileBasedMesh> pTestFBXMesh = make_shared<CFileBasedMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #else
-	shared_ptr<CUseFBXMesh> pTestFBXMesh = make_shared<CUseFBXMesh>(m_pd3dDevice, m_pd3dDeviceContext);
+	shared_ptr<CFileBasedMesh> pTestFBXMesh = make_shared<CFileBasedMesh>(m_pd3dDevice, m_pd3dDeviceContext);
 #endif
 	//ddd
 	//CreateMultiMesh("../../Assets/Model/fbx/1-2/Die_85.fbx", "Test");
@@ -799,6 +799,7 @@ UINT CResourceManager::CreateFBXResource(string path, string name){
 			pFBXMesh = CFileBasedMesh::CreateMeshFromFBXFile(m_pd3dDevice, m_pd3dDeviceContext, j);
 			m_mMesh.insert(pairMesh(pName, pFBXMesh));
 		}
+
 	}
 
 	int meshCnt = FBXIMPORTER->GetMeshCnt();

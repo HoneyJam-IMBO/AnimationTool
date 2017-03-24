@@ -17,6 +17,9 @@ cbuffer gMaterialInfo : register(b3) {
 //texture
 Texture2D    gtxtDefault : register(t0);
 SamplerState gssDefault : register(s0);
+
+Texture2D    gtxtSpec : register(t1);
+SamplerState gssSpec : register(s1);
 //texture
 
 struct PixelShaderInput
@@ -33,15 +36,13 @@ PS_GBUFFER_OUT main(PixelShaderInput input)
 	PS_GBUFFER_OUT output = (PS_GBUFFER_OUT)0;
 
 	float4 cColor = gtxtDefault.Sample(gssDefault, input.uv) * gMaterialColor;
-	if (cColor.w == 0) {
-		cColor = gMaterialColor;
-	}
+	float4 cSpecColor = gtxtSpec.Sample(gssSpec, input.uv) * gMaterialColor;
+	cColor *= cSpecColor;
 	//cColor = gMaterialColor;
 
 	float Depth = input.position.z / input.position.w;
 
 	return (PackGBuffer(cColor.xyz, normalize(input.normal), input.positionW, gSpecIntensity, gSpecExp, Depth));
-
 }
 //float4 main(PixelShaderInput input) : SV_TARGET
 //{

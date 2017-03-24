@@ -213,6 +213,7 @@ shared_ptr<CAnimater> CAnimater::CreateAnimaterFromGJMFile(ID3D11Device* pd3dDev
 		XMFLOAT4X4 xmf4x4MeshOffsetMtx = IMPORTER->ReadFloat4x4();
 		pAnimater->SetMeshOffsetMtx(xmf4x4MeshOffsetMtx);
 		
+
 		XMFLOAT3 xmf3Position;
 		xmf3Position.x = IMPORTER->ReadFloat();
 		xmf3Position.y = IMPORTER->ReadFloat();

@@ -22,6 +22,7 @@ class CMesh;
 struct StructLoadTextureFile {
 	shared_ptr<CMesh> m_pMesh;
 	string m_sName;
+	int m_indexSelectTexture{ 0 };
 };
 
 class CGameObject : public CObject {
@@ -45,6 +46,8 @@ public:
 
 	void SetWorldMtx(XMMATRIX mtxWorld);
 	virtual XMMATRIX GetWorldMtx();
+	void SetMeshOffsetMtx(XMMATRIX mtxMeshOffset) { XMStoreFloat4x4(&m_xmf4x4MeshOffset, mtxMeshOffset); }
+	XMMATRIX GetMeshOffsetMtx() { return XMLoadFloat4x4(&m_xmf4x4MeshOffset); }
 	virtual void SetPosition(XMVECTOR pos);
 	void SetPositionX(const float pos);
 	void SetPositionY(const float pos);
@@ -106,6 +109,8 @@ public:
 	void CreateMeshUI();
 	void CreateMenuMeshTextureUI();
 
+	//mesh offset mtx
+	XMFLOAT4X4 m_xmf4x4MeshOffset;
 	//world
 	XMFLOAT4X4 m_xmf4x4World;
 	XMFLOAT3 m_xmf3Position{ 0.f, 0.f, 0.f };
@@ -120,8 +125,11 @@ public:
 	}
 
 	shared_ptr<CAnimater> GetAnimater() { return m_pAnimater; }
+	void SetMeshModeDefault();
+	void SetMeshModeSpec();
 protected:
 	int m_indexSelectMesh{ 0 };
+	int m_indexSelectTexture{ 0 };
 
 	BoundingBox m_OriBoundingBox;
 

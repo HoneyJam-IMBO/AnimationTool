@@ -59,6 +59,12 @@ void CResourceManager::CreateTextures(){
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
 	pTexture->Begin(_T("../../Assets/default.jpg"), pSampler, DefaultSlot, DefaultFlag);
 	m_mTexture.insert(pairTexture("DEFAULT", pTexture));
+
+	UINT DefaultSpecSlot = { PS_TEXTURE };
+	UINT DefaultSpecFlag = { BIND_PS };
+	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	pTexture->Begin(_T("../../Assets/default.jpg"), pSampler, 1, DefaultSpecFlag);
+	m_mTexture.insert(pairTexture("DEFAULTSPEC", pTexture));
 	////elf
 	////0 Çã¸®¶ì
 	//UINT ElfSlot = { PS_TEXTURE };
@@ -186,6 +192,7 @@ shared_ptr<CTexture> CResourceManager::CreateTexture(string name, const TCHAR* p
 	//make sampler
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
 	pTexture->Begin((wchar_t*)pstrTextureNames, pSampler, Slot, BindFlag);
+	m_mTexture.erase(name);
 	m_mTexture.insert(pairTexture(name, pTexture));
 	return pTexture;
 
@@ -748,7 +755,10 @@ UINT CResourceManager::CreateGJMResource(string path, string name){
 		pMesh = CFileBasedMesh::CreateMeshFromGJMFile(m_pd3dDevice, m_pd3dDeviceContext, i, bHasAnimation);
 		m_mMesh.insert(pairMesh(pName, pMesh));
 	}
-	if (false == bHasAnimation) return nMeshCnt;
+	if (false == bHasAnimation) {
+		IMPORTER->End();
+		return nMeshCnt;
+	}
 
 	//animater
 	sprintf(pName, "%s", name.c_str());

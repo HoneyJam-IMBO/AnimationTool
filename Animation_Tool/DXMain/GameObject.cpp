@@ -37,6 +37,17 @@ void TW_CALL SetMeshTextureButtonCallback(void * clientData) {
 	//make texture/ set texture
 	//pObj->GetRenderContainer()->GetMesh(pObj->GetSelectMeshIndex());
 }
+
+
+void TW_CALL SetDefaultButtonCallback(void * clientData) {
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	pObj->SetMeshModeDefault();
+}
+
+void TW_CALL SetSpecButtonCallback(void * clientData) {
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	pObj->SetMeshModeSpec();
+}
 void TW_CALL LoadTextureFileCallback(void* clientData) {
 	/*
 	pSampler = make_shared<CSampler>(m_pd3dDevice, m_pd3dDeviceContext);
@@ -56,14 +67,22 @@ void TW_CALL LoadTextureFileCallback(void* clientData) {
 	wPath.assign(pData->m_sName.cbegin(), pData->m_sName.cend());
 
 	char name[64];
-	sprintf(name, "Test%d", dynamic_cast<CFileBasedMesh*>(pData->m_pMesh.get())->GetMeshIndex());
-	pData->m_pMesh->SetMeshTexture(0, RESOURCEMGR->CreateTexture(name, wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT")));
+	if (1 == pData->m_indexSelectTexture) {
+		sprintf(name, "TestSpec%d", dynamic_cast<CFileBasedMesh*>(pData->m_pMesh.get())->GetMeshIndex());
+		pData->m_pMesh->SetMeshTexture(pData->m_indexSelectTexture, RESOURCEMGR->CreateTexture(name, wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT"), 1));
+	}
+	else {
+		sprintf(name, "TestDefault%d", dynamic_cast<CFileBasedMesh*>(pData->m_pMesh.get())->GetMeshIndex());
+		pData->m_pMesh->SetMeshTexture(pData->m_indexSelectTexture, RESOURCEMGR->CreateTexture(name, wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT"), 0));
+	}
 
 	pData->m_pMesh->SetMeshMaterial(RESOURCEMGR->GetMaterial("DEFAULT"));
 }
 bool CGameObject::Begin() {
 
 	XMStoreFloat4x4(&m_xmf4x4World, XMMatrixIdentity());
+
+	XMStoreFloat4x4(&m_xmf4x4MeshOffset, XMMatrixIdentity());
 
 	m_pRenderContainer = RCSELLER->GetRenderContainer(m_objectID);
 	if (m_pRenderContainer->GetMesh())//mesh가 있으면
@@ -74,7 +93,10 @@ bool CGameObject::Begin() {
 		BoundingBox::CreateFromPoints(m_OriBoundingBox, XMVectorSet(+10.f, +10.f, +10.f, 0.f), XMVectorSet(-10.f, -10.f, -10.f, 0.f));
 	}
 
-	if (m_pRenderContainer->GetAnimater()) m_pAnimater = m_pRenderContainer->GetAnimater();
+	if (m_pRenderContainer->GetAnimater()){
+		m_pAnimater = m_pRenderContainer->GetAnimater();
+		m_xmf4x4MeshOffset = m_pAnimater->GetMeshOffsetMtx();
+	}
 
 	XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionIdentity());
 	return true;
@@ -317,7 +339,8 @@ void CGameObject::SetBufferInfo(void** ppMappedResources, int& nInstance, shared
 	VS_VB_INSTANCE *pnInstances = (VS_VB_INSTANCE *)ppMappedResources[0];
 	
 	//transpose 이후 정보 주입
-	pnInstances[nInstance].m_xmmtxWorld = XMMatrixTranspose(GetWorldMtx());
+	//pnInstances[nInstance].m_xmmtxWorld = XMMatrixTranspose(GetWorldMtx());// *GetMeshOffsetMtx());
+	pnInstances[nInstance].m_xmmtxWorld = XMMatrixTranspose(GetWorldMtx()*GetMeshOffsetMtx());
 
 }
 void CGameObject::RegistToContainer() {
@@ -363,7 +386,7 @@ void CGameObject::GetMainBoundingBox(BoundingBox& out){
 		out = m_pAnimater->GetMainAABB()->GetAABB();
 	}
 
-	out.Transform(out, GetWorldMtx());
+	out.Transform(out, GetMeshOffsetMtx() * GetWorldMtx());
 }
 
 bool CGameObject::CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float & distance){
@@ -412,7 +435,9 @@ void CGameObject::CreateMeshUI(){
 	TWBARMGR->SetBarMovable(barName, false);
 	TWBARMGR->SetBarResizable(barName, false);
 	//set param
-
+	  
+	TWBARMGR->AddButtonCB(barName, "MODE", "DEFAULT", SetDefaultButtonCallback, this);
+	TWBARMGR->AddButtonCB(barName, "MODE", "SPEC", SetSpecButtonCallback, this);
 	TWBARMGR->AddMinMaxBarCB(barName, "SelectMesh", "SelectMeshIndex",
 		SetSelectMeshCallback, GetSelectMeshCallback, this, 0.f, m_pRenderContainer->GetvMesh().size() - 1, 1.f);
 
@@ -443,7 +468,9 @@ void CGameObject::CreateMenuMeshTextureUI(){
 		data = DIRECTORYFINDER->ReplaceString(data, L"\\", L"/");
 		string filsDirectory{ "" };
 		filsDirectory.assign(data.cbegin(), data.cend());
-		m_vStructLoadTextureFile[cnt] = StructLoadTextureFile{ m_pRenderContainer->GetMesh(m_indexSelectMesh), filsDirectory };
+		m_vStructLoadTextureFile[cnt].m_pMesh = m_pRenderContainer->GetMesh(m_indexSelectMesh);
+		m_vStructLoadTextureFile[cnt].m_sName = filsDirectory;
+		m_vStructLoadTextureFile[cnt].m_indexSelectTexture = m_indexSelectTexture;
 
 		//menu name = file name
 		string menuNameString{ "" };
@@ -461,6 +488,16 @@ void CGameObject::CreateMenuMeshTextureUI(){
 		cnt++;
 	}
 
+}
+
+void CGameObject::SetMeshModeDefault(){
+	m_indexSelectTexture = 0;
+	CreateMenuMeshTextureUI();
+}
+
+void CGameObject::SetMeshModeSpec(){
+	m_indexSelectTexture = 1;
+	CreateMenuMeshTextureUI();
 }
 
 

@@ -43,6 +43,7 @@ public:
 
 	void SetMeshOffsetMtx(XMFLOAT4X4& xmf4x4Mtx) { m_xmf4x4MeshOffsetMtx = xmf4x4Mtx; }
 	void SetMeshOffsetMtx(XMMATRIX xmMtx) { XMStoreFloat4x4(&m_xmf4x4MeshOffsetMtx, xmMtx); }
+	XMFLOAT4X4 GetMeshOffsetMtx() { return m_xmf4x4MeshOffsetMtx; }
 	void SetpAnimBuffer(CStaticBuffer* pAnimBuffer) { m_pAnimBuffer = pAnimBuffer; }
 	void SetpMainAABB(CBoundingBox* pMainBoundingBox) { m_pMainBoundingBox = pMainBoundingBox; }
 	void SetpSkeletonData(CSkeletonData* pSkeletonData) { m_pSkeletonData = pSkeletonData; }

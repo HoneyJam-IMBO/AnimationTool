@@ -134,6 +134,7 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromFBXFile(ID3D11Device* p
 	//set mesh info
 	pFileBasedMesh->Begin();
 	pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULT"));
+	pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
 	return pFileBasedMesh;
 
 	return nullptr;
@@ -156,6 +157,7 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(ID3D11Device* p
 		int MeshTextureCnt = IMPORTER->ReadInt();
 		if (MeshTextureCnt <= 0) {
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULT"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
 		}
 		for (int i = 0; i < MeshTextureCnt; ++i) {
 			//char name[64];
@@ -164,7 +166,9 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(ID3D11Device* p
 			path = IMPORTER->Readstring();
 			wstring wPath{ L"" };
 			wPath.assign(path.cbegin(), path.cend());
-			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->CreateTexture(path.c_str(), wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT")));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->CreateTexture(path.c_str(), wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT"), i));
+			//이걸 file에서 읽어 들인다. 또 저장한다. 
+			//pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
 			pFileBasedMesh->SetMeshMaterial(RESOURCEMGR->GetMaterial("DEFAULT"));
 		}
 		//mesh texture

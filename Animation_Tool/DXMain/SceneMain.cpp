@@ -395,7 +395,8 @@ void CSceneMain::CreateControllObject(string path){
 	m_pFBXObject = new CTestObject();
 	m_pFBXObject->Begin();
 	//pObject->SetTerrainContainer(m_pTerrainContainer);
-	m_pFBXObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
+	//-m_pFBXObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
+	m_pFBXObject->SetPosition(XMLoadFloat3(&XMFLOAT3(0, 0, 0)));
 	m_pSpaceContainer->AddObject(m_pFBXObject);
 //∞¥√º ¡¶¿€
 	//ui pop up!

@@ -53,18 +53,24 @@ void CResourceManager::CreateTextures(){
 	pSampler = make_shared<CSampler>(m_pd3dDevice, m_pd3dDeviceContext);
 	pSampler->Begin(PS_TEXTURE_SAMPLER, BIND_PS);
 	m_mSampler.insert(pairSampler("DEFAULT", pSampler));
-	UINT DefaultSlot = { PS_TEXTURE };
+	UINT DefaultSlot = { 0 };
 	UINT DefaultFlag = { BIND_PS };
 	//D3DX11CreateShaderResourceViewFromFile(m_pd3dDevice, _T("../../Assets/default.jpg"), NULL, NULL, &pd3dSRV, NULL);
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
 	pTexture->Begin(_T("../../Assets/default.jpg"), pSampler, DefaultSlot, DefaultFlag);
 	m_mTexture.insert(pairTexture("DEFAULT", pTexture));
 
-	UINT DefaultSpecSlot = { PS_TEXTURE };
+	UINT DefaultSpecSlot = { 1 };
 	UINT DefaultSpecFlag = { BIND_PS };
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
 	pTexture->Begin(_T("../../Assets/default.jpg"), pSampler, 1, DefaultSpecFlag);
 	m_mTexture.insert(pairTexture("DEFAULTSPEC", pTexture));
+
+	UINT DefaultCPSlot = { 2 };
+	UINT DefaultCPFlag = { BIND_PS };
+	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
+	pTexture->Begin(_T("../../Assets/default.jpg"), pSampler, DefaultCPSlot, DefaultCPFlag);
+	m_mTexture.insert(pairTexture("DEFAULTCP", pTexture));
 	////elf
 	////0 Çã¸®¶ì
 	//UINT ElfSlot = { PS_TEXTURE };
@@ -187,12 +193,10 @@ shared_ptr<CTexture> CResourceManager::CreateTexture(string name, const TCHAR* p
 	//UINT Slot = { PS_SLOT_SKYBOX };
 	//UINT BindFlag = { BIND_PS };
 	//_TCHAR pstrTextureNames[128];
+	m_mTexture.erase(name);
 	shared_ptr<CTexture> pTexture;
-
-	//make sampler
 	pTexture = make_shared<CTexture>(m_pd3dDevice, m_pd3dDeviceContext);
 	pTexture->Begin((wchar_t*)pstrTextureNames, pSampler, Slot, BindFlag);
-	m_mTexture.erase(name);
 	m_mTexture.insert(pairTexture(name, pTexture));
 	return pTexture;
 
@@ -750,9 +754,11 @@ UINT CResourceManager::CreateGJMResource(string path, string name){
 
 	shared_ptr<CMesh> pMesh;
 	UINT nMeshCnt = IMPORTER->ReadUINT();
+	tag t = (tag)IMPORTER->ReadUINT();
 	for (UINT i = 0; i < nMeshCnt; ++i) {
 		sprintf(pName, "%s%d", name.c_str(), i);
 		pMesh = CFileBasedMesh::CreateMeshFromGJMFile(m_pd3dDevice, m_pd3dDeviceContext, i, bHasAnimation);
+		pMesh->SetTag(t);
 		m_mMesh.insert(pairMesh(pName, pMesh));
 	}
 	if (false == bHasAnimation) {
@@ -794,6 +800,7 @@ UINT CResourceManager::CreateFBXResource(string path, string name){
 		for (UINT i = 0; i < FBXIMPORTER->GetMeshCnt(); ++i) {
 			sprintf(pName, "%s%d", name.c_str(), i);
 			pFBXMesh = CFileBasedMesh::CreateMeshFromFBXFile(m_pd3dDevice, m_pd3dDeviceContext, i);
+			pFBXMesh->SetTag(tag::TAG_DYNAMIC_OBJECT);
 			m_mMesh.insert(pairMesh(pName, pFBXMesh));
 		}
 
@@ -807,6 +814,7 @@ UINT CResourceManager::CreateFBXResource(string path, string name){
 		for (UINT j = 0; j < FBXIMPORTER->GetMeshCnt(); ++j) {
 			sprintf(pName, "%s%d", name.c_str(), j);
 			pFBXMesh = CFileBasedMesh::CreateMeshFromFBXFile(m_pd3dDevice, m_pd3dDeviceContext, j);
+			pFBXMesh->SetTag(tag::TAG_STATIC_OBJECT);
 			m_mMesh.insert(pairMesh(pName, pFBXMesh));
 		}
 
@@ -850,6 +858,7 @@ void CResourceManager::ReleaseMesh(string name){
 
 void CResourceManager::ReleaseAnimater(string name){
 	map<string, shared_ptr<CAnimater>> ::iterator iter = m_mAnimater.find(name);
+	if (iter == m_mAnimater.end()) return;
 	(iter->second)->End();
 	m_mAnimater.erase(iter);
 }

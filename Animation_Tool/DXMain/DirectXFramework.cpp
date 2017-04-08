@@ -50,8 +50,8 @@ void CDirectXFramework::Begin(HINSTANCE hInstance, HWND hWnd)
 
 	//위치 조정
 	//viewprojection행렬 제작
-	XMVECTOR eye = { 0.0f, 200.0f, 00.0f, 0.0f };
-	XMVECTOR at = { 500.0f, 0.0f, 500.0f, 0.0f };
+	XMVECTOR eye = { -100.0f, 200.0f, 00.0f, 0.0f };
+	XMVECTOR at = { 0.0f, 0.0f, 0.0f, 0.0f };
 	XMVECTOR up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
 	m_pCamera->SetLookAt(eye, at, up);

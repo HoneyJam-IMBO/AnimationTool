@@ -4,7 +4,7 @@
 
 bool CTestObject::Begin() {
 	//object_id set
-	m_objectID = object_id::OBJECT_FBX_ELF;
+	//m_objectID = object_id::OBJECT_END;
 	//m_objectID = object_id::OBJECT_TEST;
 
 	Rotate(-90.f, 0.f, 0.f);
@@ -32,10 +32,8 @@ void CTestObject::SetPosition(XMVECTOR pos) {
 	
 }
 void CTestObject::Animate(float fTimeElapsed) {
+	m_pRenderContainer = RCSELLER->GetRenderContainer(m_objectID);
 	if (m_pAnimater)m_pAnimater->Update(fTimeElapsed);
-	//for (int i = 0; i < m_pRenderContainer->GetvMesh().size(); ++i) {
-	//	m_pRenderContainer->GetMesh(i).get()->Update(fTimeElapsed);
-	//}
 }
 CTestObject::CTestObject() : CGameObject("testobject", tag::TAG_DYNAMIC_OBJECT) {
 

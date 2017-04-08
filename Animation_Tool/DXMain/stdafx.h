@@ -133,9 +133,10 @@ enum object_id {
 	OBJECT_SKYBOX,
 	OBJECT_SPACE,
 	OBJECT_TERRAIN,
+	OBJECT_TOOL_NONANIM,
+	OBJECT_TOOL_ANIM,
 	OBJECT_TEST,
 	OBJECT_PLANE,
-	OBJECT_FBX_ELF,
 	OBJECT_FBX_BUNNY,
 	OBJECT_END,
 
@@ -159,8 +160,14 @@ enum object_id {
 
 enum tag {
 	TAG_DEFAULT,
+	TAG_TERRAIN,
+	TAG_SPACE,
 	TAG_STATIC_OBJECT,
 	TAG_DYNAMIC_OBJECT,
+	TAG_LIGHT,
+	TAG_SSLR,
+	TAG_POSTPROCESSING,
+	TAG_DEBUG,
 	TAG_END
 };
 
@@ -212,4 +219,4 @@ enum shader_value_num {
 #define			EXPORTER	CExporter::GetInstance()
 #include "Importer.h"
 #define			IMPORTER	CImporter::GetInstance()
-#define USE_ANIM
+//#define USE_ANIM

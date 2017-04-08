@@ -135,6 +135,7 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromFBXFile(ID3D11Device* p
 	pFileBasedMesh->Begin();
 	pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULT"));
 	pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
+	pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
 	return pFileBasedMesh;
 
 	return nullptr;
@@ -155,9 +156,11 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(ID3D11Device* p
 	if (bHasAnimation) {
 		//mesh texture
 		int MeshTextureCnt = IMPORTER->ReadInt();
+
 		if (MeshTextureCnt <= 0) {
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULT"));
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
 		}
 		for (int i = 0; i < MeshTextureCnt; ++i) {
 			//char name[64];
@@ -170,6 +173,13 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(ID3D11Device* p
 			//이걸 file에서 읽어 들인다. 또 저장한다. 
 			//pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
 			pFileBasedMesh->SetMeshMaterial(RESOURCEMGR->GetMaterial("DEFAULT"));
+		}
+		if (MeshTextureCnt == 1) {
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
+		}
+		else if (MeshTextureCnt == 2) {
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
 		}
 		//mesh texture
 
@@ -226,6 +236,35 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(ID3D11Device* p
 
 	}
 	else {
+		//mesh texture
+		int MeshTextureCnt = IMPORTER->ReadInt();
+
+		if (MeshTextureCnt <= 0) {
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULT"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
+		}
+		for (int i = 0; i < MeshTextureCnt; ++i) {
+			//char name[64];
+			//sprintf(name, "Test%d", index);
+			string path;
+			path = IMPORTER->Readstring();
+			wstring wPath{ L"" };
+			wPath.assign(path.cbegin(), path.cend());
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->CreateTexture(path.c_str(), wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT"), i));
+			//이걸 file에서 읽어 들인다. 또 저장한다. 
+			//pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
+			pFileBasedMesh->SetMeshMaterial(RESOURCEMGR->GetMaterial("DEFAULT"));
+		}
+		if (MeshTextureCnt == 1) {
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
+		}
+		else if (MeshTextureCnt == 2) {
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
+		}
+		//mesh texture
+
 		//1. 전체 정점을 구한다.
 		UINT nVertices = IMPORTER->ReadUINT();
 		pFileBasedMesh->SetnVertices(nVertices);
@@ -253,7 +292,7 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(ID3D11Device* p
 		nVertex = 0;
 		for (UINT j = 0; j < nVertices; ++j) {
 			pUVs[nVertex].x = IMPORTER->ReadFloat();
-			pUVs[nVertex].y = IMPORTER->ReadFloat();
+			pUVs[nVertex++].y = IMPORTER->ReadFloat();
 		}
 		//4. set
 		pFileBasedMesh->SetpVertices(pVertices);

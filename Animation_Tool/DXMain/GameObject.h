@@ -33,6 +33,7 @@ public:
 	//----------------------------object-----------------------------
 
 	object_id GetObjectID() { return m_objectID; }
+	void SetObjectID(object_id id) { m_objectID = id; }
 
 	void SetActive(bool b) { m_bActive = b; }
 	bool& GetActive() { return m_bActive; }
@@ -125,8 +126,8 @@ public:
 	}
 
 	shared_ptr<CAnimater> GetAnimater() { return m_pAnimater; }
-	void SetMeshModeDefault();
-	void SetMeshModeSpec();
+	void SetMeshMode(int mode);
+	int GetMeshMode() { return m_indexSelectTexture; }
 protected:
 	int m_indexSelectMesh{ 0 };
 	int m_indexSelectTexture{ 0 };

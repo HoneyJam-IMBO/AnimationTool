@@ -378,27 +378,31 @@ CGameObject* CSceneMain::PickObjectPointedByCursor(int xClient, int yClient)
 }
 
 void CSceneMain::CreateControllObject(string path){
-//resource 力累	
+	//resource 力累	
 	m_MeshCnt = RESOURCEMGR->CreateMultiMesh(path, "Test");
+	shared_ptr<CAnimater> pAnimater = RESOURCEMGR->GetAnimater("Test");
+	//按眉 力累
+	m_pFBXObject = new CTestObject();
+	m_pFBXObject->SetObjectID(object_id::OBJECT_TOOL_NONANIM);
+	if (pAnimater) {
+		m_pFBXObject->SetObjectID(object_id::OBJECT_TOOL_ANIM);
+	}
+	//pObject->SetTerrainContainer(m_pTerrainContainer);
+	//-m_pFBXObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
+	//按眉 力累
+	
 	//m_MeshCnt = RESOURCEMGR->CreateMultiMesh("../outputata/text.txt", "Test");
-	RCSELLER->GetRenderContainer(object_id::OBJECT_FBX_ELF)->ClearMesh();
+	RCSELLER->GetRenderContainer(m_pFBXObject->GetObjectID())->ClearMesh();
 	char pName[20];
 	for (int i = 0; i < m_MeshCnt; ++i) {
 		sprintf(pName, "%s%d", "Test", i);
-		RCSELLER->GetRenderContainer(object_id::OBJECT_FBX_ELF)->AddMesh(RESOURCEMGR->GetMesh(pName));
+		RCSELLER->GetRenderContainer(m_pFBXObject->GetObjectID())->AddMesh(RESOURCEMGR->GetMesh(pName));
 	}
-	RCSELLER->GetRenderContainer(object_id::OBJECT_FBX_ELF)->SetAnimater(RESOURCEMGR->GetAnimater("Test"));
-//resource 力累	
+	RCSELLER->GetRenderContainer(m_pFBXObject->GetObjectID())->SetAnimater(pAnimater);
 
-
-//按眉 力累
-	m_pFBXObject = new CTestObject();
 	m_pFBXObject->Begin();
-	//pObject->SetTerrainContainer(m_pTerrainContainer);
-	//-m_pFBXObject->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
 	m_pFBXObject->SetPosition(XMLoadFloat3(&XMFLOAT3(0, 0, 0)));
 	m_pSpaceContainer->AddObject(m_pFBXObject);
-//按眉 力累
 	//ui pop up!
 	m_pFBXObject->PickingProc();
 }

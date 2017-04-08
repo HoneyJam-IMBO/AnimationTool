@@ -37,17 +37,83 @@ void TW_CALL SetMeshTextureButtonCallback(void * clientData) {
 	//make texture/ set texture
 	//pObj->GetRenderContainer()->GetMesh(pObj->GetSelectMeshIndex());
 }
-
-
-void TW_CALL SetDefaultButtonCallback(void * clientData) {
+void TW_CALL SetDynamicTagButtonCallback(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
 	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
-	pObj->SetMeshModeDefault();
+	if(*static_cast<const bool *>(value)){
+		pObj->SetTag(tag::TAG_DYNAMIC_OBJECT);
+	}
+}
+void TW_CALL GetDynamicTagButtonCallback(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<bool *>(value) = (tag::TAG_DYNAMIC_OBJECT == pObj->GetTag());
+}
+void TW_CALL SetStaticTagButtonCallback(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	if (*static_cast<const bool *>(value)) {
+		pObj->SetTag(tag::TAG_STATIC_OBJECT);
+	}
+}
+void TW_CALL GetStaticTagButtonCallback(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<bool *>(value) = (tag::TAG_STATIC_OBJECT == pObj->GetTag());
 }
 
-void TW_CALL SetSpecButtonCallback(void * clientData) {
+void TW_CALL SetStaticTagButtonCallback(void* clientData) {
 	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
-	pObj->SetMeshModeSpec();
+	pObj->GetRenderContainer()->GetMesh(0)->SetTag(tag::TAG_STATIC_OBJECT);
 }
+/////////////////////
+void TW_CALL GetDefaultTexButtonCallback(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<bool *>(value) = (0 == pObj->GetMeshMode());
+}
+
+void TW_CALL SetDefaultTexButtonCallback(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	if (*static_cast<const bool *>(value)) {
+		pObj->SetMeshMode(0);
+		pObj->CreateMenuMeshTextureUI();
+	}
+
+}
+
+void TW_CALL GetSpecTexButtonCallback(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<bool *>(value) = (1 == pObj->GetMeshMode());
+}
+
+void TW_CALL SetSpecTexButtonCallback(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	if (*static_cast<const bool *>(value)) {
+		pObj->SetMeshMode(1);
+		pObj->CreateMenuMeshTextureUI();
+
+	}
+}
+void TW_CALL GetCPTexButtonCallback(void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	*static_cast<bool *>(value) = (2 == pObj->GetMeshMode());
+}
+
+void TW_CALL SetCPTexButtonCallback(const void * value, void * clientData) {
+	if (nullptr == clientData) return;
+	CGameObject* pObj = reinterpret_cast<CGameObject*>(clientData);
+	if (*static_cast<const bool *>(value)) {
+		pObj->SetMeshMode(2);
+		pObj->CreateMenuMeshTextureUI();
+
+	}
+}
+/////////////////////////
 void TW_CALL LoadTextureFileCallback(void* clientData) {
 	/*
 	pSampler = make_shared<CSampler>(m_pd3dDevice, m_pd3dDeviceContext);
@@ -67,14 +133,22 @@ void TW_CALL LoadTextureFileCallback(void* clientData) {
 	wPath.assign(pData->m_sName.cbegin(), pData->m_sName.cend());
 
 	char name[64];
-	if (1 == pData->m_indexSelectTexture) {
-		sprintf(name, "TestSpec%d", dynamic_cast<CFileBasedMesh*>(pData->m_pMesh.get())->GetMeshIndex());
-		pData->m_pMesh->SetMeshTexture(pData->m_indexSelectTexture, RESOURCEMGR->CreateTexture(name, wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT"), 1));
-	}
-	else {
+	if (0 == pData->m_indexSelectTexture) {
 		sprintf(name, "TestDefault%d", dynamic_cast<CFileBasedMesh*>(pData->m_pMesh.get())->GetMeshIndex());
-		pData->m_pMesh->SetMeshTexture(pData->m_indexSelectTexture, RESOURCEMGR->CreateTexture(name, wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT"), 0));
+		pData->m_pMesh->SetMeshTexture(pData->m_indexSelectTexture, 
+			RESOURCEMGR->CreateTexture(name, wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT"), 0));
 	}
+	else if(1 == pData->m_indexSelectTexture) {
+		sprintf(name, "TestSpec%d", dynamic_cast<CFileBasedMesh*>(pData->m_pMesh.get())->GetMeshIndex());
+		pData->m_pMesh->SetMeshTexture(pData->m_indexSelectTexture, 
+			RESOURCEMGR->CreateTexture(name, wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT"), 1));		
+	}
+	else if (2 == pData->m_indexSelectTexture) {
+		sprintf(name, "TestCP%d", dynamic_cast<CFileBasedMesh*>(pData->m_pMesh.get())->GetMeshIndex());
+		pData->m_pMesh->SetMeshTexture(pData->m_indexSelectTexture, 
+			RESOURCEMGR->CreateTexture(name, wPath.c_str(), RESOURCEMGR->GetSampler("DEFAULT"), 2));
+	}
+
 
 	pData->m_pMesh->SetMeshMaterial(RESOURCEMGR->GetMaterial("DEFAULT"));
 }
@@ -85,7 +159,7 @@ bool CGameObject::Begin() {
 	XMStoreFloat4x4(&m_xmf4x4MeshOffset, XMMatrixIdentity());
 
 	m_pRenderContainer = RCSELLER->GetRenderContainer(m_objectID);
-	if (m_pRenderContainer->GetMesh())//mesh가 있으면
+	if (m_pRenderContainer->GetvMesh().size() > 0)//mesh가 있으면
 	{//aabb 해당 mesh에서 aabb를 얻어온다.
 		m_OriBoundingBox = m_pRenderContainer->GetMesh()->GetAABB();
 	}
@@ -435,12 +509,17 @@ void CGameObject::CreateMeshUI(){
 	TWBARMGR->SetBarMovable(barName, false);
 	TWBARMGR->SetBarResizable(barName, false);
 	//set param
-	  
-	TWBARMGR->AddButtonCB(barName, "MODE", "DEFAULT", SetDefaultButtonCallback, this);
-	TWBARMGR->AddButtonCB(barName, "MODE", "SPEC", SetSpecButtonCallback, this);
+	
+	TWBARMGR->AddBoolBarCB(barName, "MODE", "DEFAULT", SetDefaultTexButtonCallback, GetDefaultTexButtonCallback, this);
+	TWBARMGR->AddBoolBarCB(barName, "MODE", "SPEC", SetSpecTexButtonCallback, GetSpecTexButtonCallback, this);
+	TWBARMGR->AddBoolBarCB(barName, "MODE", "CP", SetCPTexButtonCallback, GetCPTexButtonCallback, this);
+
 	TWBARMGR->AddMinMaxBarCB(barName, "SelectMesh", "SelectMeshIndex",
 		SetSelectMeshCallback, GetSelectMeshCallback, this, 0.f, m_pRenderContainer->GetvMesh().size() - 1, 1.f);
-
+	//TWBARMGR->AddButtonCB(barName, "SET_TAG", "DYNAMIC", SetDynamicTagButtonCallback, this);
+	TWBARMGR->AddBoolBarCB(barName, "SET_TAG", "DYNAMIC", SetDynamicTagButtonCallback, GetDynamicTagButtonCallback, this);
+	TWBARMGR->AddBoolBarCB(barName, "SET_TAG", "STATIC", SetStaticTagButtonCallback, GetStaticTagButtonCallback, this);
+	//TWBARMGR->AddButtonCB(barName, "SET_TAG", "STATIC", SetStaticTagButtonCallback, this);
 //	TWBARMGR->AddButtonCB(barName, "SetSelect", "MeshTexture", SetMeshTextureButtonCallback, this);
 	//char menuName[64];
 	//int i{ 0 };
@@ -490,13 +569,8 @@ void CGameObject::CreateMenuMeshTextureUI(){
 
 }
 
-void CGameObject::SetMeshModeDefault(){
-	m_indexSelectTexture = 0;
-	CreateMenuMeshTextureUI();
-}
-
-void CGameObject::SetMeshModeSpec(){
-	m_indexSelectTexture = 1;
+void CGameObject::SetMeshMode(int mode){
+	m_indexSelectTexture = mode;
 	CreateMenuMeshTextureUI();
 }
 

@@ -94,7 +94,11 @@ public:
 	shared_ptr<CBuffer> GetBuffer(string name) { return m_mBuffer[name]; }
 	shared_ptr<CGlobalBuffer> GetGlobalBuffer(string name) { return m_mGlobalBuffer[name]; }
 	shared_ptr<CMaterial> GetMaterial(string name) { return m_mMaterial[name]; }
-	shared_ptr<CAnimater> GetAnimater(string name) { return m_mAnimater[name]; }
+	shared_ptr<CAnimater> GetAnimater(string name) {
+		if (m_mAnimater.end() != m_mAnimater.find(name))
+			return m_mAnimater[name];
+		return nullptr;
+	}
 private:
 	ID3D11Device* m_pd3dDevice{ nullptr };
 	ID3D11DeviceContext* m_pd3dDeviceContext{ nullptr };

@@ -43,6 +43,10 @@ void CExporter::WriteFBXMeshData(CTestObject* pFBXObject){
 	//WriteWCHAR(L"Meshinfo", 0);
 	//WriteEnter();
 	//mesh info
+	tag t = pFBXObject->GetTag();
+	WriteUINT(t);
+	WriteEnter();
+
 	for (auto pMesh : pFBXObject->GetRenderContainer()->GetvMesh()) {
 		CFileBasedMesh* pFBXMesh = dynamic_cast<CFileBasedMesh*>(pMesh.get());
 		//mesh texture
@@ -61,11 +65,23 @@ void CExporter::WriteFBXMeshData(CTestObject* pFBXObject){
 
 		//position 
 		//WriteWCHAR(L"Position", 0); WriteEnter();
-		XMFLOAT3* pVertices = pFBXMesh->GetVertices();
-		for (int i = 0; i < vertexCnt; ++i) {
-			WriteFloat(pVertices[i].x); WriteSpace();
-			WriteFloat(pVertices[i].y); WriteSpace();
-			WriteFloat(pVertices[i].z); WriteSpace();
+		if(bHasAnimation){
+			XMFLOAT3* pVertices = pFBXMesh->GetVertices();
+			for (int i = 0; i < vertexCnt; ++i) {
+				WriteFloat(pVertices[i].x); WriteSpace();
+				WriteFloat(pVertices[i].y); WriteSpace();
+				WriteFloat(pVertices[i].z); WriteSpace();
+			}
+		}
+		else {
+			//animation이 없다면 vertex에 offsetMtx를 곱해서 저장한다.
+			XMFLOAT3* pVertices = pFBXMesh->GetVertices();
+			for (int i = 0; i < vertexCnt; ++i) {
+				XMStoreFloat3(&pVertices[i], XMVector3TransformCoord(XMLoadFloat3(&pVertices[i]), pFBXObject->GetWorldMtx()));
+				WriteFloat(pVertices[i].x); WriteSpace();
+				WriteFloat(pVertices[i].y); WriteSpace();
+				WriteFloat(pVertices[i].z); WriteSpace();
+			}
 		}
 		//WriteEnter();
 
@@ -88,27 +104,29 @@ void CExporter::WriteFBXMeshData(CTestObject* pFBXObject){
 		}
 		//WriteEnter();
 
-		//weight
-		//WriteWCHAR(L"Weight", 0); WriteEnter();
-		XMFLOAT3* pWeights = pFBXMesh->GetWeights();
-		for (int i = 0; i < vertexCnt; ++i) {
-			WriteFloat(pWeights[i].x); WriteSpace();
-			WriteFloat(pWeights[i].y); WriteSpace();
-			WriteFloat(pWeights[i].z); WriteSpace();
-		}
-		//WriteEnter();
+		if (bHasAnimation) {
+			//weight
+			//WriteWCHAR(L"Weight", 0); WriteEnter();
+			XMFLOAT3* pWeights = pFBXMesh->GetWeights();
+			for (int i = 0; i < vertexCnt; ++i) {
+				WriteFloat(pWeights[i].x); WriteSpace();
+				WriteFloat(pWeights[i].y); WriteSpace();
+				WriteFloat(pWeights[i].z); WriteSpace();
+			}
+			//WriteEnter();
 
-		//joint index
-		//WriteWCHAR(L"JointIndex", 0); WriteEnter();
-		XMFLOAT4* pJointIndices = pFBXMesh->GetJointIndices();
-		for (int i = 0; i < vertexCnt; ++i) {
-			WriteFloat(pJointIndices[i].x); WriteSpace();
-			WriteFloat(pJointIndices[i].y); WriteSpace();
-			WriteFloat(pJointIndices[i].z); WriteSpace();
-			WriteFloat(pJointIndices[i].w); WriteSpace();
-		}
-		WriteEnter();
+			//joint index
+			//WriteWCHAR(L"JointIndex", 0); WriteEnter();
+			XMFLOAT4* pJointIndices = pFBXMesh->GetJointIndices();
+			for (int i = 0; i < vertexCnt; ++i) {
+				WriteFloat(pJointIndices[i].x); WriteSpace();
+				WriteFloat(pJointIndices[i].y); WriteSpace();
+				WriteFloat(pJointIndices[i].z); WriteSpace();
+				WriteFloat(pJointIndices[i].w); WriteSpace();
+			}
+			WriteEnter();
 
+		}
 		//index num
 		//WriteWCHAR(L"IndexCnt", 0); WriteEnter();
 		UINT indexCnt = pFBXMesh->GetIndexCnt();
@@ -129,6 +147,8 @@ void CExporter::WriteFBXMeshData(CTestObject* pFBXObject){
 
 void CExporter::WriteFBXAnimaterData(CTestObject * pFBXObject){
 	//WriteWCHAR(L"Animater"); WriteEnter();
+	bool bHasAnimation = pFBXObject->GetAnimater().get() != nullptr;
+	if (false == bHasAnimation) return;
 
 	//WriteWCHAR(L"AnimaterOffsetMtx"); WriteEnter();
 	WriteXMMatrix(pFBXObject->GetWorldMtx());
@@ -179,6 +199,9 @@ void CExporter::WriteFBXAnimaterData(CTestObject * pFBXObject){
 }
 
 void CExporter::WriteAllFBXAnimationInfo(CTestObject * pFBXObject) {
+	bool bHasAnimation = pFBXObject->GetAnimater().get() != nullptr;
+	if (false == bHasAnimation) return;
+
 	//animation info cnt
 	//WriteWCHAR(L"Animation Info Cnt"); WriteEnter();
 	int animationCnt = pFBXObject->GetAnimater()->GetAnimationCnt();

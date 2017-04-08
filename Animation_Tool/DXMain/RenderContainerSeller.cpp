@@ -209,31 +209,22 @@ CRenderContainer* CRenderContainerSeller::GetRenderContainer(object_id objectid)
 
 		m_mRenderContainer[objectid]->Begin();
 		break;
-	case object_id::OBJECT_FBX_ELF:
+	case object_id::OBJECT_TOOL_NONANIM:
+		m_mRenderContainer[objectid] = new CRenderContainer(m_pd3dDevice, m_pd3dDeviceContext);
+		m_mRenderContainer[objectid]->AddMesh(RESOURCEMGR->GetMesh("Rect1"));
+		m_mRenderContainer[objectid]->SetShader(RESOURCEMGR->GetRenderShader("Core"));
+		m_mRenderContainer[objectid]->AddBuffer(RESOURCEMGR->GetBuffer("FBX"));
+		m_mRenderContainer[objectid]->AddMaterial(RESOURCEMGR->GetMaterial("FBX"));
+
+		m_mRenderContainer[objectid]->Begin();
+
+	case object_id::OBJECT_TOOL_ANIM:
 		m_mRenderContainer[objectid] = new CRenderContainer(m_pd3dDevice, m_pd3dDeviceContext);
 
 		m_mRenderContainer[objectid]->AddMesh(RESOURCEMGR->GetMesh("Rect1"));
-
-		////mesh set
-		//char pName[20];
-		//for (int i = 0; i < 10; ++i) {
-		//	sprintf(pName, "FBX_%d", i);
-		//	m_mRenderContainer[objectid]->AddMesh(RESOURCEMGR->GetMesh(pName));
-		//}
-		//mesh set
-		//m_mRenderContainer[objectid]->SetMesh(m_pTestMultiMesh);
-
-		//m_mRenderContainer[objectid]->SetShader(RESOURCEMGR->GetRenderShader("Core"));
-
-#ifdef USE_ANIM
-		m_mRenderContainer[objectid]->SetShader(RESOURCEMGR->GetRenderShader("AnimationObject"));
-#else
 		m_mRenderContainer[objectid]->SetShader(RESOURCEMGR->GetRenderShader("Core"));
-#endif
-		m_mRenderContainer[objectid]->AddBuffer(RESOURCEMGR->GetBuffer("FBX"));
+		m_mRenderContainer[objectid]->AddBuffer(RESOURCEMGR->GetBuffer("FBX")); 
 		m_mRenderContainer[objectid]->AddMaterial(RESOURCEMGR->GetMaterial("FBX"));
-		//m_mRenderContainer[objectid]->AddTexture(RESOURCEMGR->GetTexture("FBX"));
-		//m_mRenderContainer[objectid]->SetAnimater(RESOURCEMGR->GetAnimater("ELF"));
 
 		m_mRenderContainer[objectid]->Begin();
 		break;

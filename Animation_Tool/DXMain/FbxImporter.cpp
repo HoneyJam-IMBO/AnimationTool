@@ -149,7 +149,7 @@ void CFbxImporter::ProcessSkeletonHierarchyRecursively(FbxNode * inNode, int myI
 
 void CFbxImporter::LoadNodeRecursive(FbxNode* pNode){
 	FbxNodeAttribute* pNodeAttribute = pNode->GetNodeAttribute();
-
+	
 	if (pNodeAttribute){
 		if (pNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh){
 			FbxMesh* pMesh = pNode->GetMesh();
@@ -157,6 +157,23 @@ void CFbxImporter::LoadNodeRecursive(FbxNode* pNode){
 //				ExportMeshData(pMesh);
 				if (false == ExportMeshData(pMesh))
 					DEBUGER->DebugMessageBox("LoadNodeRecursive()", "FAIL");
+				else {
+					int nMaterial = pNode->GetMaterialCount();
+					for (int i = 0; i < nMaterial; ++i) {
+						FbxSurfaceMaterial* pMaterial = pNode->GetMaterial(i);
+						if (pMaterial) {
+							FbxProperty Property = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
+							if (Property.IsValid()) {
+								FbxFileTexture* pTexture = Property.GetSrcObject<FbxFileTexture>();
+								if (pTexture) {
+									const FbxString strFileName = pTexture->GetFileName();
+								}
+							}
+						}
+					}
+					
+					//m_vMeshData[0].AddTextureName(name);
+				}
 
 			}//end pMesh if
 		}//end if
@@ -166,8 +183,7 @@ void CFbxImporter::LoadNodeRecursive(FbxNode* pNode){
 	for (int i = 0; i < childCount; ++i)	//Recursive
 		LoadNodeRecursive(pNode->GetChild(i));
 }
-bool CFbxImporter::ExportMeshData(FbxMesh* pMesh)
-{
+bool CFbxImporter::ExportMeshData(FbxMesh* pMesh){
 	if (!pMesh->GetNode()) return false;
 
 //	DEBUGER->DebugMessageBox("ExportMeshData()", "Start Export Mesh Data");
